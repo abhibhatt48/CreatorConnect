@@ -2,6 +2,7 @@
 
 import { Button, Grid, TextField } from "@mui/material";
 import "./styles.css";
+import Link from "next/link";
 
 export const LoginBox = () => {
   return (
@@ -9,7 +10,7 @@ export const LoginBox = () => {
       style={{
         display: "flex",
         flexDirection: "column",
-        width: "70%",
+        width: "60%",
       }}
     >
       <Grid container direction={"column"} gap={2}>
@@ -49,6 +50,21 @@ export const LoginBox = () => {
         >
           Login
         </button>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          <p>New here?</p>
+          <Link
+            href="/signup"
+            style={{ color: "#222AEF", marginLeft: "0.5rem" }}
+          >
+            Signup
+          </Link>
+        </div>
       </Grid>
     </div>
   );

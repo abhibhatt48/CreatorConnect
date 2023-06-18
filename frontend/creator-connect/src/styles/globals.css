@@ -20,12 +20,20 @@ body {
 
   /* Media query for smaller screens */
   @media (max-width: 768px) {
-    font-size: 8px; /* Decreased font size for smaller screens */
+    font-size: 12px; /* Decreased font size for smaller screens */
+  }
+
+  @media (max-width: 1000px) {
+    font-size: 14px; /* Decreased font size for smaller screens */
   }
 
   /* Media query for larger screens */
   @media (min-width: 1800px) {
     font-size: 18px; /* Increased font size for larger screens */
+  }
+
+  @media (max-height: 500px) {
+    font-size: 8px; /* Decreased font size for smaller screens */
   }
 }
 
