@@ -1,5 +1,5 @@
 import "../../../src/styles/globals.css";
-import React from "react";
+import React, { Suspense } from "react";
 import styles from "./signup.module.css";
 import { SignupBox } from "../components/SignupBox/SignupBox";
 

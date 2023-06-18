@@ -2,7 +2,6 @@ import React from "react";
 import styles from "./SidePicture.module.css";
 
 const SidePicture = () => {
-  console.log("side picture rendering");
   return (
     <div className={styles.sidepicture}>
       <div className={styles.sidepictureOverlay}>
