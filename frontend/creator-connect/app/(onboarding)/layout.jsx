@@ -1,14 +1,9 @@
 import SidePicture from "./components/SidePicture/SidePicture";
+import styles from "./layout.module.css";
 
 export default function OnboardingLayout({ children }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "row",
-        height: "100vh",
-      }}
-    >
+    <div className={styles.onboardingLayout}>
       <SidePicture />
       {children}
     </div>
