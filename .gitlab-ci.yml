@@ -11,18 +11,10 @@ cache:
     - node_modules/
     - .m2/repository/
 
-# before_script:
-#   - apt-get update && apt-get install -y curl
-#   - curl -sL https://deb.nodesource.com/setup_14.x | bash -
-#   - apt-get install -y nodejs
-#   - apt-get install -y maven
-
 
 build-backend:
   stage: build
   image: maven:latest
-  tags:
-    - v1
   script:
     - cd backend/creator-connect
     - echo "Running build stage (backend)..."
@@ -36,8 +28,6 @@ build-backend:
 test-backend:
   stage: test
   image: maven:latest
-  tags:
-    - v1
   script:
     - cd backend/creator-connect
     - echo "Running test stage..."
@@ -48,8 +38,6 @@ test-backend:
 build-frontend:
   stage: build
   image: node:16
-  #tags:
-  #  - v1
   script:
     - cd frontend/creator-connect
     - echo "Building frontend..."
@@ -57,15 +45,13 @@ build-frontend:
     - npm run build
     - echo "Build successful!"
 
-
+# Waiting on getting Designite API.
 # code-quality:
 #   stage: smell-detection
-#   tags:
-#     - v1.0
 #   script:
 #     - echo "Code quality stage..."
 #     - wget "https://www.designite-tools.com/static/download/DJE/DesigniteJava.jar"
-#     - java -jar DesigniteJava.jar -i backend/creatorconnect -o backend/creatorconnect
+#     - java -jar DesigniteJava.jar -i backend/creator-connect -o backend/creator-connect
 #     - echo "Saving results in csvs..."
 #   artifacts:
 #     paths:
@@ -76,12 +62,12 @@ build-frontend:
 #       - TestabilitySmells.csv
 #       - TypeMetrics.csv
 
+
+#  Planning to push this to dockerhub , and then run the latest image on the server (Initial Dockerfile is included)
 # deploy-backend:
 #   stage: deploy
-#   tags:
-#     - v1.0
 #   script:
-#     - cd backend/creatorconnect
+#     - cd backend/creator-connect
 #     - mvn clean package
 #     - echo "Building docker image..."
 #     - docker build -t creator_connect_backend .
@@ -90,8 +76,6 @@ build-frontend:
 
 # deploy-frontend:
 #   stage: deploy
-#   tags:
-#     - v1.0
 #   script:
-#     - cd CreatorConnect/frontend
+#     - cd frontend/creator-connect
 #     -
