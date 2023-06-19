@@ -6,14 +6,16 @@ stages:
   # - smell-detection
   # - deploy
 
-cache:
-  paths:
-    - node_modules/
-    - .m2/repository/
+# cache:
+#   paths:
+#     - node_modules/
+#     - .m2/repository/
 
 
 build-backend:
   stage: build
+  # tags:
+  #   - ugrad
   image: maven:latest
   script:
     - cd backend/creator-connect
@@ -27,6 +29,8 @@ build-backend:
 
 test-backend:
   stage: test
+  # tags:
+  #   - ugrad
   image: maven:latest
   script:
     - cd backend/creator-connect
@@ -37,11 +41,13 @@ test-backend:
 
 build-frontend:
   stage: build
+#  tags:
+#     - ugrad
   image: node:16
   script:
     - cd frontend/creator-connect
     - echo "Building frontend..."
-    - npm install
+    - npm install 
     - npm run build
     - echo "Build successful!"
 
@@ -63,7 +69,7 @@ build-frontend:
 #       - TypeMetrics.csv
 
 
-#  Planning to push this to dockerhub , and then run the latest image on the server (Initial Dockerfile is included)
+# Planning to push this to dockerhub , and then run the latest image on the server (Initial Dockerfile is included)
 # deploy-backend:
 #   stage: deploy
 #   script:
@@ -72,7 +78,7 @@ build-frontend:
 #     - echo "Building docker image..."
 #     - docker build -t creator_connect_backend .
 #     - echo "Deploying backend on docker..."
-#     - docker run -d -p 8080:8080 creator_connect_backend
+#     - docker push {}
 
 # deploy-frontend:
 #   stage: deploy
