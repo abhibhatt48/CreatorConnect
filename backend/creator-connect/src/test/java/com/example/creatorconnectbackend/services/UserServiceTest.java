@@ -20,10 +20,7 @@ import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.lang.reflect.Field;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -38,10 +35,13 @@ public class UserServiceTest {
     @Mock
     private JdbcTemplate jdbcTemplate;
 
+    @Mock
+    private EmailService emailService;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserService(jdbcTemplate);
+        userService = new UserService(jdbcTemplate, emailService);
     }
 
     @Test
@@ -102,5 +102,25 @@ public class UserServiceTest {
         boolean loggedIn = userService.userLogin(user);
 
         assertTrue(loggedIn);
+    }
+
+    @Test
+    public void testForgotPassword() {
+        String email = "test@example.com";
+
+        userService.forgotPassword(email);
+
+        verify(jdbcTemplate).update(any(String.class), any(String.class), any(String.class));
+        verify(emailService).sendEmail(any(String.class), any(String.class), any(String.class));
+    }
+
+    @Test
+    public void testResetPassword() {
+        String token = UUID.randomUUID().toString();
+        String newPassword = "newPassword";
+
+        userService.resetPassword(token, newPassword);
+
+        verify(jdbcTemplate).update(any(String.class), any(String.class), any(String.class));
     }
 }

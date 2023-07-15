@@ -1,11 +1,15 @@
 package com.example.creatorconnectbackend.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.example.creatorconnectbackend.models.EmailBody;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -86,5 +90,34 @@ public class UserControllerTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Email is required, Password is required", response.getBody());
+    }
+
+    @Test
+    public void testForgotPassword() {
+        EmailBody emailBody = new EmailBody();
+        emailBody.setEmail("test@example.com");
+
+        ResponseEntity<String> response = userController.forgotPassword(emailBody);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Email with reset password link has been sent", response.getBody());
+
+        verify(userService).forgotPassword(emailBody.getEmail());
+    }
+
+    @Test
+    public void testResetPassword() {
+        String token = "testToken";
+        String newPassword = "newPassword";
+        Map<String, String> request = new HashMap<>();
+        request.put("token", token);
+        request.put("password", newPassword);
+
+        ResponseEntity<String> response = userController.resetPassword(request);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Password has been reset", response.getBody());
+
+        verify(userService).resetPassword(token, newPassword);
     }
 }
