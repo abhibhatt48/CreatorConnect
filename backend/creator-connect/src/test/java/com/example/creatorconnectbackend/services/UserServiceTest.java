@@ -9,17 +9,23 @@ import org.springframework.jdbc.support.KeyHolder;
 import com.example.creatorconnectbackend.models.User;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.lang.reflect.Field;
 
@@ -44,6 +50,34 @@ public class UserServiceTest {
         userService = new UserService(jdbcTemplate, emailService);
     }
 
+    @Test
+    void testGetUserRowMapper() {
+        // Arrange
+        UserService userService = new UserService(jdbcTemplate, emailService);
+
+        // Act
+        RowMapper<User> rowMapper = userService.getUserRowMapper();
+
+        // Assert
+        assertNotNull(rowMapper);
+
+        ResultSet resultSet = mock(ResultSet.class);
+        try {
+            when(resultSet.getLong("userID")).thenReturn(1L);
+            when(resultSet.getString("email")).thenReturn("test@example.com");
+            when(resultSet.getString("password")).thenReturn("password");
+            when(resultSet.getString("user_type")).thenReturn("user");
+
+            User user = rowMapper.mapRow(resultSet, 1);
+            assertEquals(1L, user.getUserID());
+            assertEquals("test@example.com", user.getEmail());
+            assertEquals("password", user.getPassword());
+            assertEquals("user", user.getUser_type());
+        } catch (SQLException e) {
+            fail("SQLException occurred: " + e.getMessage());
+        }
+    }
+    
     @Test
     public void testRegisterUser() {
         User user = new User();
@@ -102,7 +136,22 @@ public class UserServiceTest {
         boolean loggedIn = userService.userLogin(user);
 
         assertTrue(loggedIn);
+
+        verify(jdbcTemplate).query(any(String.class), any(RowMapper.class), any(String.class), any(String.class));
+        reset(jdbcTemplate);
+
+        List<User> emptyUsers = new ArrayList<>();
+
+        when(jdbcTemplate.query(any(String.class), any(RowMapper.class), any(String.class), any(String.class)))
+                .thenReturn(emptyUsers);
+
+        loggedIn = userService.userLogin(user);
+
+        assertFalse(loggedIn);
+        
+        verify(jdbcTemplate).query(any(String.class), any(RowMapper.class), any(String.class), any(String.class));
     }
+
 
     @Test
     public void testForgotPassword() {

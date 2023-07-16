@@ -26,7 +26,6 @@ public class UserService implements UserServiceInterface {
     private static final int OTP_LENGTH = 6;
 
     @Autowired
-    @Lazy
     public UserService(JdbcTemplate jdbcTemplate, EmailService emailService) {
         this.jdbcTemplate = jdbcTemplate;
         this.emailService = emailService;
