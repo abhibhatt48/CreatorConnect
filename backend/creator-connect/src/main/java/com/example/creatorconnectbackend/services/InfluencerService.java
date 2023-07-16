@@ -23,9 +23,15 @@ public class InfluencerService implements InfluencerServiceInterface {
     @Autowired
     private UserService userService;
 
+	private SimpleJdbcInsert jdbcInsert;
+
     public InfluencerService(JdbcTemplate jdbcTemplate, UserService userService ) {
         this.jdbcTemplate = jdbcTemplate;
         this.userService = userService;
+    }
+    
+    public void setJdbcInsert(SimpleJdbcInsert jdbcInsert) {
+        this.jdbcInsert = jdbcInsert;
     }
 
     private RowMapper<Influencer> rowMapper = (rs, rowNum) -> {

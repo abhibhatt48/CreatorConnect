@@ -93,6 +93,19 @@ public class UserControllerTest {
     }
 
     @Test
+    public void testLoginUserNotFound() {
+        User user = new User();
+        user.setEmail("test@example.com");
+        user.setPassword("password");
+        
+        when(userService.userLogin(user)).thenReturn(false);
+
+        ResponseEntity<String> response = userController.loginUser(user, bindingResult);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+    
+    @Test
     public void testForgotPassword() {
         EmailBody emailBody = new EmailBody();
         emailBody.setEmail("test@example.com");
