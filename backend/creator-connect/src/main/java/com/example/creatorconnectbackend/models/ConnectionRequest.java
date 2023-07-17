@@ -38,9 +38,3 @@ public class ConnectionRequest {
 		this.requestStatus = requestStatus;
 	}    
 }
-
-enum RequestStatus {
-    Pending,
-    Accepted,
-    Denied
-}
