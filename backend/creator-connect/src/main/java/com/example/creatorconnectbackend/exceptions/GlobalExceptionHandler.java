@@ -1,4 +1,4 @@
-package com.example.creatorconnectbackend.exception;
+package com.example.creatorconnectbackend.exceptions;
 
 import java.util.stream.Collectors;
 
