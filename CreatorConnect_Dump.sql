@@ -54,16 +54,16 @@ DROP TABLE IF EXISTS `influencers`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `influencers` (
   `InfluencerID` bigint NOT NULL,
-  `Name` varchar(255) DEFAULT NULL,
-  `ProfileImage` varchar(255) DEFAULT NULL,
-  `Gender` enum('Male','Female','Other') DEFAULT NULL,
-  `InfluencerName` varchar(255) DEFAULT NULL,
-  `InfluencerType` varchar(255) DEFAULT NULL,
-  `InterestedIn` varchar(255) DEFAULT NULL,
-  `MinRate` bigint DEFAULT NULL,
-  `PreviousBrands` text,
-  `Location` varchar(255) DEFAULT NULL,
-  `BestPosts` text,
+  `name` varchar(255) DEFAULT NULL,
+  `profileImage` varchar(255) DEFAULT NULL,
+  `gender` varchar(255) DEFAULT NULL,
+  `influencerName` varchar(255) DEFAULT NULL,
+  `influencerType` varchar(255) DEFAULT NULL,
+  `interestedIn` varchar(255) DEFAULT NULL,
+  `minRate` bigint DEFAULT NULL,
+  `previousBrands` text,
+  `location` varchar(255) DEFAULT NULL,
+  `bestPosts` text,
   PRIMARY KEY (`InfluencerID`),
   CONSTRAINT `influencers_ibfk_1` FOREIGN KEY (`InfluencerID`) REFERENCES `users` (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -86,7 +86,7 @@ DROP TABLE IF EXISTS `organizations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `organizations` (
-  `OrgID` bigint NOT NULL,
+  `OrgID` bigint NOT NULL AUTO_INCREMENT,
   `OrgName` varchar(255) DEFAULT NULL,
   `ProfileImage` varchar(255) DEFAULT NULL,
   `CompanyType` varchar(255) DEFAULT NULL,
@@ -96,7 +96,7 @@ CREATE TABLE `organizations` (
   `Location` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`OrgID`),
   CONSTRAINT `organizations_ibfk_1` FOREIGN KEY (`OrgID`) REFERENCES `users` (`UserID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -105,6 +105,7 @@ CREATE TABLE `organizations` (
 
 LOCK TABLES `organizations` WRITE;
 /*!40000 ALTER TABLE `organizations` DISABLE KEYS */;
+INSERT INTO `organizations` VALUES (1,'Updated Organization','http://example.com/image2.jpg','Type C',200,'http://example2.com','Type D','Location Y');
 /*!40000 ALTER TABLE `organizations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -149,7 +150,7 @@ CREATE TABLE `users` (
   `user_type` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`UserID`),
   UNIQUE KEY `Email` (`Email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -158,6 +159,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'ab@google.com','qwerty','Influencer'),(8,'abhi@example.coom','Anypassword','Organizationfnnnn'),(10,'aabhi@example.coom','Anypassword','Organizationfnnnn'),(11,'abhi@482299@gmail.com','qwerty123','Infuencer'),(12,'abhi.bhatt1713@gmail.com','passAbhi123','Organization');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -170,4 +172,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-06-17 22:52:48
+-- Dump completed on 2023-07-17 12:07:07
