@@ -17,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import com.example.creatorconnectbackend.models.Organization;
 import com.example.creatorconnectbackend.services.OrganizationService;
 
-public class OrganizationControllerTests {
+public class OrganizationControllerTest {
     private OrganizationController organizationController;
 
     @Mock
