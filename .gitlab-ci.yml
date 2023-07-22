@@ -47,7 +47,7 @@ build-frontend:
   script:
     - cd frontend/creator-connect
     - echo "Building frontend..."
-    - npm install 
+    - npm install --legacy-peer-deps 
     - npm run build
     - echo "Build successful!"
 
