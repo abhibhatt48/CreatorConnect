@@ -39,6 +39,9 @@ class InfluencerServiceTest {
 	
 	private Influencer rowMapper = new Influencer();
 
+	@Mock
+    private ResultSet rs;
+	
     @Mock
     private JdbcTemplate jdbcTemplate;
 
@@ -80,7 +83,7 @@ class InfluencerServiceTest {
         influencerService = new InfluencerService(jdbcTemplate, userService);
         influencerService.setJdbcInsert(jdbcInsert);
     }
-  
+    
     @Test
     void testRegister_NonInfluencerUser() {
         User user = new User();
