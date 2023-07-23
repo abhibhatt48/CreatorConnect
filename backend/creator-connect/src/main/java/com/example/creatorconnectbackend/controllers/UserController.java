@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import com.example.creatorconnectbackend.models.EmailBody;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -23,6 +26,7 @@ import com.example.creatorconnectbackend.services.UserService;
 public class UserController {
 	
 	private final UserService userService;
+	private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	public UserController(UserService userService) {
         this.userService = userService;
@@ -31,6 +35,7 @@ public class UserController {
 
 	@PostMapping("/register")
 	public ResponseEntity<String> registerUser(@Valid @RequestBody User user, BindingResult bindingResult) {
+		logger.info("Attempt to register new user.");
 	    if(bindingResult.hasErrors()){
 	        // convert the list of ObjectError objects into a single string
 	        String errorMsg = bindingResult.getAllErrors().stream()
@@ -42,11 +47,13 @@ public class UserController {
 	    user.setUser_type(user.getUser_type());
 	    
 	    User registeredUser = userService.userRegister(user);
+	    logger.info("User registered successfully with ID: {}", registeredUser.getUserID());
 	    return ResponseEntity.ok("Registered successfully");
 	}
 	
 	@PostMapping("/login")
 	public ResponseEntity<String> loginUser(@Valid @RequestBody User user, BindingResult bindingResult) {
+		logger.info("Attempt to login user.");
 	    if(bindingResult.hasErrors()){
 	        // convert the list of ObjectError objects into a single string
 	        String errorMsg = bindingResult.getAllErrors().stream()
@@ -56,11 +63,13 @@ public class UserController {
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMsg);
 	    }
 	    boolean loggedIn = userService.userLogin(user);
+	    logger.info("User login {}", loggedIn ? "successful" : "failed");
 	    return loggedIn ? ResponseEntity.ok("Logged in successfully") : ResponseEntity.badRequest().build();
 	}
 
 	@PostMapping("/forgot-password")
 	public ResponseEntity<String> forgotPassword(@RequestBody EmailBody emailBody) {
+		logger.info("Processing forgot password request for email: {}", emailBody.getEmail());
 		userService.forgotPassword(emailBody.getEmail());
 		return ResponseEntity.ok("Email with reset password link has been sent");
 	}
@@ -68,6 +77,7 @@ public class UserController {
 	@PostMapping("/reset-password")
 	public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> request) {
 		String token = request.get("token");
+		logger.info("Processing password reset request for token: {}", token);
 		String newPassword = request.get("password");
 		userService.resetPassword(token, newPassword);
 		return ResponseEntity.ok("Password has been reset");
