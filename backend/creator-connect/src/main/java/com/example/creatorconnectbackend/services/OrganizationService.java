@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +21,8 @@ import com.example.creatorconnectbackend.models.User;
 @Service
 public class OrganizationService implements OrganizationServiceInterface {
     private final JdbcTemplate jdbcTemplate;
+    private final Logger logger = LoggerFactory.getLogger(OrganizationService.class);
+    
     
     @Autowired
     private UserService userService;
@@ -42,6 +46,7 @@ public class OrganizationService implements OrganizationServiceInterface {
     };
 
     public Organization register(Organization organization, Long userId) {
+    	logger.info("Attempting to register organization with userId {}", userId);
     	// Fetch the user using the provided userId
         User user = jdbcTemplate.queryForObject("SELECT * FROM users WHERE UserID = ?", new Object[]{userId}, userService.getUserRowMapper());
         
@@ -70,31 +75,38 @@ public class OrganizationService implements OrganizationServiceInterface {
     
     public Organization getById(Long id) {
         String sql = "SELECT * FROM organizations WHERE orgID = ?";
+        logger.info("Attempting to get organization by id {}", id);
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{id}, rowMapper);
         } catch (EmptyResultDataAccessException e) {
+        	logger.error("Organization not found with id: {}", id, e);
             throw new RuntimeException("Organization not found with id: " + id);
         }
     }
 
     public Organization update(Long id, Organization updatedOrganization) {
         String sql = "UPDATE organizations SET orgName = ?, profileImage = ?, companyType = ?, size = ?, websiteLink = ?, targetInfluencerType = ?, location = ? WHERE orgID = ?";
+        logger.info("Attempting to update organization with id {}", id);
         int updated = jdbcTemplate.update(sql, updatedOrganization.getOrgName(), updatedOrganization.getProfileImage(), updatedOrganization.getCompanyType(), updatedOrganization.getSize(), updatedOrganization.getWebsiteLink(), updatedOrganization.getTargetInfluencerType(), updatedOrganization.getLocation(), id);
         if(updated == 0) {
+        	logger.error("Organization not found with id: {}", id);
             throw new RuntimeException("Failed to update. Organization not found with id: " + id);
         }
         return getById(id);
     }
 
     public List<Organization> getAll() {
+    	logger.info("Attempting to get all organizations");
         String sql = "SELECT * FROM organizations";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     public void deleteById(Long id) {
         String sql = "DELETE FROM organizations WHERE orgID = ?";
+        logger.info("Attempting to delete organization by id {}", id);
         int deleted = jdbcTemplate.update(sql, id);
         if(deleted == 0) {
+        	logger.error("Organization not found with id: {}", id);
             throw new RuntimeException("Failed to delete. Organization not found with id: " + id);
         }
     }

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +21,7 @@ import com.example.creatorconnectbackend.models.User;
 @Service
 public class InfluencerService implements InfluencerServiceInterface {
     private final JdbcTemplate jdbcTemplate;
+    private final Logger logger = LoggerFactory.getLogger(InfluencerService.class);
 
     @Autowired
     private UserService userService;
@@ -51,6 +54,7 @@ public class InfluencerService implements InfluencerServiceInterface {
     };
 
     public Influencer register(Influencer influencer, Long userId) {
+    	logger.info("Attempting to register influencer with userId {}", userId);
         // Fetch the user using the provided userId
         User user = jdbcTemplate.queryForObject("SELECT * FROM users WHERE UserID = ?", new Object[]{userId}, userService.getUserRowMapper());
 
@@ -84,17 +88,21 @@ public class InfluencerService implements InfluencerServiceInterface {
 
     public Influencer getById(Long id) {
         String sql = "SELECT * FROM influencers WHERE influencerID = ?";
+        logger.info("Attempting to get influencer by id {}", id);
         try {
             return jdbcTemplate.queryForObject(sql, new Object[]{id}, rowMapper);
         } catch (EmptyResultDataAccessException e) {
+        	logger.error("Influencer not found with id: {}", id, e);
             throw new RuntimeException("Influencer not found with id: " + id);
         }
     }
 
     public Influencer update(Long id, Influencer updatedInfluencer) {
         String sql = "UPDATE influencers SET name = ?, profileImage = ?, gender = ?, influencerName = ?, influencerType = ?, interestedIn = ?, minRate = ?, previousBrands = ?, location = ?, bestPosts = ? WHERE influencerID = ?";
+        logger.info("Attempting to update influencer with id {}", id);
         int updated = jdbcTemplate.update(sql, updatedInfluencer.getName(), updatedInfluencer.getProfileImage(), updatedInfluencer.getGender().name(), updatedInfluencer.getInfluencerName(), updatedInfluencer.getInfluencerType(), updatedInfluencer.getInterestedIn(), updatedInfluencer.getMinRate(), updatedInfluencer.getPreviousBrands(), updatedInfluencer.getLocation(), updatedInfluencer.getBestPosts(), id);
         if(updated == 0) {
+        	logger.error("Influencer not found with id: {}", id);
             throw new RuntimeException("Failed to update. Influencer not found with id: " + id);
         }
         return getById(id);
@@ -102,13 +110,16 @@ public class InfluencerService implements InfluencerServiceInterface {
 
     public List<Influencer> getAll() {
         String sql = "SELECT * FROM influencers";
+        logger.info("Attempting to get all influencers");
         return jdbcTemplate.query(sql, rowMapper);
     }
 
     public void deleteById(Long id) {
         String sql = "DELETE FROM influencers WHERE influencerID = ?";
+        logger.info("Attempting to delete influencer by id {}", id);
         int deleted = jdbcTemplate.update(sql, id);
         if(deleted == 0) {
+        	logger.error("Influencer not found with id: {}", id);
             throw new RuntimeException("Failed to delete. Influencer not found with id: " + id);
         }
     }
