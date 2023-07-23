@@ -70,16 +70,16 @@ public class UserService implements UserServiceInterface {
         return user;
     }
     
-    public boolean userLogin(User user) {
+    public long userLogin(User user) {
         String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
         LOGGER.info("Logging in User: {}", user.getEmail());
         List<User> users = jdbcTemplate.query(sql, rowMapper, user.getEmail(), user.getPassword());
         if(users.isEmpty()){
             LOGGER.warn("Failed Login for User: {}", user.getEmail());
-            return false;
+            return -1;
         }
         LOGGER.info("Successful Login for User: {}", user.getEmail());
-        return true;
+        return user.getUserID();
     }
 
     public void forgotPassword(String email) {
@@ -89,7 +89,7 @@ public class UserService implements UserServiceInterface {
         LOGGER.info("Reset token generated for User: {}", email);
 
         // Send email with the reset password link. Have to change this link with hosted API 
-        String resetPasswordLink = "http://localhost:8080//api/users/reset-password?token=" + token;
+        String resetPasswordLink = "https://asdc-project-group2.onrender.com/api/users/reset-password?token=" + token;
         emailService.sendEmail(email, "Reset Password", "To reset your password, click the following link: " + resetPasswordLink);
         LOGGER.info("Password reset link sent to User: {}", email);
     }
