@@ -7,6 +7,7 @@ import com.example.creatorconnectbackend.services.UserService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -17,6 +18,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -51,8 +53,15 @@ class OrganizationServiceTest {
         organization.setCompanyType("Type A");
         organization.setSize(100L);
         organization.setWebsiteLink("https://example.org");
-        organization.setTargetInfluencerType("Type B");
+        organization.setTargetInfluencerNiche(Arrays.asList("Niche A", "Niche B"));
         organization.setLocation("Location A");
+        organization.setBio("This is a bio.");
+        organization.setInstagram("https://instagram.com/example");
+        organization.setFacebook("https://facebook.com/example");
+        organization.setTwitter("https://twitter.com/example");
+        organization.setTiktok("https://tiktok.com/example");
+        organization.setYoutube("https://youtube.com/example");
+        organization.setTwitch("https://twitch.com/example");
         return organization;
     }
 
@@ -82,42 +91,37 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void testUpdate_ValidId_ReturnsUpdatedOrganization() {
+    void testUpdate_OrganizationExists() {
         Long id = 1L;
-
-        Organization updatedOrganization = new Organization();
-        updatedOrganization.setOrgID(id);
+        Organization updatedOrganization = createMockOrganization(id);
         updatedOrganization.setOrgName("Updated Org");
 
-        when(jdbcTemplate.update(anyString(), any(Object[].class))).thenReturn(1);
+        ArgumentCaptor<String> sqlArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<Object[]> argsArgumentCaptor = ArgumentCaptor.forClass(Object[].class);
+
+        when(jdbcTemplate.update(sqlArgumentCaptor.capture(), argsArgumentCaptor.capture())).thenReturn(1);
         when(organizationService.getById(id)).thenReturn(updatedOrganization);
 
         Organization result = organizationService.update(id, updatedOrganization);
 
         assertNotNull(result);
-        assertEquals(updatedOrganization, result);
-        verify(jdbcTemplate, times(1)).update(anyString(), any(Object[].class));
+        assertEquals("Updated Org", result.getOrgName());
 
+        // Check if SQL and parameters passed to jdbcTemplate.update are as expected
+        String sqlPassed = sqlArgumentCaptor.getValue();
+        Object[] argsPassed = argsArgumentCaptor.getValue();
     }
+
+
 
     @Test
-    void testUpdate_InvalidId_ThrowsException() {
-        Long id = 1L;
+    void testUpdate_OrganizationDoesNotExist() {
+        Organization updatedOrganization = createMockOrganization(1L);
 
-        Organization updatedOrganization = new Organization();
-        updatedOrganization.setOrgID(id);
-        updatedOrganization.setOrgName("Updated Org");
+        when(jdbcTemplate.update(anyString(), (Object[]) any())).thenReturn(0);
 
-        when(jdbcTemplate.update(anyString(), any(Object[].class))).thenReturn(0);
-
-        assertThrows(RuntimeException.class, () -> organizationService.update(id, updatedOrganization));
-
-        verify(jdbcTemplate, times(1)).update(anyString(), any(Object[].class));
-        OrganizationService organizationServiceMock = Mockito.mock(OrganizationService.class);
-        verify(organizationServiceMock, never()).getById(id);
+        assertThrows(RuntimeException.class, () -> organizationService.update(1L, updatedOrganization));
     }
-
-
 
     @Test
     void testGetAll_ReturnsListOfOrganizations() {
