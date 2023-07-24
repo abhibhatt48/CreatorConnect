@@ -169,6 +169,128 @@ class ConnectionRequestServiceTest {
         verify(jdbcTemplate, times(1)).update(anyString(), any(Object[].class));
     }
 
+    @Test
+    void testGetRequestsByInfluencerID_ValidID_ReturnsListOfConnectionRequests() {
+        Long influencerID = 1L;
+
+        List<ConnectionRequest> connectionRequests = new ArrayList<>();
+        connectionRequests.add(new ConnectionRequest());
+        connectionRequests.add(new ConnectionRequest());
+
+        when(jdbcTemplate.query(anyString(), any(Object[].class), any(RowMapper.class))).thenReturn(connectionRequests);
+
+        List<ConnectionRequest> result = connectionRequestService.getRequestsByInfluencerID(influencerID);
+
+        assertNotNull(result);
+        assertEquals(connectionRequests.size(), result.size());
+        assertEquals(connectionRequests, result);
+        verify(jdbcTemplate, times(1)).query(anyString(), any(Object[].class), any(RowMapper.class));
+    }
+
+    @Test
+    void testGetRequestsByInfluencerID_InvalidID_ReturnsEmptyList() {
+        Long influencerID = 1L;
+
+        when(jdbcTemplate.query(anyString(), any(Object[].class), any(RowMapper.class))).thenThrow(EmptyResultDataAccessException.class);
+
+        List<ConnectionRequest> result = connectionRequestService.getRequestsByInfluencerID(influencerID);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(jdbcTemplate, times(1)).query(anyString(), any(Object[].class), any(RowMapper.class));
+    }
+
+    @Test
+    void testGetRequestsByOrgID_ValidID_ReturnsListOfConnectionRequests() {
+        Long orgID = 1L;
+
+        List<ConnectionRequest> connectionRequests = new ArrayList<>();
+        connectionRequests.add(new ConnectionRequest());
+        connectionRequests.add(new ConnectionRequest());
+
+        when(jdbcTemplate.query(anyString(), any(Object[].class), any(RowMapper.class))).thenReturn(connectionRequests);
+
+        List<ConnectionRequest> result = connectionRequestService.getRequestsByOrgID(orgID);
+
+        assertNotNull(result);
+        assertEquals(connectionRequests.size(), result.size());
+        assertEquals(connectionRequests, result);
+        verify(jdbcTemplate, times(1)).query(anyString(), any(Object[].class), any(RowMapper.class));
+    }
+
+    @Test
+    void testGetRequestsByOrgID_InvalidID_ReturnsEmptyList() {
+        Long orgID = 1L;
+
+        when(jdbcTemplate.query(anyString(), any(Object[].class), any(RowMapper.class))).thenThrow(EmptyResultDataAccessException.class);
+
+        List<ConnectionRequest> result = connectionRequestService.getRequestsByOrgID(orgID);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(jdbcTemplate, times(1)).query(anyString(), any(Object[].class), any(RowMapper.class));
+    }
+
+    @Test
+    void testGetRequestsByStatus_ValidParameters_ReturnsListOfConnectionRequests() {
+        Long orgID = 1L;
+        String status = "PENDING";
+
+        List<ConnectionRequest> connectionRequests = new ArrayList<>();
+        connectionRequests.add(new ConnectionRequest());
+        connectionRequests.add(new ConnectionRequest());
+
+        when(jdbcTemplate.query(anyString(), any(Object[].class), any(RowMapper.class))).thenReturn(connectionRequests);
+
+        List<ConnectionRequest> result = connectionRequestService.getRequestsByStatus(orgID, status);
+
+        assertNotNull(result);
+        assertEquals(connectionRequests.size(), result.size());
+        assertEquals(connectionRequests, result);
+        verify(jdbcTemplate, times(1)).query(anyString(), any(Object[].class), any(RowMapper.class));
+    }
+
+    @Test
+    void testGetRequestsByStatus_InvalidParameters_ReturnsEmptyList() {
+        Long orgID = 1L;
+        String status = "PENDING";
+
+        when(jdbcTemplate.query(anyString(), any(Object[].class), any(RowMapper.class))).thenThrow(EmptyResultDataAccessException.class);
+
+        List<ConnectionRequest> result = connectionRequestService.getRequestsByStatus(orgID, status);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(jdbcTemplate, times(1)).query(anyString(), any(Object[].class), any(RowMapper.class));
+    }
+
+    @Test
+    void testGetAllRequests_ReturnsListOfConnectionRequests() {
+        List<ConnectionRequest> connectionRequests = new ArrayList<>();
+        connectionRequests.add(new ConnectionRequest());
+        connectionRequests.add(new ConnectionRequest());
+
+        when(jdbcTemplate.query(anyString(), any(Object[].class), any(RowMapper.class))).thenReturn(connectionRequests);
+
+        List<ConnectionRequest> result = connectionRequestService.getAllRequests();
+
+        assertNotNull(result);
+        assertEquals(connectionRequests.size(), result.size());
+        assertEquals(connectionRequests, result);
+        verify(jdbcTemplate, times(1)).query(anyString(), any(Object[].class), any(RowMapper.class));
+    }
+
+    @Test
+    void testGetAllRequests_ReturnsEmptyList() {
+        when(jdbcTemplate.query(anyString(), any(Object[].class), any(RowMapper.class))).thenThrow(EmptyResultDataAccessException.class);
+
+        List<ConnectionRequest> result = connectionRequestService.getAllRequests();
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(jdbcTemplate, times(1)).query(anyString(), any(Object[].class), any(RowMapper.class));
+    }
+
 
     @Test
     void testDeleteByID_ValidID_DeletesConnectionRequest() {
