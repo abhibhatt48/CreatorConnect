@@ -72,6 +72,20 @@ public class ConnectionRequestController {
         return ResponseEntity.ok(requests);
     }
 
+    @GetMapping("/organization/{orgID}/status/{status}")
+    public ResponseEntity<List<ConnectionRequest>> getRequestsByStatus(@PathVariable("orgID") Long orgID, @PathVariable("status") String status) {
+        List<ConnectionRequest> requests = connectionRequestService.getRequestsByStatus(orgID, status);
+        return ResponseEntity.ok(requests);
+    }
+
+
+    @GetMapping("/getAll")
+    public List<ConnectionRequest> getAllRequests() {
+        List<ConnectionRequest> allRequests = connectionRequestService.getAllRequests();
+        return ResponseEntity.ok(allRequests).getBody();
+    }
+
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteByID(@PathVariable("id") Long id) {
     	logger.info("Deleting connection request with ID: {}", id);
