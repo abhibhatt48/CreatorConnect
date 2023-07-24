@@ -145,6 +145,42 @@ class ConnectionRequestControllerTests {
     }
 
     @Test
+    void testGetRequestsByStatus_ValidOrganizationIdAndStatus_ReturnsConnectionRequests() {
+        // Prepare the expected connection requests
+        List<ConnectionRequest> requests = Arrays.asList(mock(ConnectionRequest.class), mock(ConnectionRequest.class));
+
+        // Configure the mock service to return the connection requests
+        when(connectionRequestService.getRequestsByStatus(1L, "Pending")).thenReturn(requests);
+
+        // Invoke the getRequestsByStatus method
+        ResponseEntity<List<ConnectionRequest>> response = connectionRequestController.getRequestsByStatus(1L, "Pending");
+
+        // Verify that the service method was called
+        verify(connectionRequestService).getRequestsByStatus(1L, "Pending");
+
+        // Verify the response status code and body
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(requests, response.getBody());
+    }
+
+    @Test
+    void testGetAllRequests_ValidRequest_ReturnsAllConnectionRequests() {
+        // Prepare the expected connection requests
+        List<ConnectionRequest> requests = Arrays.asList(mock(ConnectionRequest.class), mock(ConnectionRequest.class));
+
+        // Configure the mock service to return the connection requests
+        when(connectionRequestService.getAllRequests()).thenReturn(requests);
+
+        // Invoke the getAllRequests method
+        List<ConnectionRequest> response = connectionRequestController.getAllRequests();
+
+        // Verify that the service method was called
+        verify(connectionRequestService).getAllRequests();
+
+        // Verify the response body
+        assertEquals(requests, response);
+    }
+    @Test
     void testDeleteByID_ValidRequestId_ReturnsNoContent() {
         // Invoke the deleteByID method
         ResponseEntity<String> response = connectionRequestController.deleteByID(1L);

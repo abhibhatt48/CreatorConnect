@@ -107,6 +107,26 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
+    public List<ConnectionRequest> getRequestsByStatus(Long orgID, String status) {
+        String query = "SELECT * FROM connection_requests WHERE OrgID = ? AND RequestStatus = ?";
+        try {
+            return jdbcTemplate.query(query, new Object[]{orgID, status}, rowMapper);
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+
+    public List<ConnectionRequest> getAllRequests() {
+        String query = "SELECT * FROM connection_requests";
+        try {
+            return jdbcTemplate.query(query, new Object[]{}, rowMapper);
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+
     public void deleteByID(Long id) {
         String query = "DELETE FROM connection_requests WHERE RequestID = ?";
         logger.info("Deleting connection request with ID: {}", id);
