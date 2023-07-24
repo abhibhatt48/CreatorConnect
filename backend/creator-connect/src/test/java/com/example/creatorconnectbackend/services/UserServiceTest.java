@@ -126,6 +126,7 @@ public class UserServiceTest {
         User user = new User();
         user.setEmail("test@example.com");
         user.setPassword("password");
+        user.setUserID(1L); // Assuming this is a valid user ID
 
         List<User> users = new ArrayList<>();
         users.add(user);
@@ -133,9 +134,9 @@ public class UserServiceTest {
         when(jdbcTemplate.query(any(String.class), any(RowMapper.class), any(String.class), any(String.class)))
                 .thenReturn(users);
 
-        boolean loggedIn = userService.userLogin(user);
+        long userID = userService.userLogin(user);
 
-        assertTrue(loggedIn);
+        assertEquals(user.getUserID(), userID); // We expect the user's ID to be returned
 
         verify(jdbcTemplate).query(any(String.class), any(RowMapper.class), any(String.class), any(String.class));
         reset(jdbcTemplate);
@@ -145,9 +146,9 @@ public class UserServiceTest {
         when(jdbcTemplate.query(any(String.class), any(RowMapper.class), any(String.class), any(String.class)))
                 .thenReturn(emptyUsers);
 
-        loggedIn = userService.userLogin(user);
+        userID = userService.userLogin(user);
 
-        assertFalse(loggedIn);
+        assertEquals(-1, userID); // We expect -1 to be returned when login fails
         
         verify(jdbcTemplate).query(any(String.class), any(RowMapper.class), any(String.class), any(String.class));
     }
