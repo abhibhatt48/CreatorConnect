@@ -44,6 +44,13 @@ public class OrganizationService implements OrganizationServiceInterface {
         organization.setWebsiteLink(rs.getString("websiteLink"));
         organization.setTargetInfluencerNiche(new ArrayList<>(Arrays.asList(rs.getString("targetInfluencerNiche").split(","))));
         organization.setLocation(rs.getString("location"));
+        organization.setBio(rs.getString("bio"));
+        organization.setInstagram(rs.getString("instagram"));
+        organization.setFacebook(rs.getString("facebook"));
+        organization.setTwitter(rs.getString("twitter"));
+        organization.setTiktok(rs.getString("tiktok"));
+        organization.setYoutube(rs.getString("youtube"));
+        organization.setTwitch(rs.getString("twitch"));
         return organization;
     };
 

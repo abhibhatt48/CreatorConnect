@@ -79,7 +79,7 @@ public class UserService implements UserServiceInterface {
             return -1;
         }
         LOGGER.info("Successful Login for User: {}", user.getEmail());
-        return user.getUserID();
+        return users.get(0).getUserID();
     }
 
     public void forgotPassword(String email) {
