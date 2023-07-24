@@ -107,6 +107,44 @@ class ConnectionRequestControllerTests {
     }
 
     @Test
+    void testGetRequestsByInfluencerID_ValidInfluencerId_ReturnsConnectionRequests() {
+        // Prepare the expected connection requests
+        List<ConnectionRequest> requests = Arrays.asList(mock(ConnectionRequest.class), mock(ConnectionRequest.class));
+
+        // Configure the mock service to return the connection requests
+        when(connectionRequestService.getRequestsByInfluencerID(1L)).thenReturn(requests);
+
+        // Invoke the getRequestsByInfluencerID method
+        ResponseEntity<List<ConnectionRequest>> response = connectionRequestController.getRequestsByInfluencerID(1L);
+
+        // Verify that the service method was called
+        verify(connectionRequestService).getRequestsByInfluencerID(1L);
+
+        // Verify the response status code and body
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(requests, response.getBody());
+    }
+
+    @Test
+    void testGetRequestsByOrganizationID_ValidOrganizationId_ReturnsConnectionRequests() {
+        // Prepare the expected connection requests
+        List<ConnectionRequest> requests = Arrays.asList(mock(ConnectionRequest.class), mock(ConnectionRequest.class));
+
+        // Configure the mock service to return the connection requests
+        when(connectionRequestService.getRequestsByOrgID(1L)).thenReturn(requests);
+
+        // Invoke the getRequestsByOrganizationID method
+        ResponseEntity<List<ConnectionRequest>> response = connectionRequestController.getRequestsByOrganizationID(1L);
+
+        // Verify that the service method was called
+        verify(connectionRequestService).getRequestsByOrgID(1L);
+
+        // Verify the response status code and body
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(requests, response.getBody());
+    }
+
+    @Test
     void testDeleteByID_ValidRequestId_ReturnsNoContent() {
         // Invoke the deleteByID method
         ResponseEntity<String> response = connectionRequestController.deleteByID(1L);
