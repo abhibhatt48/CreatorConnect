@@ -1,5 +1,6 @@
 package com.example.creatorconnectbackend.services;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,11 +46,19 @@ public class InfluencerService implements InfluencerServiceInterface {
         influencer.setGender(Gender.valueOf(rs.getString("gender")));
         influencer.setInfluencerName(rs.getString("influencerName"));
         influencer.setInfluencerType(rs.getString("influencerType"));
-        influencer.setInterestedIn(rs.getString("interestedIn"));
+        influencer.setInfluencerNiche(Arrays.asList(rs.getString("influencerNiche").split(",")));
         influencer.setMinRate(rs.getLong("minRate"));
         influencer.setPreviousBrands(rs.getString("previousBrands"));
         influencer.setLocation(rs.getString("location"));
-        influencer.setBestPosts(rs.getString("bestPosts"));
+        influencer.setBio(rs.getString("bio"));
+        influencer.setBirthdate(rs.getDate("birthdate").toLocalDate());
+        influencer.setInstagram(rs.getString("instagram"));
+        influencer.setTikTok(rs.getString("tikTok"));
+        influencer.setTweeter(rs.getString("tweeter"));
+        influencer.setYoutube(rs.getString("youtube"));
+        influencer.setFacebook(rs.getString("facebook"));
+        influencer.setTwitch(rs.getString("twitch"));
+        influencer.setBestPosts(Arrays.asList(rs.getString("bestPosts").split(",")));
         return influencer;
     };
 
@@ -71,11 +80,19 @@ public class InfluencerService implements InfluencerServiceInterface {
             parameters.put("gender", influencer.getGender());
             parameters.put("InfluencerName", influencer.getInfluencerName());
             parameters.put("InfluencerType", influencer.getInfluencerType());
-            parameters.put("InterestedIn", influencer.getInterestedIn());
+            parameters.put("InfluencerNiche", String.join(",", influencer.getInfluencerNiche()));
             parameters.put("MinRate", influencer.getMinRate());
             parameters.put("PreviousBrands", influencer.getPreviousBrands());
             parameters.put("Location", influencer.getLocation());
-            parameters.put("BestPosts", influencer.getBestPosts());
+            parameters.put("Bio", influencer.getBio());
+            parameters.put("Birthdate", influencer.getBirthdate());
+            parameters.put("Instagram", influencer.getInstagram());
+            parameters.put("TikTok", influencer.getTikTok());
+            parameters.put("Tweeter", influencer.getTweeter());
+            parameters.put("Youtube", influencer.getYoutube());
+            parameters.put("Facebook", influencer.getFacebook());
+            parameters.put("Twitch", influencer.getTwitch());
+            parameters.put("BestPosts", String.join(",", influencer.getBestPosts()));
 
             jdbcInsert.execute(parameters);
 
@@ -98,9 +115,11 @@ public class InfluencerService implements InfluencerServiceInterface {
     }
 
     public Influencer update(Long id, Influencer updatedInfluencer) {
-        String sql = "UPDATE influencers SET name = ?, profileImage = ?, gender = ?, influencerName = ?, influencerType = ?, interestedIn = ?, minRate = ?, previousBrands = ?, location = ?, bestPosts = ? WHERE influencerID = ?";
+    	String sql = "UPDATE influencers SET name = ?, profileImage = ?, gender = ?, influencerName = ?, influencerType = ?, influencerNiche = ?, minRate = ?, previousBrands = ?, location = ?, bestPosts = ?, bio = ?, birthdate = ?, instagram = ?, tikTok = ?, tweeter = ?, youtube = ?, facebook = ?, twitch = ? WHERE influencerID = ?";
+
         logger.info("Attempting to update influencer with id {}", id);
-        int updated = jdbcTemplate.update(sql, updatedInfluencer.getName(), updatedInfluencer.getProfileImage(), updatedInfluencer.getGender().name(), updatedInfluencer.getInfluencerName(), updatedInfluencer.getInfluencerType(), updatedInfluencer.getInterestedIn(), updatedInfluencer.getMinRate(), updatedInfluencer.getPreviousBrands(), updatedInfluencer.getLocation(), updatedInfluencer.getBestPosts(), id);
+        int updated = jdbcTemplate.update(sql, updatedInfluencer.getName(), updatedInfluencer.getProfileImage(), updatedInfluencer.getGender().name(), updatedInfluencer.getInfluencerName(), updatedInfluencer.getInfluencerType(), String.join(",", updatedInfluencer.getInfluencerNiche()), updatedInfluencer.getMinRate(), updatedInfluencer.getPreviousBrands(), updatedInfluencer.getLocation(), String.join(",", updatedInfluencer.getBestPosts()), updatedInfluencer.getBio(), updatedInfluencer.getBirthdate(), updatedInfluencer.getInstagram(), updatedInfluencer.getTikTok(), updatedInfluencer.getTweeter(), updatedInfluencer.getYoutube(), updatedInfluencer.getFacebook(), updatedInfluencer.getTwitch(), id);
+
         if(updated == 0) {
         	logger.error("Influencer not found with id: {}", id);
             throw new RuntimeException("Failed to update. Influencer not found with id: " + id);
