@@ -52,7 +52,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<String> loginUser(@Valid @RequestBody User user, BindingResult bindingResult) {
+	public ResponseEntity<?> loginUser(@Valid @RequestBody User user, BindingResult bindingResult) {
 		logger.info("Attempt to login user.");
 	    if(bindingResult.hasErrors()){
 	        // convert the list of ObjectError objects into a single string
@@ -62,9 +62,14 @@ public class UserController {
 
 	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMsg);
 	    }
-	    boolean loggedIn = userService.userLogin(user);
-	    logger.info("User login {}", loggedIn ? "successful" : "failed");
-	    return loggedIn ? ResponseEntity.ok("Logged in successfully") : ResponseEntity.badRequest().build();
+	    long userId = userService.userLogin(user);
+	    if (userId == -1) {
+	        logger.info("User login failed");
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+	    } else {
+	        logger.info("User login successful");
+	        return ResponseEntity.ok(userId);
+	    }
 	}
 
 	@PostMapping("/forgot-password")

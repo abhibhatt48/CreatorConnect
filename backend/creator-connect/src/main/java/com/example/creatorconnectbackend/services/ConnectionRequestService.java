@@ -13,7 +13,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -85,6 +87,43 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
             throw new RuntimeException("Could not update the status of requestID: " + id);
         }
         return getConnectionRequestByID(id);
+    }
+
+    public List<ConnectionRequest> getRequestsByInfluencerID(Long id) {
+        String query = "SELECT * FROM connection_requests WHERE InfluencerID = ?";
+        try {
+            return jdbcTemplate.query(query, new Object[]{id}, rowMapper);
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<ConnectionRequest> getRequestsByOrgID(Long orgID) {
+        String query = "SELECT * FROM connection_requests WHERE OrgID = ?";
+        try {
+            return jdbcTemplate.query(query, new Object[]{orgID}, rowMapper);
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<ConnectionRequest> getRequestsByStatus(Long orgID, String status) {
+        String query = "SELECT * FROM connection_requests WHERE OrgID = ? AND RequestStatus = ?";
+        try {
+            return jdbcTemplate.query(query, new Object[]{orgID, status}, rowMapper);
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+
+    public List<ConnectionRequest> getAllRequests() {
+        String query = "SELECT * FROM connection_requests";
+        try {
+            return jdbcTemplate.query(query, new Object[]{}, rowMapper);
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
     }
 
 

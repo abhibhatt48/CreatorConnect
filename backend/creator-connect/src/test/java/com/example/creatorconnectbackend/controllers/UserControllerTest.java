@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.example.creatorconnectbackend.models.EmailBody;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,13 +69,14 @@ public class UserControllerTest {
     @Test
     public void testLoginUserValid() {
         User user = new User();
+        user.setUserID(1L);
         when(bindingResult.hasErrors()).thenReturn(false);
-        when(userService.userLogin(user)).thenReturn(true);
+        when(userService.userLogin(user)).thenReturn(user.getUserID());
 
-        ResponseEntity<String> response = userController.loginUser(user, bindingResult);
+        ResponseEntity<?> response = userController.loginUser(user, bindingResult);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Logged in successfully", response.getBody());
+        assertEquals(user.getUserID(), response.getBody());
     }
 
     @Test
@@ -86,10 +88,13 @@ public class UserControllerTest {
         when(bindingResult.hasErrors()).thenReturn(true);
         when(bindingResult.getAllErrors()).thenReturn(errors);
 
-        ResponseEntity<String> response = userController.loginUser(user, bindingResult);
+        ResponseEntity<?> response = userController.loginUser(user, bindingResult);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Email is required, Password is required", response.getBody());
+        String errorMsg = errors.stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(", "));
+        assertEquals(errorMsg, response.getBody());
     }
 
     @Test
@@ -97,12 +102,14 @@ public class UserControllerTest {
         User user = new User();
         user.setEmail("test@example.com");
         user.setPassword("password");
-        
-        when(userService.userLogin(user)).thenReturn(false);
 
-        ResponseEntity<String> response = userController.loginUser(user, bindingResult);
+        when(bindingResult.hasErrors()).thenReturn(false);
+        when(userService.userLogin(user)).thenReturn(-1L);
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        ResponseEntity<?> response = userController.loginUser(user, bindingResult);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        assertEquals("Invalid email or password", response.getBody());
     }
     
     @Test

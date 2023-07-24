@@ -1,5 +1,7 @@
 package com.example.creatorconnectbackend.services;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +42,7 @@ public class OrganizationService implements OrganizationServiceInterface {
         organization.setCompanyType(rs.getString("companyType"));
         organization.setSize(rs.getLong("size"));
         organization.setWebsiteLink(rs.getString("websiteLink"));
-        organization.setTargetInfluencerType(rs.getString("targetInfluencerType"));
+        organization.setTargetInfluencerNiche(new ArrayList<>(Arrays.asList(rs.getString("targetInfluencerNiche").split(","))));
         organization.setLocation(rs.getString("location"));
         return organization;
     };
@@ -61,8 +63,15 @@ public class OrganizationService implements OrganizationServiceInterface {
             parameters.put("companyType", organization.getCompanyType());
             parameters.put("size", organization.getSize());
             parameters.put("websiteLink", organization.getWebsiteLink());
-            parameters.put("targetInfluencerType", organization.getTargetInfluencerType());
             parameters.put("location", organization.getLocation());
+            parameters.put("targetInfluencerNiche", String.join(",", organization.getTargetInfluencerNiche()));
+            parameters.put("bio", organization.getBio());
+            parameters.put("instagram", organization.getInstagram());
+            parameters.put("facebook", organization.getFacebook());
+            parameters.put("twitter", organization.getTwitter());
+            parameters.put("tiktok", organization.getTiktok());
+            parameters.put("youtube", organization.getYoutube());
+            parameters.put("twitch", organization.getTwitch());
             
             jdbcInsert.execute(parameters);
             
@@ -85,9 +94,10 @@ public class OrganizationService implements OrganizationServiceInterface {
     }
 
     public Organization update(Long id, Organization updatedOrganization) {
-        String sql = "UPDATE organizations SET orgName = ?, profileImage = ?, companyType = ?, size = ?, websiteLink = ?, targetInfluencerType = ?, location = ? WHERE orgID = ?";
+    	String sql = "UPDATE organizations SET orgName = ?, profileImage = ?, companyType = ?, size = ?, websiteLink = ?, targetInfluencerNiche = ?, location = ?, bio = ?, instagram = ?, facebook = ?, twitter = ?, tiktok = ?, youtube = ?, twitch = ? WHERE orgID = ?";
         logger.info("Attempting to update organization with id {}", id);
-        int updated = jdbcTemplate.update(sql, updatedOrganization.getOrgName(), updatedOrganization.getProfileImage(), updatedOrganization.getCompanyType(), updatedOrganization.getSize(), updatedOrganization.getWebsiteLink(), updatedOrganization.getTargetInfluencerType(), updatedOrganization.getLocation(), id);
+        int updated = jdbcTemplate.update(sql, updatedOrganization.getOrgName(), updatedOrganization.getProfileImage(), updatedOrganization.getCompanyType(), updatedOrganization.getSize(), updatedOrganization.getWebsiteLink(), String.join(",", updatedOrganization.getTargetInfluencerNiche()), updatedOrganization.getLocation(), updatedOrganization.getBio(), updatedOrganization.getInstagram(), updatedOrganization.getFacebook(), updatedOrganization.getTwitter(), updatedOrganization.getTiktok(), updatedOrganization.getYoutube(), updatedOrganization.getTwitch(), id);
+
         if(updated == 0) {
         	logger.error("Organization not found with id: {}", id);
             throw new RuntimeException("Failed to update. Organization not found with id: " + id);

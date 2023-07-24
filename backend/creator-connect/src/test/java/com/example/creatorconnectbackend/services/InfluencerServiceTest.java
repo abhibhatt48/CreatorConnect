@@ -17,7 +17,9 @@ import static org.mockito.Mockito.when;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +36,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import com.example.creatorconnectbackend.models.Gender;
 import com.example.creatorconnectbackend.models.Influencer;
 import com.example.creatorconnectbackend.models.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 class InfluencerServiceTest {
 	
@@ -62,11 +65,20 @@ class InfluencerServiceTest {
         influencer.setGender(Gender.MALE);
         influencer.setInfluencerName("John Doe");
         influencer.setInfluencerType("Fashion");
-        influencer.setInterestedIn("Fashion, Beauty, Travel");
         influencer.setMinRate(1000L);
         influencer.setPreviousBrands("Nike, Adidas, Apple");
         influencer.setLocation("Los Angeles");
-        influencer.setBestPosts("https://example.com/post-1.jpg, https://example.com/post-2.jpg");
+        influencer.setBio("A dedicated influencer in the fashion industry.");
+        influencer.setBirthdate(LocalDate.of(1992, 1, 1));
+        influencer.setInstagram("john_doe");
+        influencer.setTikTok("john_doe");
+        influencer.setTweeter("john_doe");
+        influencer.setYoutube("john_doe");
+        influencer.setFacebook("john_doe");
+        influencer.setTwitch("john_doe");
+        influencer.setInfluencerNiche(Arrays.asList("Fashion", "Sports", "Tech"));
+        influencer.setBestPosts(Arrays.asList("Post1", "Post2", "Post3"));
+        
         return influencer;
     }
     

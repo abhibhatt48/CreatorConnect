@@ -60,11 +60,37 @@ public class ConnectionRequestController {
         }
     }
 
+    @GetMapping("/influencer/getByID/{id}")
+    public ResponseEntity<List<ConnectionRequest>> getRequestsByInfluencerID(@PathVariable("id") Long influencerID) {
+        List<ConnectionRequest> requests = connectionRequestService.getRequestsByInfluencerID(influencerID);
+        return ResponseEntity.ok(requests);
+    }
+
+    @GetMapping("/organization/getByID/{id}")
+    public ResponseEntity<List<ConnectionRequest>> getRequestsByOrganizationID(@PathVariable("id") Long orgID) {
+        List<ConnectionRequest> requests = connectionRequestService.getRequestsByOrgID(orgID);
+        return ResponseEntity.ok(requests);
+    }
+
+    @GetMapping("/organization/{orgID}/status/{status}")
+    public ResponseEntity<List<ConnectionRequest>> getRequestsByStatus(@PathVariable("orgID") Long orgID, @PathVariable("status") String status) {
+        List<ConnectionRequest> requests = connectionRequestService.getRequestsByStatus(orgID, status);
+        return ResponseEntity.ok(requests);
+    }
+
+
+    @GetMapping("/getAll")
+    public List<ConnectionRequest> getAllRequests() {
+        List<ConnectionRequest> allRequests = connectionRequestService.getAllRequests();
+        return ResponseEntity.ok(allRequests).getBody();
+    }
+
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteByID(@PathVariable("id") Long id) {
     	logger.info("Deleting connection request with ID: {}", id);
         connectionRequestService.deleteByID(id);
-        logger.info("Deleted connection request with ID: {}", id);
+        logger.info("Deleted connection request with ID: {}",    id);
         return ResponseEntity.noContent().build();
     }
 
