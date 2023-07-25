@@ -29,7 +29,7 @@ export default function RecommendedInfluencerCardlexGrid() {
         <Grid item sx={{ height: "150px" }}>
           <Img
             alt="complex"
-            src="https://images.pexels.com/photos/12432832/pexels-photo-12432832.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            src="https://images.pexels.com/photos/8691641/pexels-photo-8691641.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
           />
         </Grid>
         <Container>
