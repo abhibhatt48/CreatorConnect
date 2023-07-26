@@ -1,12 +1,16 @@
 package com.example.creatorconnectbackend.controllers;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +36,16 @@ public class InfluencerController {
     }
 
     @PostMapping("/register/{userId}")
-    public ResponseEntity<Influencer> registerInfluencer(@PathVariable Long userId, @RequestBody Influencer influencer) {
+    public ResponseEntity<?> registerInfluencer(@PathVariable Long userId, @RequestBody Influencer influencer, BindingResult bindingResult) {
+    	if (bindingResult.hasErrors()) {
+            logger.error("Validation errors while registering influencer by user with ID: {}", userId);
+
+            // Collect all the error messages in a map and send it as response
+            Map<String, String> errors = bindingResult.getFieldErrors().stream()
+                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
+            
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        }
     	logger.info("Attempt to register new influencer by user with ID: {}", userId);
         Influencer registeredInfluencer = influencerService.register(influencer, userId);
         logger.info("Influencer registered successfully with ID: {}", registeredInfluencer.getInfluencerID());
@@ -47,7 +60,16 @@ public class InfluencerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Influencer> updateInfluencer(@PathVariable("id") Long id, @RequestBody Influencer updatedInfluencer) {
+    public ResponseEntity<?> updateInfluencer(@PathVariable("id") Long id, @RequestBody Influencer updatedInfluencer, BindingResult bindingResult) {
+    	if (bindingResult.hasErrors()) {
+            logger.error("Validation errors while updating influencer with ID: {}", id);
+
+            // Collect all the error messages in a map and send it as response
+            Map<String, String> errors = bindingResult.getFieldErrors().stream()
+                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
+
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        }
     	logger.info("Attempt to update influencer with ID: {}", id);
         Influencer influencer = influencerService.update(id, updatedInfluencer);
         logger.info("Influencer with ID: {} updated successfully", id);

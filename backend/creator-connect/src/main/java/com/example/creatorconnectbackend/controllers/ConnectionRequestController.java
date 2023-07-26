@@ -9,11 +9,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/connectionReq")
@@ -28,7 +31,12 @@ public class ConnectionRequestController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ConnectionRequest> createRequest(@Valid @RequestBody ConnectionRequest connectionRequest) {
+    public ResponseEntity<?> createRequest(@Valid @RequestBody ConnectionRequest connectionRequest, BindingResult bindingResult) {
+    	if (bindingResult.hasErrors()) {
+            logger.info("Validation errors while creating connection request");
+            List<String> errors = bindingResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.toList());
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+        }
     	logger.info("Creating new connection request");
         ConnectionRequest createdRequest = connectionRequestService.createRequest(connectionRequest);
         logger.info("Created connection request with ID: {}", createdRequest.getRequestID());
