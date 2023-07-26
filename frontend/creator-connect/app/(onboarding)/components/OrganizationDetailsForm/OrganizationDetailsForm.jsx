@@ -1,22 +1,22 @@
 "use client";
 
 import React from "react";
-import styles from "./InfluencerDetailsForm.module.css";
+import styles from "./OrganizationDetailsForm.module.css";
 import { Grid } from "@mui/material";
-import { useInfluencerDetailsForm } from "./useInfluencerDetailsForm";
+import { useOrganizationDetailsForm } from "./useOrganizationDetailsForm";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import FacebookIcon from "@mui/icons-material/Facebook";
 
-export const InfluencerDetailsForm = () => {
+export const OrganizationDetailsForm = () => {
   const {
     influencerNicheList,
     handleSelect,
     filterSelected,
     selectedNiches,
     setSelectedNiches,
-  } = useInfluencerDetailsForm();
+  } = useOrganizationDetailsForm();
 
   return (
     <Grid
@@ -25,6 +25,7 @@ export const InfluencerDetailsForm = () => {
         display: "flex",
         flexDirection: "column",
         width: "60%",
+        overflow: "scroll",
       }}
     >
       <div style={{ display: "flex", flexDirection: "column" }}>
@@ -37,7 +38,7 @@ export const InfluencerDetailsForm = () => {
               textAlign: "left",
             }}
           >
-            Select the type of creators you are interested in
+            Select your niche
           </p>
           <p style={{ textAlign: "left", marginTop: "5px" }}>
             Select all that apply
@@ -167,22 +168,32 @@ export const InfluencerDetailsForm = () => {
             />
           </div>
         </Grid>
-
-        <select className={styles.input} style={{ marginTop: "2rem" }}>
-          <option value="" selected disabled hidden>
-            Choose Organization Industry
-          </option>
-          <option value="FoodManufacturing">Food Manufacturing</option>
-          <option value="Construction">Construction</option>
-          <option value="InformationTechnology">Information Technology</option>
-          <option value="Healthcare">Healthcare</option>
-          <option value="Automotive">Automotive</option>
-          <option value="Retail">Retail</option>
-          <option value="Finance">Finance</option>
-          <option value="Education">Education</option>
-          <option value="Energy">Energy</option>
-          <option value="Transportation">Transportation</option>
-        </select>
+        <Grid style={{ display: "flex", marginTop: "20px" }}>
+          <div>
+            <div style={{ alignSelf: "flex-start" }}>
+              <p
+                style={{
+                  fontSize: "20px",
+                  color: "#222aef",
+                  fontWeight: "bold",
+                  textAlign: "left",
+                }}
+              >
+                Minimum rate (Optional)
+              </p>
+              <p style={{ textAlign: "left", marginTop: "5px" }}>
+                Enter the minimum compensation you are willing to accept for
+                your promotional services
+              </p>
+            </div>
+          </div>
+          <input
+            className={styles.input}
+            type={"number"}
+            placeholder="$"
+            style={{ width: "100%", height: "80px", fontSize: "40px" }}
+          />
+        </Grid>
       </div>
       <button className={styles.button}>Next</button>
     </Grid>
