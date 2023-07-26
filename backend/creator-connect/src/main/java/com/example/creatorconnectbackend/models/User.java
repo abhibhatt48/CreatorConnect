@@ -3,12 +3,11 @@ package com.example.creatorconnectbackend.models;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.Email;
 
 public class User {
 
 	private Long userID;	
-	@Email(message = "Email should be valid")
+	@Pattern(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "Email should be valid")
     private String email;
 	@Size(min = 8, message = "Password should have at least 8 characters")
     private String password;
