@@ -24,8 +24,6 @@ public class UserService implements UserServiceInterface {
     
     private final JdbcTemplate jdbcTemplate;
     private final EmailService emailService;
-    private static final SecureRandom RANDOM = new SecureRandom();
-    private static final int OTP_LENGTH = 6;
     
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
@@ -73,7 +71,11 @@ public class UserService implements UserServiceInterface {
     public long userLogin(User user) {
         String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
         LOGGER.info("Logging in User: {}", user.getEmail());
-        List<User> users = jdbcTemplate.query(sql, rowMapper, user.getEmail(), user.getPassword());
+        
+        List<User> users = jdbcTemplate.query(sql, rowMapper, 
+        		user.getEmail(), 
+        		user.getPassword());
+        
         if(users.isEmpty()){
             LOGGER.warn("Failed Login for User: {}", user.getEmail());
             return -1;
@@ -85,11 +87,13 @@ public class UserService implements UserServiceInterface {
     public void forgotPassword(String email) {
         String token = UUID.randomUUID().toString();
         String sql = "UPDATE users SET reset_token = ? WHERE email = ?";
+        
         jdbcTemplate.update(sql, token, email);
         LOGGER.info("Reset token generated for User: {}", email);
 
         // Send email with the reset password link. Have to change this link with hosted API 
         String resetPasswordLink = "https://asdc-project-group2.onrender.com/api/users/reset-password?token=" + token;
+        
         emailService.sendEmail(email, "Reset Password", "To reset your password, click the following link: " + resetPasswordLink);
         LOGGER.info("Password reset link sent to User: {}", email);
     }

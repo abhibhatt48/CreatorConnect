@@ -1,11 +1,16 @@
 package com.example.creatorconnectbackend.models;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class ConnectionRequest {
 
 	private Long requestID;
     private Long orgID;
     private Long influencerID;
+    @Size(max = 500)
     private String requestMessage;
+    @NotNull
     private RequestStatus requestStatus;
 	public Long getRequestID() {
 		return requestID;
