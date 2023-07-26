@@ -16,6 +16,16 @@ export const InfluencerDetailsForm = () => {
     filterSelected,
     selectedNiches,
     setSelectedNiches,
+    instagramUrl,
+    setInstagramUrl,
+    twitterUrl,
+    setTwitterUrl,
+    youtubeUrl,
+    setYoutubeUrl,
+    facebookUrl,
+    setFacebookUrl,
+    industry,
+    setIndustry,
   } = useInfluencerDetailsForm();
 
   return (
@@ -119,6 +129,8 @@ export const InfluencerDetailsForm = () => {
               className={styles.input}
               placeholder="URL"
               style={{ width: "90%" }}
+              value={instagramUrl}
+              onChange={(e) => setInstagramUrl(e.target.value)}
             />
           </div>
           <div
@@ -134,6 +146,8 @@ export const InfluencerDetailsForm = () => {
               className={styles.input}
               placeholder="URL"
               style={{ width: "90%" }}
+              value={twitterUrl}
+              onChange={(e) => setTwitterUrl(e.target.value)}
             />
           </div>
           <div
@@ -149,6 +163,8 @@ export const InfluencerDetailsForm = () => {
               className={styles.input}
               placeholder="URL"
               style={{ width: "90%" }}
+              value={youtubeUrl}
+              onChange={(e) => setYoutubeUrl(e.target.value)}
             />
           </div>
           <div
@@ -164,11 +180,18 @@ export const InfluencerDetailsForm = () => {
               className={styles.input}
               placeholder="URL"
               style={{ width: "90%" }}
+              value={facebookUrl}
+              onChange={(e) => setFacebookUrl(e.target.value)}
             />
           </div>
         </Grid>
 
-        <select className={styles.input} style={{ marginTop: "2rem" }}>
+        <select
+          className={styles.input}
+          style={{ marginTop: "2rem" }}
+          value={industry}
+          onChange={(e) => setIndustry(e.target.value)}
+        >
           <option value="" selected disabled hidden>
             Choose Organization Industry
           </option>

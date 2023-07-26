@@ -9,17 +9,32 @@ import styles from "./SignupBox.module.css";
 import { useSignupBox } from "./useSignupBox";
 
 export const SignupBox = () => {
-  const { accountType, setAccountType } = useSignupBox();
+  const {
+    accountType,
+    setAccountType,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    handleSignup,
+  } = useSignupBox();
 
   return (
     <div className={styles.container}>
       <Grid container direction={"column"} gap={2}>
         <p className={styles.title}>Signup</p>
-        <input className={styles.input} placeholder="email" />
+        <input
+          className={styles.input}
+          placeholder="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <input
           className={styles.input}
           placeholder="password"
           type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <div className={styles.accountContainer}>
           <div
@@ -53,7 +68,9 @@ export const SignupBox = () => {
             <p>Organisation</p>
           </div>
         </div>
-        <button className={styles.button}>Create Account</button>
+        <button className={styles.button} onClick={handleSignup}>
+          Create Account
+        </button>
         <div className={styles.linkContainer}>
           <p>Already a member?</p>
           <Link href="/login" className={styles.linkText}>

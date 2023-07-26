@@ -1,24 +1,23 @@
 import { useRouter } from "next/navigation";
-const { useState } = require("react");
+import { useState } from "react";
 
-export const useSignupBox = () => {
-  const [accountType, setAccountType] = useState("Influencer");
+export const useLoginBox = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleSignup = async () => {
-    const signupData = {
+  const handleSignin = async () => {
+    const signinData = {
       email,
       password,
-      user_type: accountType,
     };
 
     try {
       const res = await fetch(
-        "https://asdc-project-group2.onrender.com/api/users/register",
+        "https://asdc-project-group2.onrender.com/api/users/login",
         {
           method: "POST", // *GET, POST, PUT, DELETE, etc.
+
           mode: "cors", // no-cors, *cors, same-origin
           // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
           // credentials: "same-origin", // include, *same-origin, omit
@@ -28,10 +27,12 @@ export const useSignupBox = () => {
           },
           // redirect: "follow", // manual, *follow, error
           // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin,
-          body: JSON.stringify(signupData), // body data type must match "Content-Type" header
+          body: JSON.stringify(signinData), // body data type must match "Content-Type" header
         }
       );
-      router.push("login");
+
+      localStorage.setItem("userId", 3);
+
       return res;
     } catch (error) {
       console.log("Error", e);
@@ -39,12 +40,10 @@ export const useSignupBox = () => {
   };
 
   return {
-    accountType,
-    setAccountType,
     email,
     setEmail,
     password,
     setPassword,
-    handleSignup,
+    handleSignin,
   };
 };

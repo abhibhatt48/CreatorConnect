@@ -66,6 +66,35 @@ export const useInfluencerDetailsForm = () => {
   };
 
   const [selectedNiches, setSelectedNiches] = useState(influencerNicheList);
+  console.log(
+    "🚀 ~ file: useInfluencerDetailsForm.js:69 ~ useInfluencerDetailsForm ~ selectedNiches:",
+    selectedNiches
+  );
+  const [instagramUrl, setInstagramUrl] = useState("");
+  console.log(
+    "🚀 ~ file: useInfluencerDetailsForm.js:71 ~ useInfluencerDetailsForm ~ instagramUrl:",
+    instagramUrl
+  );
+  const [twitterUrl, setTwitterUrl] = useState("");
+  console.log(
+    "🚀 ~ file: useInfluencerDetailsForm.js:73 ~ useInfluencerDetailsForm ~ twitterUrl:",
+    twitterUrl
+  );
+  const [youtubeUrl, setYoutubeUrl] = useState("");
+  console.log(
+    "🚀 ~ file: useInfluencerDetailsForm.js:75 ~ useInfluencerDetailsForm ~ youtubeUrl:",
+    youtubeUrl
+  );
+  const [facebookUrl, setFacebookUrl] = useState("");
+  console.log(
+    "🚀 ~ file: useInfluencerDetailsForm.js:77 ~ useInfluencerDetailsForm ~ facebookUrl:",
+    facebookUrl
+  );
+  const [industry, setIndustry] = useState("");
+  console.log(
+    "🚀 ~ file: useInfluencerDetailsForm.js:79 ~ useInfluencerDetailsForm ~ industry:",
+    industry
+  );
 
   return {
     influencerNicheList,
@@ -73,5 +102,15 @@ export const useInfluencerDetailsForm = () => {
     filterSelected,
     selectedNiches,
     setSelectedNiches,
+    instagramUrl,
+    setInstagramUrl,
+    twitterUrl,
+    setTwitterUrl,
+    youtubeUrl,
+    setYoutubeUrl,
+    facebookUrl,
+    setFacebookUrl,
+    industry,
+    setIndustry,
   };
 };
