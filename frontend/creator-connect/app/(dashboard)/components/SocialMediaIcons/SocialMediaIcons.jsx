@@ -5,6 +5,9 @@ import YouTubeIcon from "@mui/icons-material/YouTube";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import { IconButton, Grid } from "@mui/material";
 import Link from "next/link";
+import Image from "next/image";
+import TwitchLogo from "../../icons/twitch.svg";
+import TikTokLogo from "../../icons/tiktok.svg";
 
 export default function SocialMediaIcons() {
   return (
@@ -41,7 +44,7 @@ export default function SocialMediaIcons() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <div style={{ width: 24, height: 24, background: "#000000" }} />
+            <Image src={TikTokLogo} width={24} height={24} alt="TikTok Logo" />
           </IconButton>
         </Link>
       </Grid>
@@ -77,7 +80,7 @@ export default function SocialMediaIcons() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <div style={{ width: 24, height: 24, background: "#9146FF" }} />
+            <Image src={TwitchLogo} width={24} height={24} alt="Twitch Logo" />
           </IconButton>
         </Link>
       </Grid>
