@@ -2,23 +2,25 @@ package com.example.creatorconnectbackend.models;
 
 import java.util.List;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class Organization {
 	
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long orgID;
 	private Long userId; 
+	@NotNull(message = "Organization name cannot be null")
+    @Size(min = 1, message = "Organization name cannot be empty")
     private String orgName;
     private String profileImage;
+    @NotNull(message = "Company type cannot be null")
+    @Size(min = 1, message = "Company type cannot be empty")
     private String companyType;
     private Long size;
     private String websiteLink;
     private String location;
     private List<String> targetInfluencerNiche;
+    @Size(max = 250, message = "Bio cannot be more than 250 characters")
     private String bio;
     private String instagram;
     private String facebook;

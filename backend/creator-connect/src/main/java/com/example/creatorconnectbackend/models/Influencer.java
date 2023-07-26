@@ -3,18 +3,28 @@ package com.example.creatorconnectbackend.models;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+
 public class Influencer {
 	private Long influencerID;
+	@NotNull(message = "Name cannot be null")
+    @Size(min = 1, message = "Name cannot be empty")
     private String name;
     private String profileImage;
     private Gender gender;
+    @NotNull(message = "Influencer name cannot be null")
+    @Size(min = 1, message = "Influencer name cannot be empty")
     private String influencerName;
     private String influencerType;
     private List<String> influencerNiche;
     private Long minRate;
     private String previousBrands;
     private String location;
+    @Size(max = 250, message = "Bio cannot be more than 250 characters")
     private String bio;
+    @Past(message = "Birthdate must be in the past")
     private LocalDate birthdate;
     private String instagram;
     private String tikTok;
@@ -23,7 +33,7 @@ public class Influencer {
     private String facebook;
     private String twitch;
     private List<String> bestPosts;
- 
+
     private User user;
     
 	public Long getInfluencerID() {
