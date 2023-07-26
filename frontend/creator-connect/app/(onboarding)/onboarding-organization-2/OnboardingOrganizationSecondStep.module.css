@@ -5,6 +5,9 @@
   flex-direction: column;
   justify-content: center;
   text-align: center;
+
+  overflow: scroll;
+  background-color: "red";
 }
 
 @media (max-width: 768px) {
