@@ -2,6 +2,7 @@
 import { Box, Container, Grid, Typography, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import InfluencerListTable from "../components/InfluencerListTable/InfluencerListTable";
 export default function OrganizationDashboard() {
   const Placeholder = () => <div>Loading...</div>;
 
@@ -24,7 +25,7 @@ export default function OrganizationDashboard() {
   );
 
   return (
-    <Box height="100vh">
+    <Box height="100%" overflow="auto">
       <Grid container spacing={2} direction="column" mt={7}>
         <Container maxWidth="lg">
           <Grid item xs={12}>
@@ -74,9 +75,21 @@ export default function OrganizationDashboard() {
             </Grid>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="h5" color="#222AEF" fontWeight="600">
-              Influencer List
-            </Typography>
+            <Grid container spacing={2} direction="column">
+              <Grid item xs={12}>
+                <Typography
+                  variant="h5"
+                  color="#222AEF"
+                  fontWeight="600"
+                  mt={3}
+                >
+                  Influencer List
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <InfluencerListTable />
+              </Grid>
+            </Grid>
           </Grid>
         </Container>
       </Grid>
