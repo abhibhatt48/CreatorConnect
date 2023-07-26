@@ -1,6 +1,8 @@
 package com.example.creatorconnectbackend.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -13,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 import com.example.creatorconnectbackend.models.Organization;
 import com.example.creatorconnectbackend.services.OrganizationService;
@@ -33,13 +37,35 @@ public class OrganizationControllerTest {
     public void testRegisterOrganization() {
         Organization organization = new Organization();
         Long userId = 12345L;
+        BindingResult bindingResult = mock(BindingResult.class);
 
+        when(bindingResult.hasErrors()).thenReturn(false);
         when(organizationService.register(organization, userId)).thenReturn(organization);
 
-        ResponseEntity<Organization> response = organizationController.registerOrganization(userId, organization);
+        ResponseEntity<?> response = organizationController.registerOrganization(userId, organization, bindingResult);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertTrue(response.getBody() instanceof Organization);
         assertEquals(organization, response.getBody());
+    }
+
+    @Test
+    public void testRegisterOrganization_WithValidationErrors() {
+        Organization organization = new Organization();
+        Long userId = 12345L;
+        BindingResult bindingResult = mock(BindingResult.class);
+        ObjectError error = new ObjectError("organization", "error message");
+
+        when(bindingResult.hasErrors()).thenReturn(true);
+        when(bindingResult.getAllErrors()).thenReturn(Arrays.asList(error));
+
+        ResponseEntity<?> response = organizationController.registerOrganization(userId, organization, bindingResult);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertTrue(response.getBody() instanceof List);
+
+        List<String> errors = Arrays.asList("error message");
+        assertEquals(errors, response.getBody());
     }
 
     @Test
@@ -58,12 +84,35 @@ public class OrganizationControllerTest {
     public void testUpdateOrganization() {
         Organization organization = new Organization();
         Long id = 1L;
+        BindingResult bindingResult = mock(BindingResult.class);
+        
+        when(bindingResult.hasErrors()).thenReturn(false);
         when(organizationService.update(id, organization)).thenReturn(organization);
 
-        ResponseEntity<Organization> response = organizationController.updateOrganization(id, organization);
+        ResponseEntity<?> response = organizationController.updateOrganization(id, organization, bindingResult);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertTrue(response.getBody() instanceof Organization);
         assertEquals(organization, response.getBody());
+    }
+    
+    @Test
+    public void testUpdateOrganization_WithValidationErrors() {
+        Organization organization = new Organization();
+        Long id = 1L;
+        BindingResult bindingResult = mock(BindingResult.class);
+        ObjectError error = new ObjectError("organization", "error message");
+
+        when(bindingResult.hasErrors()).thenReturn(true);
+        when(bindingResult.getAllErrors()).thenReturn(Arrays.asList(error));
+
+        ResponseEntity<?> response = organizationController.updateOrganization(id, organization, bindingResult);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertTrue(response.getBody() instanceof List);
+
+        List<String> errors = Arrays.asList("error message");
+        assertEquals(errors, response.getBody());
     }
 
     @Test

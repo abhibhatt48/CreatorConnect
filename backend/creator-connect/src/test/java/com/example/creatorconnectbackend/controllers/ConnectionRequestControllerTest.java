@@ -9,9 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 import javax.validation.Valid;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
@@ -32,59 +35,72 @@ class ConnectionRequestControllerTests {
 
     @Test
     void testCreateRequest_ValidConnectionRequest_ReturnsCreatedRequest() {
-        // Prepare a mock ConnectionRequest object
         ConnectionRequest connectionRequest = mock(ConnectionRequest.class);
-
-        // Prepare the expected created request
         ConnectionRequest createdRequest = mock(ConnectionRequest.class);
 
-        // Configure the mock service to return the created request
+        BindingResult bindingResult = mock(BindingResult.class);
+
+        when(bindingResult.hasErrors()).thenReturn(false);
         when(connectionRequestService.createRequest(connectionRequest)).thenReturn(createdRequest);
 
-        // Invoke the createRequest method
-        ResponseEntity<ConnectionRequest> response = connectionRequestController.createRequest(connectionRequest);
+        ResponseEntity<?> response = connectionRequestController.createRequest(connectionRequest, bindingResult);
 
-        // Verify that the service method was called
         verify(connectionRequestService).createRequest(connectionRequest);
 
-        // Verify the response status code and body
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertTrue(response.getBody() instanceof ConnectionRequest);
         assertEquals(createdRequest, response.getBody());
     }
+    
+	private void assertTrue(boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Test
+	void testCreateRequest_InvalidConnectionRequest_ReturnsBadRequest() {
+	    ConnectionRequest connectionRequest = mock(ConnectionRequest.class);
+	    BindingResult bindingResult = mock(BindingResult.class);
+	    List<ObjectError> allErrors = Arrays.asList(new ObjectError("test", "test"));
 
-    @Test
+	    when(bindingResult.hasErrors()).thenReturn(true);
+	    when(bindingResult.getAllErrors()).thenReturn(allErrors);
+
+	    ResponseEntity<?> response = connectionRequestController.createRequest(connectionRequest, bindingResult);
+
+	    verify(connectionRequestService, never()).createRequest(connectionRequest);
+	    verifyNoInteractions(connectionRequestService);
+
+	    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+	    assertTrue(response.getBody() instanceof List<?>);
+	    assertEquals(allErrors.stream().map(ObjectError::getDefaultMessage).collect(Collectors.toList()), response.getBody());
+	}
+
+
+	@Test
     void testGetConnectionById_ValidRequestId_ReturnsConnectionRequest() {
-        // Prepare the expected connection request
         ConnectionRequest connectionRequest = mock(ConnectionRequest.class);
 
-        // Configure the mock service to return the connection request
         when(connectionRequestService.getConnectionRequestByID(1L)).thenReturn(connectionRequest);
 
-        // Invoke the getConnectionById method
         ResponseEntity<ConnectionRequest> response = connectionRequestController.getConnectionById(1L);
 
-        // Verify that the service method was called
         verify(connectionRequestService).getConnectionRequestByID(1L);
 
-        // Verify the response status code and body
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(connectionRequest, response.getBody());
     }
 
     @Test
     void testUpdateConnectionRequestStatus_ValidRequestIdAndPayload_ReturnsSuccessMessage() {
-        // Prepare the request ID and payload
         Long requestId = 1L;
         Map<String, String> payload = new HashMap<>();
         payload.put("requestStatus", "Accepted");
 
-        // Invoke the updateConnectionRequestStatus method
         ResponseEntity<String> response = connectionRequestController.updateConnectionRequestStatus(requestId, payload);
 
-        // Verify that the service method was called
         verify(connectionRequestService).updateStatus(requestId, RequestStatus.Accepted);
 
-        // Verify the response status code and body
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Connection request updated successfully", response.getBody());
     }
