@@ -1,9 +1,6 @@
 import { useState } from "react";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 
 export const useInfluencerDetailsForm = () => {
-  const router = useRouter();
   const influencerNicheList = [
     {
       name: "Fashion",
@@ -51,37 +48,53 @@ export const useInfluencerDetailsForm = () => {
     },
   ];
 
+  const [selectedNiches, setSelectedNiches] = useState(influencerNicheList);
+  const [instagramUrl, setInstagramUrl] = useState("");
+  const [twitterUrl, setTwitterUrl] = useState("");
+  const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [facebookUrl, setFacebookUrl] = useState("");
+  const [industry, setIndustry] = useState("");
+
   const handleFinish = async () => {
+    const influencerProfileData = {
+      firstName,
+      lastName,
+      bio,
+      gender,
+      region,
+      birthdate,
+    };
+
     const influencerProfileDataString = localStorage.getItem(
       "influencerProfileData"
     );
 
-    const influencerProfileData = JSON.parse(influencerProfileDataString);
+    JSON.parse(influencerProfileDataString);
 
-    const influencerOnboardingInfo = {
-      name: `${influencerProfileData?.firstName} ${influencerProfileData.lastName}`,
-      gender: influencerProfileData.gender,
-      influencerName: `${influencerProfileData?.firstName} ${influencerProfileData.lastName}`,
-      influencerType: "", //not needed
-      influencerNiche: getSelectedNicheNames(selectedNiches),
-      minRate: parseInt(minimumRate),
-      location: influencerProfileData?.region,
-      bio: influencerProfileData?.bio,
-      previousBrands: "",
-      profileImage: "",
-      // birthdate: influencerProfileData?.birthdate,
-      instagram: instagramUrl,
-      tweeter: twitterUrl,
-      youtube: youtubeUrl,
-      facebook: facebookUrl,
-      bestPosts: ["asdf", "asdf"],
-      tiktok: "",
-      twitch: "",
-    };
+    //   const influencerOnboardingInfo =
+    //   {
+    //     name: influencerProfileData?.firstName + influencerProfileData.lastName,
+    //     gender: influencerProfileData.gender,
+    //     influencerName: influencerProfileData?.firstName + influencerProfileData.lastName,
+    //     influencerType: Fashion,
+    //     influencerNiche: filterSelected(selectedNiches),
+    //     minRate: 5000,
+    //     previousBrands: Brand A, Brand B,
+    //     location: New York, USA,
+    //     bio: influencerProfileData?.bio,
+    //     birthdate: influencerProfileData?.birthdate,
+    //     instagram: http://instagram.com/influencer,
+    //     tikTok: http://tiktok.com/influencer,
+    //     tweeter: http://twitter.com/influencer,
+    //     youtube: http://youtube.com/influencer,
+    //     facebook: http://facebook.com/influencer,
+    //     twitch: http://twitch.com/influencer,
+    //     bestPosts: [http://instagram.com/p/abcdef, http://instagram.com/p/ghijkl]
+    // }
 
     try {
       const res = await fetch(
-        "https://asdc-project-group2.onrender.com/api/influencers/register/40",
+        "https://asdc-project-group2.onrender.com/api/users/login",
         {
           method: "POST", // *GET, POST, PUT, DELETE, etc.
           mode: "cors", // no-cors, *cors, same-origin
@@ -93,24 +106,17 @@ export const useInfluencerDetailsForm = () => {
           },
           // redirect: "follow", // manual, *follow, error
           // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin,
-          body: JSON.stringify(influencerOnboardingInfo), // body data type must match "Content-Type" header
+          body: JSON.stringify(signinData), // body data type must match "Content-Type" header
         }
       );
-      if (!res.error) router.push("influencer-dashboard");
-      else toast.error(error);
+
+      localStorage.setItem("userId", 3);
+
       return res;
     } catch (error) {
-      toast.error(error);
-      console.log("Error", error);
+      console.log("Error", e);
     }
   };
-
-  const [selectedNiches, setSelectedNiches] = useState(influencerNicheList);
-  const [instagramUrl, setInstagramUrl] = useState("");
-  const [twitterUrl, setTwitterUrl] = useState("");
-  const [youtubeUrl, setYoutubeUrl] = useState("");
-  const [facebookUrl, setFacebookUrl] = useState("");
-  const [minimumRate, setMinimumRate] = useState("");
 
   const handleSelect = (data, setData, index) => {
     const newNiches = data.map((niche, i) => {
@@ -124,14 +130,17 @@ export const useInfluencerDetailsForm = () => {
   };
 
   //filteres the selected data to return only the selected ones as an array of the fields.
-  function getSelectedNicheNames(nicheList) {
-    return nicheList
-      .filter((niche) => niche.selected) // filter out unselected niches
-      .map((niche) => niche.name); // transform remaining objects to just their names
-  }
+  const filterSelected = (data) => {
+    const selectedData = data?.filter((data) => data.selected === true);
+    return selectedData;
+  };
 
   return {
     influencerNicheList,
+    handleSelect,
+    filterSelected,
+    selectedNiches,
+    setSelectedNiches,
     instagramUrl,
     setInstagramUrl,
     twitterUrl,
@@ -140,11 +149,7 @@ export const useInfluencerDetailsForm = () => {
     setYoutubeUrl,
     facebookUrl,
     setFacebookUrl,
-    handleSelect,
-    selectedNiches,
-    setSelectedNiches,
-    minimumRate,
-    setMinimumRate,
-    handleFinish,
+    industry,
+    setIndustry,
   };
 };

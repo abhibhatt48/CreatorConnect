@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation";
 const { useState } = require("react");
+import { toast } from "react-toastify";
 
 export const useSignupBox = () => {
   const [accountType, setAccountType] = useState("Influencer");
@@ -31,10 +32,11 @@ export const useSignupBox = () => {
           body: JSON.stringify(signupData), // body data type must match "Content-Type" header
         }
       );
-      router.push("login");
+      // router.push("login");
       return res;
     } catch (error) {
-      console.log("Error", e);
+      // console.log("signup error");
+      toast.error("Error signing up", e);
     }
   };
 

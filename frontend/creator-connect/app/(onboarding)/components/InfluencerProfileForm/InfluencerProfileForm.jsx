@@ -31,46 +31,6 @@ export const InfluencerProfileForm = () => {
         width: "60%",
       }}
     >
-      {/* <div
-        style={{
-          height: "200px",
-          width: "200px",
-          borderRadius: "100%",
-          backgroundColor: "#d2d3d1",
-          alignSelf: "center",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginBottom: "20px",
-        }}
-        onClick={handleCircularDivClick}
-      >
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          style={{ display: "none" }}
-          onChange={handleImageSelect}
-        />
-        {selectedImage ? (
-          <img
-            className="selected-image"
-            src={selectedImage}
-            style={{
-              height: "200px",
-              width: "200px",
-              borderRadius: "100%",
-              backgroundColor: "#d2d3d1",
-            }}
-            alt="Profile"
-          />
-        ) : (
-          <div className="placeholder" style={{ color: "#222aef" }}>
-            Select Profile Image
-          </div>
-        )}
-      </div> */}
-
       <div
         style={{
           alignSelf: "center",
@@ -88,6 +48,7 @@ export const InfluencerProfileForm = () => {
               height: 100,
               width: 100,
               mb: 2,
+              fontSize: "6rem",
             }}
           >
             {`${firstName?.[0].toUpperCase() + lastName?.[0].toUpperCase()}`}
@@ -101,6 +62,7 @@ export const InfluencerProfileForm = () => {
               height: 100,
               width: 100,
               mb: 2,
+              fontSize: "6rem",
             }}
           >
             C
@@ -139,8 +101,8 @@ export const InfluencerProfileForm = () => {
         <option value="" selected disabled hidden>
           Choose Gender
         </option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
+        <option value="MALE">Male</option>
+        <option value="FEMALE">Female</option>
       </select>
       <select
         className={styles.input}
