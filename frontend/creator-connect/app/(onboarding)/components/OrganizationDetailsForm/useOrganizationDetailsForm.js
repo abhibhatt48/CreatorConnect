@@ -111,10 +111,12 @@ export const useOrganizationDetailsForm = () => {
 
     try {
       const res = await fetch(
-        "https://asdc-project-group2.onrender.com/api/organizations/register/75",
+        // "https://asdc-project-group2.onrender.com/api/organizations/register/75",
+        "http://localhost:8080/api/organizations/register/77",
         {
           method: "POST", // *GET, POST, PUT, DELETE, etc.
-          mode: "cors", // no-cors, *cors, same-origin
+          // mode: "cors", // no-cors, *cors, same-origin
+          mode: "cors",
           // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
           // credentials: "same-origin", // include, *same-origin, omit
           headers: {
@@ -126,6 +128,11 @@ export const useOrganizationDetailsForm = () => {
           body: JSON.stringify(organizationOnboardingInfo), // body data type must match "Content-Type" header
         }
       );
+      console.log(
+        "🚀 ~ file: useOrganizationDetailsForm.js:131 ~ handleFinish ~ res:",
+        res
+      );
+
       if (!res.error) router.push("organization-dashboard");
       else toast.error(error);
       return res;
