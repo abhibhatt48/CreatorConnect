@@ -1,28 +1,52 @@
-import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export const useOrganizationProfileForm = () => {
-  const fileInputRef = useRef(null);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const router = useRouter();
+  const [organizationName, setOrganizationName] = useState("");
+  const [description, setDescription] = useState("");
+  const [websiteLink, setWebsiteLink] = useState("");
+  const [region, setRegion] = useState("");
+  const [organizationSize, setOrganizationSize] = useState("");
 
-  const handleImageSelect = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result);
+  const handleNext = () => {
+    if (
+      organizationName &&
+      description &&
+      websiteLink &&
+      region &&
+      organizationSize
+    ) {
+      const organizationProfileData = {
+        organizationName,
+        description,
+        websiteLink,
+        region,
+        organizationSize,
       };
-      reader.readAsDataURL(file);
+      localStorage.setItem(
+        "organizationProfileData",
+        JSON.stringify(organizationProfileData)
+      );
+
+      router.push("onboarding-organization-2");
+    } else {
+      toast.error("Please fill out all fields");
     }
   };
 
-  const handleCircularDivClick = () => {
-    fileInputRef.current.click();
-  };
-
   return {
-    fileInputRef,
-    selectedImage,
-    handleImageSelect,
-    handleCircularDivClick,
+    organizationName,
+    setOrganizationName,
+    description,
+    setDescription,
+    websiteLink,
+    setWebsiteLink,
+    region,
+    setRegion,
+    organizationSize,
+    setOrganizationSize,
+    handleNext,
   };
 };

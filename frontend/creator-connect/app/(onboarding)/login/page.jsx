@@ -1,3 +1,4 @@
+"use client";
 import "../../../src/styles/globals.css";
 import React from "react";
 import styles from "./login.module.css";

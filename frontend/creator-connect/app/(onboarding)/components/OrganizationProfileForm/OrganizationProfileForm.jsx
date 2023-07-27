@@ -2,15 +2,22 @@
 
 import React from "react";
 import styles from "./OrganizationProfileForm.module.css";
-import { Grid } from "@mui/material";
+import { Avatar, Grid } from "@mui/material";
 import { useOrganizationProfileForm } from "./useOrganizationProfileForm";
 
 export const OrganizationProfileForm = () => {
   const {
-    fileInputRef,
-    selectedImage,
-    handleImageSelect,
-    handleCircularDivClick,
+    organizationName,
+    setOrganizationName,
+    description,
+    setDescription,
+    websiteLink,
+    setWebsiteLink,
+    region,
+    setRegion,
+    organizationSize,
+    setOrganizationSize,
+    handleNext,
   } = useOrganizationProfileForm();
 
   return (
@@ -24,72 +31,93 @@ export const OrganizationProfileForm = () => {
     >
       <div
         style={{
-          height: "200px",
-          width: "200px",
-          borderRadius: "100%",
-          backgroundColor: "#d2d3d1",
           alignSelf: "center",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          marginBottom: "20px",
         }}
-        onClick={handleCircularDivClick}
       >
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          style={{ display: "none" }}
-          onChange={handleImageSelect}
-        />
-        {selectedImage ? (
-          <img
-            className="selected-image"
-            src={selectedImage}
-            style={{
-              height: "200px",
-              width: "200px",
-              borderRadius: "100%",
-              backgroundColor: "#d2d3d1",
+        {organizationName ? (
+          <Avatar
+            alt="CreatorConnect"
+            sx={{
+              bgcolor: "#222AEF",
+              color: "#D9D9D9",
+              height: 100,
+              width: 100,
+              mb: 2,
+              fontSize: "6rem",
             }}
-            alt="Profile"
-          />
+          >
+            {`${organizationName?.[0].toUpperCase()}`}
+          </Avatar>
         ) : (
-          <div className="placeholder" style={{ color: "#222aef" }}>
-            Select Profile Image
-          </div>
+          <Avatar
+            alt="CreatorConnect"
+            sx={{
+              bgcolor: "#222AEF",
+              color: "#D9D9D9",
+              height: 100,
+              width: 100,
+              mb: 2,
+              fontSize: "6rem",
+            }}
+          >
+            C
+          </Avatar>
         )}
       </div>
-      <input className={styles.input} placeholder="Organization name" />
+      <input
+        className={styles.input}
+        placeholder="Organization name"
+        value={organizationName}
+        onChange={(e) => setOrganizationName(e.target.value)}
+      />
       <input
         className={styles.input}
         placeholder="Organization description"
         style={{ height: "9rem", textAlign: "top" }}
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
       />
-      <input className={styles.input} placeholder="Website link" />
+      <input
+        className={styles.input}
+        placeholder="Website link"
+        value={websiteLink}
+        onChange={(e) => setWebsiteLink(e.target.value)}
+      />
 
-      <select className={styles.input}>
+      <select
+        className={styles.input}
+        value={region}
+        onChange={(e) => setRegion(e.target.value)}
+      >
         <option value="" selected disabled hidden>
           Choose Region
         </option>
         <option value="North America">North America</option>
         <option value="volvo">South America</option>
-        <option value="saab">Caribbean</option>
-        <option value="mercedes">Asia</option>
-        <option value="audi">Europe</option>
-        <option value="audi">Australasia</option>
-        <option value="audi">Africa</option>
+        <option value="Caribbean">Caribbean</option>
+        <option value="Asia">Asia</option>
+        <option value="Europe">Europe</option>
+        <option value="Australasia">Australasia</option>
+        <option value="Africa">Africa</option>
       </select>
-      <select className={styles.input}>
+      <select
+        className={styles.input}
+        value={organizationSize}
+        onChange={(e) => setOrganizationSize(e.target.value)}
+      >
         <option value="" selected disabled hidden>
           Choose Organization Size
         </option>
-        <option value="Small: 10-49">Small: 10-49 employees</option>
-        <option value="Medium: 50-249">Medium: 50-249 10-49 employees</option>
-        <option value="Large 249+">Large: 249+ 10-49 employees</option>
+        <option value="49">10-49 </option>
+        <option value="150">Medium: 50-249 employees</option>
+        <option value="249">Large: 249+ employees</option>
       </select>
-      <button className={styles.button}>Next</button>
+      <button className={styles.button} onClick={handleNext}>
+        Next
+      </button>
     </Grid>
   );
 };
