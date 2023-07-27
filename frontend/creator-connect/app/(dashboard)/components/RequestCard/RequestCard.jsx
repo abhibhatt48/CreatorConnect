@@ -12,9 +12,10 @@ import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
+import { Link } from "next/link";
+import { useRouter } from "next/navigation";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -63,7 +64,11 @@ export default function RequestCard({
 }) {
   const [influencerData, setInfluencerData] = useState(null);
   const [open, setOpen] = React.useState(false);
+  const router = useRouter();
 
+  const navigateToInfluencerProfile = () => {
+    router.push(`/influencer-profile/${influencerID}`);
+  };
   const handleClickOpen = () => {
     console.log("clicked");
     setOpen(true);
@@ -90,7 +95,10 @@ export default function RequestCard({
   }, []);
 
   return (
-    <Card sx={{ maxHeight: 150, backgroundColor: "#D9D9D9" }}>
+    <Card
+      onClick={navigateToInfluencerProfile}
+      sx={{ maxHeight: 150, backgroundColor: "#D9D9D9", cursor: "pointer" }}
+    >
       <Grid container>
         <Grid item xs={4}>
           <CardMedia
@@ -136,7 +144,10 @@ export default function RequestCard({
               <Grid item xs={12} mt={1}>
                 <Button
                   variant="contained"
-                  onClick={handleClickOpen}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleClickOpen();
+                  }}
                   sx={{
                     borderRadius: "50px",
                     textTransform: "none",

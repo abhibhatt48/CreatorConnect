@@ -77,9 +77,49 @@ export default function OrganizationDashboard() {
                 <Container maxWidth="lg">
                   <Tabs variant="scrollable" scrollButtons="auto">
                     {requests &&
-                      requests.map((request, index) => (
-                        <Tab key={index} label={<RequestCard {...request} />} />
-                      ))}
+                      requests
+                        .filter(
+                          (request) => request.requestStatus !== "Accepted"
+                        )
+                        .map((request, index) => (
+                          <Tab
+                            key={index}
+                            label={<RequestCard {...request} />}
+                          />
+                        ))}
+                  </Tabs>
+                </Container>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          {/* Grid for Connected Influencers */}
+          <Grid item xs={12}>
+            <Grid container spacing={2} direction="column">
+              <Grid item xs={12}>
+                <Typography
+                  variant="h5"
+                  color="#222AEF"
+                  fontWeight="600"
+                  mt={3}
+                >
+                  Connected Influencers
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Container maxWidth="lg">
+                  <Tabs variant="scrollable" scrollButtons="auto">
+                    {requests &&
+                      requests
+                        .filter(
+                          (request) => request.requestStatus === "Accepted"
+                        )
+                        .map((request, index) => (
+                          <Tab
+                            key={index}
+                            label={<RequestCard {...request} />}
+                          />
+                        ))}
                   </Tabs>
                 </Container>
               </Grid>
