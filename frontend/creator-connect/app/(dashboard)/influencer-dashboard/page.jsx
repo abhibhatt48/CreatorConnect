@@ -7,6 +7,7 @@ import RequestsListTable from "../components/RequestsListTable/RequestsListTable
 
 export default function InfluencerDashboard() {
   const [requests, setRequests] = useState(null);
+  const [profileViews, setProfileViews] = useState();
 
   let userData = localStorage.getItem("userData");
 
@@ -30,6 +31,24 @@ export default function InfluencerDashboard() {
         console.error(error);
       }
     };
+
+    const fetchCount = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:8080/api/viewCounters/getByID/" + userID
+        );
+        if (res.data) {
+          setProfileViews(res.data[userID]);
+        }
+
+        console.log(res.data);
+      } catch (error) {
+        console.log("Error:");
+        console.error(error);
+      }
+    };
+
+    fetchCount();
 
     fetchRequests();
   }, []);
@@ -91,6 +110,40 @@ export default function InfluencerDashboard() {
               )}
             </Grid>
           </Grid>
+          {profileViews ? (
+            <Grid container spacing={2} direction="column">
+              <Grid item xs={12}>
+                <Typography
+                  variant="h5"
+                  color="#222AEF"
+                  fontWeight="600"
+                  mt={3}
+                >
+                  Profile Views
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Box
+                  sx={{
+                    backgroundColor: "#b7fafc",
+                    border: "1px solid blue",
+                    borderRadius: "10px",
+                  }}
+                  p={5}
+                >
+                  <Typography
+                    variant="h5"
+                    color="#222AEF"
+                    fontWeight="600"
+                    mt={3}
+                    textAlign={"center"}
+                  >
+                    {profileViews}
+                  </Typography>
+                </Box>
+              </Grid>
+            </Grid>
+          ) : null}
         </Container>
       </Grid>
     </Box>

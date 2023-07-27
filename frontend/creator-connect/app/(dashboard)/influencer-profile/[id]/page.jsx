@@ -138,7 +138,7 @@ export default function InfluencerProfile({ params }) {
   const handleConnect = async (requestMessage) => {
     try {
       await axios.post("http://localhost:8080/api/connectionReq/create", {
-        orgID: 2,
+        orgID: userID,
         influencerID: influencerID, // ID coming from the state or props
         requestMessage: requestMessage,
         requestStatus: "Pending",

@@ -8,7 +8,27 @@ import InfluencerListTable from "../components/InfluencerListTable/InfluencerLis
 export default function OrganizationDashboard() {
   const [influencers, setInfluencers] = useState(null);
   const [requests, setRequests] = useState(null);
-  const orgID = 2;
+  let userData = localStorage.getItem("userData");
+  userData = JSON.parse(userData);
+  let orgID = userData.userID;
+  const [acceptedRequests, setAcceptedRequests] = useState();
+  const [pendingRequests, setPendingRequests] = useState();
+
+  useEffect(() => {
+    if (requests?.length) {
+      setAcceptedRequests(
+        requests.filter((request) => request.requestStatus === "Accepted")
+      );
+
+      setPendingRequests(
+        requests.filter(
+          (request) =>
+            request.requestStatus === "Pending" ||
+            request.requestStatus === "Denied"
+        )
+      );
+    }
+  }, [requests]);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -66,65 +86,52 @@ export default function OrganizationDashboard() {
     <Box height="100%" overflow="auto">
       <Grid container spacing={2} direction="column" mt={7}>
         <Container maxWidth="lg">
-          <Grid item xs={12}>
-            <Grid container spacing={2} direction="column">
-              <Grid item xs={12}>
-                <Typography variant="h5" color="#222AEF" fontWeight="600">
-                  Requests
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Container maxWidth="lg">
-                  <Tabs variant="scrollable" scrollButtons="auto">
-                    {requests &&
-                      requests
-                        .filter(
-                          (request) => request.requestStatus !== "Accepted"
-                        )
-                        .map((request, index) => (
-                          <Tab
-                            key={index}
-                            label={<RequestCard {...request} />}
-                          />
-                        ))}
-                  </Tabs>
-                </Container>
+          {pendingRequests?.length ? (
+            <Grid item xs={12}>
+              <Grid container spacing={2} direction="column">
+                <Grid item xs={12}>
+                  <Typography variant="h5" color="#222AEF" fontWeight="600">
+                    Requests
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Container maxWidth="lg">
+                    <Tabs variant="scrollable" scrollButtons="auto">
+                      {pendingRequests.map((request, index) => (
+                        <Tab key={index} label={<RequestCard {...request} />} />
+                      ))}
+                    </Tabs>
+                  </Container>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          ) : null}
 
-          {/* Grid for Connected Influencers */}
-          <Grid item xs={12}>
-            <Grid container spacing={2} direction="column">
-              <Grid item xs={12}>
-                <Typography
-                  variant="h5"
-                  color="#222AEF"
-                  fontWeight="600"
-                  mt={3}
-                >
-                  Connected Influencers
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Container maxWidth="lg">
-                  <Tabs variant="scrollable" scrollButtons="auto">
-                    {requests &&
-                      requests
-                        .filter(
-                          (request) => request.requestStatus === "Accepted"
-                        )
-                        .map((request, index) => (
-                          <Tab
-                            key={index}
-                            label={<RequestCard {...request} />}
-                          />
-                        ))}
-                  </Tabs>
-                </Container>
+          {acceptedRequests?.length ? (
+            <Grid item xs={12}>
+              <Grid container spacing={2} direction="column">
+                <Grid item xs={12}>
+                  <Typography
+                    variant="h5"
+                    color="#222AEF"
+                    fontWeight="600"
+                    mt={3}
+                  >
+                    Accepted requests
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Container maxWidth="lg">
+                    <Tabs variant="scrollable" scrollButtons="auto">
+                      {acceptedRequests.map((request, index) => (
+                        <Tab key={index} label={<RequestCard {...request} />} />
+                      ))}
+                    </Tabs>
+                  </Container>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          ) : null}
           <Grid item xs={12}>
             <Grid container spacing={2} direction="column">
               <Grid item xs={12}>
