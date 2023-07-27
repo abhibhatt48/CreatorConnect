@@ -8,9 +8,16 @@ import {
   Typography,
   Chip,
   Box,
+  TextField,
 } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import InfluencerFeaturedPosts from "../../components/InfluencerFeaturedPosts/InfluencerFeaturedPosts";
 
 import { makeStyles } from "@mui/styles";
 import SocialMediaIcons from "../../components/SocialMediaIcons/SocialMediaIcons";
@@ -46,6 +53,16 @@ export default function InfluencerProfile({ params }) {
   const classes = useStyles();
   const influencerID = params.id;
   const [influencerData, setInfluencerData] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [requestMessage, setRequestMessage] = useState("");
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     const fetchInfluencerData = async () => {
@@ -63,6 +80,23 @@ export default function InfluencerProfile({ params }) {
 
     fetchInfluencerData();
   }, []);
+
+  const handleConnect = async (requestMessage) => {
+    try {
+      await axios.post("http://localhost:8080/api/connectionReq/create", {
+        orgID: 2,
+        influencerID: influencerID, // ID coming from the state or props
+        requestMessage: requestMessage,
+        requestStatus: "Pending",
+      });
+      alert("Connection Request Sent!");
+    } catch (error) {
+      console.error(
+        "There was an error sending the connection request:",
+        error
+      );
+    }
+  };
 
   function calculateAge(birthdate) {
     const dob = new Date(birthdate);
@@ -103,9 +137,36 @@ export default function InfluencerProfile({ params }) {
               variant="contained"
               color="primary"
               className={classes.button}
+              onClick={handleClickOpen}
             >
               Connect
             </Button>
+            <Dialog open={open} onClose={handleClose}>
+              <DialogTitle>Message</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  Kindly provide a brief message below.Your message will be
+                  directly shared with the influencer.
+                </DialogContentText>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="message"
+                  label="Message"
+                  type="text"
+                  fullWidth
+                  variant="standard"
+                  value={requestMessage}
+                  onChange={(e) => setRequestMessage(e.target.value)}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={() => handleConnect(requestMessage)}>
+                  Connect
+                </Button>
+              </DialogActions>
+            </Dialog>
             <Typography variant="h6" className={classes.name}>
               {influencerData?.name}
             </Typography>
@@ -179,55 +240,14 @@ export default function InfluencerProfile({ params }) {
                   <Grid item xs={12} mt={2} textAlign={"center"}>
                     <Typography variant="h4">Featured Posts</Typography>
                   </Grid>
-                  <Grid item container xs={12} rowGap={2}>
-                    <Paper
-                      variant="outlined"
-                      borderRadius="20px"
-                      sx={{
-                        backgroundColor: "#F1F3E6",
-                        p: 1,
-                        border: "1px solid #222AEF",
-                        height: "200px",
-                        width: "300px",
-                        margin: "auto",
-                      }}
-                    />
-                    <Paper
-                      variant="outlined"
-                      borderRadius="20px"
-                      sx={{
-                        backgroundColor: "#F1F3E6",
-                        p: 1,
-                        border: "1px solid #222AEF",
-                        height: "200px",
-                        width: "300px",
-                        margin: "auto",
-                      }}
-                    />
-                    <Paper
-                      variant="outlined"
-                      borderRadius="20px"
-                      sx={{
-                        backgroundColor: "#F1F3E6",
-                        p: 1,
-                        border: "1px solid #222AEF",
-                        height: "200px",
-                        width: "300px",
-                        margin: "auto",
-                      }}
-                    />
-                    <Paper
-                      variant="outlined"
-                      borderRadius="20px"
-                      sx={{
-                        backgroundColor: "#F1F3E6",
-                        p: 1,
-                        border: "1px solid #222AEF",
-                        height: "200px",
-                        width: "300px",
-                        margin: "auto",
-                      }}
-                    />
+                  <Grid
+                    item
+                    container
+                    xs={12}
+                    rowGap={2}
+                    justifyContent={"center"}
+                  >
+                    <InfluencerFeaturedPosts />
                   </Grid>
                 </Grid>
               </Grid>
