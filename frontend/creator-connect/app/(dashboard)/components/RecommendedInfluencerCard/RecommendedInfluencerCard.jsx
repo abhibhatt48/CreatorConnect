@@ -4,6 +4,8 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { Container, Chip } from "@mui/material";
 import SocialMediaIcons from "../SocialMediaIcons/SocialMediaIcons";
+import { useRouter } from "next/navigation";
+
 const Img = styled("img")({
   margin: "auto",
   display: "block",
@@ -13,6 +15,12 @@ const Img = styled("img")({
 });
 
 export default function RecommendedInfluencerCard({ influencer }) {
+  const router = useRouter();
+
+  const navigateToInfluencerProfile = () => {
+    router.push(`/influencer-profile/${influencer.influencerID}`);
+  };
+
   const {
     profileImage,
     name,
@@ -26,12 +34,14 @@ export default function RecommendedInfluencerCard({ influencer }) {
   } = influencer;
   return (
     <Paper
+      onClick={navigateToInfluencerProfile}
       sx={{
         margin: "auto",
         maxWidth: 325,
         flexGrow: 1,
         backgroundColor: "#D9D9D9",
         textTransform: "none",
+        cursor: "pointer",
       }}
     >
       <Grid container direction="column">
@@ -49,16 +59,18 @@ export default function RecommendedInfluencerCard({ influencer }) {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <SocialMediaIcons
-                links={{
-                  instagram,
-                  tweeter,
-                  tikTok,
-                  youtube,
-                  facebook,
-                  twitch,
-                }}
-              />
+              <div onClick={(e) => e.stopPropagation()}>
+                <SocialMediaIcons
+                  links={{
+                    instagram,
+                    tweeter,
+                    tikTok,
+                    youtube,
+                    facebook,
+                    twitch,
+                  }}
+                />
+              </div>
             </Grid>
             <Grid item xs={12}>
               <Typography
