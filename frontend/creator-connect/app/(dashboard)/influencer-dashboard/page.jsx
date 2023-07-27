@@ -20,7 +20,10 @@ export default function InfluencerDashboard() {
           "http://localhost:8080/api/connectionReq/influencer/getByID/" + userID
         );
         console.log("Response:");
-        setRequests(res.data);
+        let pendingRequests = res.data.filter(
+          (request) => request.requestStatus === "Pending"
+        );
+        setRequests(pendingRequests);
         console.log(res.data);
       } catch (error) {
         console.log("Error:");
@@ -53,17 +56,39 @@ export default function InfluencerDashboard() {
   );
 
   return (
-    <Box height="100%" overflow="auto">
+    <Box height="100vh" overflow="auto">
       <Grid container spacing={2} direction="column" mt={7}>
         <Container maxWidth="lg">
           <Grid container spacing={2} direction="column">
             <Grid item xs={12}>
               <Typography variant="h5" color="#222AEF" fontWeight="600" mt={3}>
-                Influencer List
+                Requests List
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <RequestsListTable requests={requests} />
+              {requests?.length ? (
+                <RequestsListTable requests={requests} />
+              ) : (
+                <Box
+                  sx={{
+                    backgroundColor: "#b7fafc",
+                    border: "1px solid blue",
+                    borderRadius: "10px",
+                  }}
+                  p={5}
+                >
+                  <Typography
+                    variant="h5"
+                    color="#222AEF"
+                    fontWeight="600"
+                    mt={3}
+                    textAlign={"center"}
+                  >
+                    You have no requests a this time. Try improving your
+                    profile!
+                  </Typography>
+                </Box>
+              )}
             </Grid>
           </Grid>
         </Container>

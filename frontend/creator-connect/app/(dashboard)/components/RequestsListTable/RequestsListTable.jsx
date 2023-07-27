@@ -64,22 +64,22 @@ export default function RequestsListTable({ requests }) {
             {requests ? (
               requests
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((influencer) => {
+                .map((requests) => {
                   return (
                     <TableRow
                       hover
                       role="checkbox"
                       tabIndex={-1}
-                      key={influencer.id}
+                      key={requests.id}
                     >
                       {columns.map((column) => {
-                        const value = influencer[column.id];
+                        const value = requests[column.id];
 
                         if (column.id === "organization") {
                           return (
                             <TableCell key={column.id} align={column.align}>
                               <Link
-                                href={`/organization-profile/${influencer.influencerID}`}
+                                href={`/organization-profile/${requests.orgID}/${requests.requestID}`}
                               >
                                 <Button
                                   variant="contained"

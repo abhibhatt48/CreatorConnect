@@ -58,6 +58,7 @@ export default function InfluencerProfile({ params }) {
   const [requests, setRequests] = useState(null);
   let userData = localStorage.getItem("userData");
   userData = JSON.parse(userData);
+  let userID = userData.userID;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -111,6 +112,25 @@ export default function InfluencerProfile({ params }) {
     };
 
     fetchRequests();
+    const addProfileView = async () => {
+      try {
+        const viewObject = {
+          influencerId: parseInt(influencerID),
+          orgId: userID,
+          date: new Date(),
+        };
+
+        const res = await axios.post(
+          "http://localhost:8080/api/viewCounters/addView",
+          viewObject
+        );
+      } catch (error) {
+        console.log("Error:");
+        console.error(error);
+      }
+    };
+
+    addProfileView();
 
     fetchInfluencerData();
   }, []);
