@@ -1,9 +1,7 @@
-import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import ButtonBase from "@mui/material/ButtonBase";
 import { Container, Chip } from "@mui/material";
 import SocialMediaIcons from "../SocialMediaIcons/SocialMediaIcons";
 const Img = styled("img")({
@@ -14,7 +12,18 @@ const Img = styled("img")({
   objectFit: "cover",
 });
 
-export default function RecommendedInfluencerCardlexGrid() {
+export default function RecommendedInfluencerCard({ influencer }) {
+  const {
+    profileImage,
+    name,
+    instagram,
+    tikTok,
+    tweeter,
+    youtube,
+    facebook,
+    twitch,
+    influencerNiche,
+  } = influencer;
   return (
     <Paper
       sx={{
@@ -28,7 +37,7 @@ export default function RecommendedInfluencerCardlexGrid() {
       <Grid container direction="column">
         <Grid item sx={{ height: "150px" }}>
           <Img
-            alt="complex"
+            alt="profileImage"
             src="https://images.pexels.com/photos/8691641/pexels-photo-8691641.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
           />
         </Grid>
@@ -36,11 +45,20 @@ export default function RecommendedInfluencerCardlexGrid() {
           <Grid container direction="column">
             <Grid item xs={12} mt={1}>
               <Typography variant="h6" sx={{ fontWeight: "600" }}>
-                David Dobrik
+                {name}
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <SocialMediaIcons />
+              <SocialMediaIcons
+                links={{
+                  instagram,
+                  tweeter,
+                  tikTok,
+                  youtube,
+                  facebook,
+                  twitch,
+                }}
+              />
             </Grid>
             <Grid item xs={12}>
               <Typography
@@ -48,18 +66,13 @@ export default function RecommendedInfluencerCardlexGrid() {
                 color="text.secondary"
                 fontWeight={600}
               >
-                <Chip
-                  label="Fitness"
-                  sx={{ ml: 1, mb: 1, backgroundColor: "#E8EaE0" }}
-                />
-                <Chip
-                  label="Vlogging"
-                  sx={{ ml: 1, mb: 1, backgroundColor: "#E8EaE0" }}
-                />
-                <Chip
-                  label="Prank"
-                  sx={{ ml: 1, mb: 1, backgroundColor: "#E8EaE0" }}
-                />
+                {influencerNiche.map((niche) => (
+                  <Chip
+                    key={niche}
+                    label={niche}
+                    sx={{ ml: 1, mb: 1, backgroundColor: "#E8EaE0" }}
+                  />
+                ))}
               </Typography>
             </Grid>
           </Grid>

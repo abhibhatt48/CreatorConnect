@@ -8,16 +8,17 @@ import Image from "next/image";
 import TwitchLogo from "../../icons/twitch.svg";
 import TikTokLogo from "../../icons/tiktok.svg";
 
-export default function SocialMediaIcons() {
+export default function SocialMediaIcons({ links }) {
   return (
     <Grid container justifyContent="center">
       <Grid item xs={2}>
         <IconButton
           color="primary"
           component="a"
-          href="https://instagram.com"
+          href={links.instagram || ""}
           target="_blank"
           rel="noopener noreferrer"
+          disabled={!links.instagram}
         >
           <InstagramIcon style={{ color: "#E1306C" }} />
         </IconButton>
@@ -26,9 +27,10 @@ export default function SocialMediaIcons() {
         <IconButton
           color="primary"
           component="a"
-          href="https://twitter.com"
+          href={links.twitter || ""}
           target="_blank"
           rel="noopener noreferrer"
+          disabled={!links.twitter}
         >
           <TwitterIcon style={{ color: "#1DA1F2" }} />
         </IconButton>
@@ -37,9 +39,10 @@ export default function SocialMediaIcons() {
         <IconButton
           color="primary"
           component="a"
-          href="https://tiktok.com"
+          href={links.tiktok || ""}
           target="_blank"
           rel="noopener noreferrer"
+          disabled={!links.tiktok}
         >
           <Image src={TikTokLogo} width={24} height={24} alt="TikTok Logo" />
         </IconButton>
@@ -48,9 +51,10 @@ export default function SocialMediaIcons() {
         <IconButton
           color="primary"
           component="a"
-          href="https://youtube.com"
+          href={links.youtube || ""}
           target="_blank"
           rel="noopener noreferrer"
+          disabled={!links.youtube}
         >
           <YouTubeIcon style={{ color: "#FF0000" }} />
         </IconButton>
@@ -59,9 +63,10 @@ export default function SocialMediaIcons() {
         <IconButton
           color="primary"
           component="a"
-          href="https://facebook.com"
+          href={links.facebook || ""}
           target="_blank"
           rel="noopener noreferrer"
+          disabled={!links.facebook}
         >
           <FacebookIcon style={{ color: "#4267B2" }} />
         </IconButton>
@@ -70,9 +75,10 @@ export default function SocialMediaIcons() {
         <IconButton
           color="primary"
           component="a"
-          href="https://twitch.tv"
+          href={links.twitch || ""}
           target="_blank"
           rel="noopener noreferrer"
+          disabled={!links.twitch}
         >
           <Image src={TwitchLogo} width={24} height={24} alt="Twitch Logo" />
         </IconButton>
