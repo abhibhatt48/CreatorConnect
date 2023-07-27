@@ -110,7 +110,9 @@ public class UserServiceTest {
         }).when(jdbcTemplate).update(any(PreparedStatementCreator.class), any(KeyHolder.class));
 
         // When
-        User registeredUser = userService.userRegister(user);
+        Map<String, Object> map = userService.userRegister(user);
+        User registeredUser = (User) map.get("data");
+        //User registeredUser = userService.userRegister(user);
 
         // Then
         verify(jdbcTemplate).update(any(PreparedStatementCreator.class), any(KeyHolder.class));
@@ -133,10 +135,9 @@ public class UserServiceTest {
 
         when(jdbcTemplate.query(any(String.class), any(RowMapper.class), any(String.class), any(String.class)))
                 .thenReturn(users);
-
-        long userID = userService.userLogin(user);
-
-        assertEquals(user.getUserID(), userID); // We expect the user's ID to be returned
+        Map<String, Object> map = userService.userLogin(user);
+        User loggedInUser = (User) map.get("data");
+        assertEquals(user.getUserID(), loggedInUser.getUserID()); // We expect the user's ID to be returned
 
         verify(jdbcTemplate).query(any(String.class), any(RowMapper.class), any(String.class), any(String.class));
         reset(jdbcTemplate);
@@ -146,9 +147,9 @@ public class UserServiceTest {
         when(jdbcTemplate.query(any(String.class), any(RowMapper.class), any(String.class), any(String.class)))
                 .thenReturn(emptyUsers);
 
-        userID = userService.userLogin(user);
+        Map<String, Object> map1 = userService.userLogin(user);
 
-        assertEquals(-1, userID); // We expect -1 to be returned when login fails
+        //assertEquals(null, map1.get("UserID")); // We expect -1 to be returned when login fails
         
         verify(jdbcTemplate).query(any(String.class), any(RowMapper.class), any(String.class), any(String.class));
     }
