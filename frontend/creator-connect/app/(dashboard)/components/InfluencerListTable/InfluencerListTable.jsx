@@ -9,6 +9,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import data from "./data.js";
 import { Button } from "@mui/material";
+import Link from "next/link";
 
 const columns = [
   { id: "name", label: "Name", minWidth: 170 },
@@ -38,7 +39,7 @@ const columns = [
 
 const rows = data;
 
-export default function InfluencerListTable() {
+export default function InfluencerListTable({ influencers }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -69,45 +70,60 @@ export default function InfluencerListTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
+            {influencers ? (
+              influencers
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((influencer) => {
+                  return (
+                    <TableRow
+                      hover
+                      role="checkbox"
+                      tabIndex={-1}
+                      key={influencer.id}
+                    >
+                      {columns.map((column) => {
+                        const value = influencer[column.id];
 
-                      if (column.id === "profile") {
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            <Button
-                              variant="contained"
-                              sx={{ backgroundColor: "#222AEF" }}
-                            >
-                              View Profile
-                            </Button>
-                          </TableCell>
-                        );
-                      } else {
-                        return (
-                          <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === "number"
-                              ? column.format(value)
-                              : value}
-                          </TableCell>
-                        );
-                      }
-                    })}
-                  </TableRow>
-                );
-              })}
+                        if (column.id === "profile") {
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              <Link
+                                href={`/influencer-profile/${influencer.influencerID}`}
+                              >
+                                <Button
+                                  variant="contained"
+                                  sx={{ backgroundColor: "#222AEF" }}
+                                >
+                                  View Profile
+                                </Button>
+                              </Link>
+                            </TableCell>
+                          );
+                        } else {
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              {column.format && typeof value === "number"
+                                ? column.format(value)
+                                : value}
+                            </TableCell>
+                          );
+                        }
+                      })}
+                    </TableRow>
+                  );
+                })
+            ) : (
+              <TableRow>
+                <TableCell>Loading...</TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
-        count={rows.length}
+        count={influencers ? influencers.length : 0}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

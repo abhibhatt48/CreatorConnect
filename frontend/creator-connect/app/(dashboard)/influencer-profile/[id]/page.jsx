@@ -9,9 +9,10 @@ import {
   Chip,
   Box,
 } from "@mui/material";
+import { useEffect, useState } from "react";
 
 import { makeStyles } from "@mui/styles";
-import SocialMediaIcons from "../components/SocialMediaIcons/SocialMediaIcons";
+import SocialMediaIcons from "../../components/SocialMediaIcons/SocialMediaIcons";
 const useStyles = makeStyles({
   large: {
     width: "100%",
@@ -40,8 +41,27 @@ const useStyles = makeStyles({
     margin: "0 0",
   },
 });
-export default function InfluencerProfile() {
+export default function InfluencerProfile({ params }) {
   const classes = useStyles();
+  const influencerID = params.id;
+  const [influencerData, setInfluencerData] = useState(null);
+
+  useEffect(() => {
+    const fetchInfluencerData = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:8080/api/influencers/" + influencerID
+        );
+        setInfluencerData(res.data);
+        console.log(res.data);
+      } catch (error) {
+        console.log("Error:");
+        console.error(error);
+      }
+    };
+
+    fetchInfluencerData();
+  }, []);
 
   return (
     <Container maxWidth="lg">
@@ -70,7 +90,7 @@ export default function InfluencerProfile() {
               Connect
             </Button>
             <Typography variant="h6" className={classes.name}>
-              John Doe
+              {influencerData?.name}
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -78,7 +98,16 @@ export default function InfluencerProfile() {
               <Grid item xs={12} md={4}>
                 <Grid container direction="column" spacing={1}>
                   <Grid item xs={12} mt={2}>
-                    <SocialMediaIcons />
+                    <SocialMediaIcons
+                      links={{
+                        instagram: influencerData?.instagram,
+                        youtube: influencerData?.youtube,
+                        twitter: influencerData?.tweeter,
+                        facebook: influencerData?.facebook,
+                        tiktok: influencerData?.tikTok,
+                        twitch: influencerData?.twitch,
+                      }}
+                    />
                   </Grid>
                   <Grid item xs={12} ml={1}>
                     <Typography variant="body1">Male(31)</Typography>

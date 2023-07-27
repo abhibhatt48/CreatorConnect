@@ -1,9 +1,46 @@
 "use client";
 import { Box, Container, Grid, Typography, Tab, Tabs } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import axios from "axios";
 import InfluencerListTable from "../components/InfluencerListTable/InfluencerListTable";
+
 export default function OrganizationDashboard() {
+  const [influencers, setInfluencers] = useState(null);
+  const [requests, setRequests] = useState(null);
+  const orgID = 2;
+
+  useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:8080/api/connectionReq/organization/getByID/" +
+            orgID
+        );
+        console.log("Response:");
+        setRequests(res.data);
+        console.log(res.data);
+      } catch (error) {
+        console.log("Error:");
+        console.error(error);
+      }
+    };
+
+    fetchRequests();
+
+    const fetchInfluencers = async () => {
+      try {
+        const res = await axios.get("http://localhost:8080/api/influencers");
+        setInfluencers(res.data);
+      } catch (error) {
+        console.log("Error:");
+        console.error(error);
+      }
+    };
+
+    fetchInfluencers();
+  }, []);
+
   const Placeholder = () => <div>Loading...</div>;
 
   const RequestCard = dynamic(
@@ -13,6 +50,7 @@ export default function OrganizationDashboard() {
       loading: () => <Placeholder />,
     }
   );
+
   const RecommendedInfluencerCard = dynamic(
     () =>
       import(
@@ -36,15 +74,14 @@ export default function OrganizationDashboard() {
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <Tabs variant="scrollable" scrollButtons="auto">
-                  <Tab label={<RequestCard />} />
-                  <Tab label={<RequestCard />} />
-                  <Tab label={<RequestCard />} />
-                  <Tab label={<RequestCard />} />
-                  <Tab label={<RequestCard />} />
-                  <Tab label={<RequestCard />} />
-                  <Tab label={<RequestCard />} />
-                </Tabs>
+                <Container maxWidth="lg">
+                  <Tabs variant="scrollable" scrollButtons="auto">
+                    {requests &&
+                      requests.map((request, index) => (
+                        <Tab key={index} label={<RequestCard {...request} />} />
+                      ))}
+                  </Tabs>
+                </Container>
               </Grid>
             </Grid>
           </Grid>
@@ -62,14 +99,21 @@ export default function OrganizationDashboard() {
               </Grid>
               <Grid item xs={12}>
                 <Grid container spacing={2} direction="row">
-                  <Tabs variant="scrollable" scrollButtons="auto">
-                    <Tab label={<RecommendedInfluencerCard />} />
-                    <Tab label={<RecommendedInfluencerCard />} />
-                    <Tab label={<RecommendedInfluencerCard />} />
-                    <Tab label={<RecommendedInfluencerCard />} />
-                    <Tab label={<RecommendedInfluencerCard />} />
-                    <Tab label={<RecommendedInfluencerCard />} />
-                  </Tabs>
+                  <Container maxWidth="lg">
+                    <Tabs variant="scrollable" scrollButtons="auto">
+                      {influencers &&
+                        influencers.map((influencer, index) => (
+                          <Tab
+                            key={index}
+                            label={
+                              <RecommendedInfluencerCard
+                                influencer={influencer}
+                              />
+                            }
+                          />
+                        ))}
+                    </Tabs>
+                  </Container>
                 </Grid>
               </Grid>
             </Grid>
@@ -87,7 +131,7 @@ export default function OrganizationDashboard() {
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <InfluencerListTable />
+                <InfluencerListTable influencers={influencers} />
               </Grid>
             </Grid>
           </Grid>
