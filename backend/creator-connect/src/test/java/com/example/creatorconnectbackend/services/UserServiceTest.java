@@ -136,8 +136,9 @@ public class UserServiceTest {
         when(jdbcTemplate.query(any(String.class), any(RowMapper.class), any(String.class), any(String.class)))
                 .thenReturn(users);
         Map<String, Object> map = userService.userLogin(user);
-        User loggedInUser = (User) map.get("data");
-        assertEquals(user.getUserID(), loggedInUser.getUserID()); // We expect the user's ID to be returned
+        List<User> loggedInUser = (List<User>) map.get("data");
+
+        assertEquals(user.getUserID(), loggedInUser.get(0).getUserID()); // We expect the user's ID to be returned
 
         verify(jdbcTemplate).query(any(String.class), any(RowMapper.class), any(String.class), any(String.class));
         reset(jdbcTemplate);

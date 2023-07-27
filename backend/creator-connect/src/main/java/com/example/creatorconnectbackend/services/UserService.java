@@ -110,7 +110,7 @@ public class UserService implements UserServiceInterface {
 
         map.put("ok", true);
         map.put("message", "Login Successful!");
-        map.put("data", user);
+        map.put("data", users);
 
         LOGGER.info("Successful Login for User: {}", user.getEmail());
         return map;
