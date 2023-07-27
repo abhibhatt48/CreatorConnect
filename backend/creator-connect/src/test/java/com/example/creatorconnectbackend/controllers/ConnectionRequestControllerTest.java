@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-class ConnectionRequestControllerTests {
+class ConnectionRequestControllerTest {
 
     @Mock
     private ConnectionRequestService connectionRequestService;
@@ -32,22 +32,11 @@ class ConnectionRequestControllerTests {
 
     @Test
     void testCreateRequest_ValidConnectionRequest_ReturnsCreatedRequest() {
-        // Prepare a mock ConnectionRequest object
         ConnectionRequest connectionRequest = mock(ConnectionRequest.class);
-
-        // Prepare the expected created request
         ConnectionRequest createdRequest = mock(ConnectionRequest.class);
-
-        // Configure the mock service to return the created request
         when(connectionRequestService.createRequest(connectionRequest)).thenReturn(createdRequest);
-
-        // Invoke the createRequest method
         ResponseEntity<ConnectionRequest> response = connectionRequestController.createRequest(connectionRequest);
-
-        // Verify that the service method was called
         verify(connectionRequestService).createRequest(connectionRequest);
-
-        // Verify the response status code and body
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(createdRequest, response.getBody());
     }
