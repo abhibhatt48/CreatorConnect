@@ -10,6 +10,7 @@ import {
   Box,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 import { makeStyles } from "@mui/styles";
 import SocialMediaIcons from "../../components/SocialMediaIcons/SocialMediaIcons";
@@ -63,6 +64,22 @@ export default function InfluencerProfile({ params }) {
     fetchInfluencerData();
   }, []);
 
+  function calculateAge(birthdate) {
+    const dob = new Date(birthdate);
+    const today = new Date();
+
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDifference = today.getMonth() - dob.getMonth();
+
+    if (
+      monthDifference < 0 ||
+      (monthDifference === 0 && today.getDate() < dob.getDate())
+    ) {
+      age--;
+    }
+    return age;
+  }
+
   return (
     <Container maxWidth="lg">
       <Paper
@@ -77,7 +94,7 @@ export default function InfluencerProfile({ params }) {
           <Grid item xs={12} className={classes.coverContainer}>
             <Avatar
               alt="Cover Image"
-              src="https://images.pexels.com/photos/12499815/pexels-photo-12499815.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+              src="https://images.pexels.com/photos/8413906/pexels-photo-8413906.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
               className={classes.large}
               variant="square"
             />
@@ -110,41 +127,33 @@ export default function InfluencerProfile({ params }) {
                     />
                   </Grid>
                   <Grid item xs={12} ml={1}>
-                    <Typography variant="body1">Male(31)</Typography>
+                    <Typography variant="body1">
+                      {influencerData?.gender} (
+                      {calculateAge(influencerData?.birthdate)})
+                    </Typography>
                   </Grid>
                   <Grid item xs={12} ml={1}>
-                    <Typography variant="body1">North America</Typography>
+                    <Typography variant="body1">
+                      {influencerData?.location}
+                    </Typography>
                   </Grid>
                   <Grid item xs={12} ml={1}>
                     <Typography variant="body2">
-                      Minimum Amount: $10,000
+                      Minimum Amount: ${influencerData?.minRate}
                     </Typography>
                   </Grid>
-                  <Grid item xs={12}>
-                    <Chip
-                      label="Fitness"
-                      sx={{
-                        ml: 1,
-                        mb: 1,
-                        backgroundColor: "#rgba(232, 234, 224, 0.4)",
-                      }}
-                    />
-                    <Chip
-                      label="Vlogging"
-                      sx={{
-                        ml: 1,
-                        mb: 1,
-                        backgroundColor: "#rgba(232, 234, 224, 0.4)",
-                      }}
-                    />
-                    <Chip
-                      label="Prank"
-                      sx={{
-                        ml: 1,
-                        mb: 1,
-                        backgroundColor: "#rgba(223, 225, 216, 0.4)",
-                      }}
-                    />{" "}
+                  <Grid item xs={12} margin={"auto"}>
+                    {influencerData?.influencerNiche.map((niche) => (
+                      <Chip
+                        key={niche}
+                        label={niche}
+                        sx={{
+                          ml: 1,
+                          mb: 1,
+                          backgroundColor: "#rgba(232, 234, 224, 0.4)",
+                        }}
+                      />
+                    ))}
                   </Grid>
                   <Grid item xs={12}>
                     <Paper
@@ -158,11 +167,7 @@ export default function InfluencerProfile({ params }) {
                     >
                       <Box p={2}>
                         <Typography variant="body1">
-                          Bio: Lorem ipsum dolor sit amet, consectetur
-                          adipiscing elit, sed do eiusmod tempor incididunt ut
-                          labore et dolore magna aliqua. Ut enim ad minim
-                          veniam, quis nostrud exercitation ullamco laboris nisi
-                          ut aliquip ex ea commodo consequat.
+                          {influencerData?.bio}
                         </Typography>
                       </Box>
                     </Paper>
