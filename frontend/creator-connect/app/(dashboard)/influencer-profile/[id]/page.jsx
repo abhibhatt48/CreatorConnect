@@ -55,6 +55,9 @@ export default function InfluencerProfile({ params }) {
   const [influencerData, setInfluencerData] = useState(null);
   const [open, setOpen] = useState(false);
   const [requestMessage, setRequestMessage] = useState("");
+  const [requests, setRequests] = useState(null);
+  let userData = localStorage.getItem("userData");
+  userData = JSON.parse(userData);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -64,6 +67,22 @@ export default function InfluencerProfile({ params }) {
     setOpen(false);
   };
 
+  const isConnected = () => {
+    if (!requests) return false;
+
+    for (let request of requests) {
+      if (
+        request.influencerID == influencerID &&
+        (request.requestStatus === "Accepted" ||
+          request.requestStatus === "Pending")
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
   useEffect(() => {
     const fetchInfluencerData = async () => {
       try {
@@ -71,12 +90,27 @@ export default function InfluencerProfile({ params }) {
           "http://localhost:8080/api/influencers/" + influencerID
         );
         setInfluencerData(res.data);
+      } catch (error) {
+        console.log("Error:");
+        console.error(error);
+      }
+    };
+
+    const fetchRequests = async () => {
+      try {
+        console.log("user id " + userData?.userID);
+        const res = await axios.get(
+          `http://localhost:8080/api/connectionReq/organization/getByID/${userData?.userID}`
+        );
+        setRequests(res.data);
         console.log(res.data);
       } catch (error) {
         console.log("Error:");
         console.error(error);
       }
     };
+
+    fetchRequests();
 
     fetchInfluencerData();
   }, []);
@@ -133,14 +167,16 @@ export default function InfluencerProfile({ params }) {
               variant="square"
             />
 
-            <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              onClick={handleClickOpen}
-            >
-              Connect
-            </Button>
+            {!isConnected() && (
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                onClick={handleClickOpen}
+              >
+                Connect
+              </Button>
+            )}
             <Dialog open={open} onClose={handleClose}>
               <DialogTitle>Message</DialogTitle>
               <DialogContent>
