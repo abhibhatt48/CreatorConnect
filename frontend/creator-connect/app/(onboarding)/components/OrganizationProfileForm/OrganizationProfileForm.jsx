@@ -111,9 +111,9 @@ export const OrganizationProfileForm = () => {
         <option value="" selected disabled hidden>
           Choose Organization Size
         </option>
-        <option value="Small: 10-49">Small: 10-49 employees</option>
-        <option value="Medium: 50-249">Medium: 50-249 10-49 employees</option>
-        <option value="Large 249+">Large: 249+ 10-49 employees</option>
+        <option value="49">10-49 </option>
+        <option value="150">Medium: 50-249 employees</option>
+        <option value="249">Large: 249+ employees</option>
       </select>
       <button className={styles.button} onClick={handleNext}>
         Next

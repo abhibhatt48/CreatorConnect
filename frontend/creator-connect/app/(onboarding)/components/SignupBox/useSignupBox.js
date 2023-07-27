@@ -16,24 +16,25 @@ export const useSignupBox = () => {
     };
 
     try {
-      const res = await fetch(
-        "https://asdc-project-group2.onrender.com/api/users/register",
-        {
-          method: "POST", // *GET, POST, PUT, DELETE, etc.
-          mode: "cors", // no-cors, *cors, same-origin
-          // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-          // credentials: "same-origin", // include, *same-origin, omit
-          headers: {
-            "Content-Type": "application/json",
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          // redirect: "follow", // manual, *follow, error
-          // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin,
-          body: JSON.stringify(signupData), // body data type must match "Content-Type" header
-        }
-      );
-      // router.push("login");
-      return res;
+      const res = await fetch("http://localhost:8080/api/users/register", {
+        method: "POST", // *GET, POST, PUT, DELETE, etc.
+        mode: "cors", // no-cors, *cors, same-origin
+        // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        // credentials: "same-origin", // include, *same-origin, omit
+        headers: {
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        // redirect: "follow", // manual, *follow, error
+        // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin,
+        body: JSON.stringify(signupData), // body data type must match "Content-Type" header
+      });
+
+      if (!res?.error) {
+        toast.success("Sucessfully registered");
+        router.push("login");
+        return res;
+      }
     } catch (error) {
       // console.log("signup error");
       toast.error("Error signing up", e);

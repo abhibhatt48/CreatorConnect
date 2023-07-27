@@ -54,11 +54,11 @@ export const SignupBox = () => {
           </div>
           <div
             className={`${styles.accountType} ${
-              accountType === "Organisation"
+              accountType === "Organization"
                 ? styles.influencer
                 : styles.organisation
             }`}
-            onClick={() => setAccountType("Organisation")}
+            onClick={() => setAccountType("Organization")}
           >
             <OrganisationIcon
               fill={accountType === "Organisation" ? "white" : "black"}

@@ -91,7 +91,7 @@ export const useOrganizationDetailsForm = () => {
       orgName: organizationProfileData?.organizationName,
       profileImage: "",
       companyType: industry,
-      size: organizationProfileData?.organizationSize,
+      size: parseInt(organizationProfileData?.organizationSize),
       websiteLink: organizationProfileData?.websiteLink,
       targetInfluencerNiche: getSelectedNicheNames(selectedNiches),
       location: organizationProfileData?.region,
@@ -112,7 +112,7 @@ export const useOrganizationDetailsForm = () => {
     try {
       const res = await fetch(
         // "https://asdc-project-group2.onrender.com/api/organizations/register/75",
-        "http://localhost:8080/api/organizations/register/77",
+        "http://localhost:8080/api/organizations/register/76",
         {
           method: "POST", // *GET, POST, PUT, DELETE, etc.
           // mode: "cors", // no-cors, *cors, same-origin
