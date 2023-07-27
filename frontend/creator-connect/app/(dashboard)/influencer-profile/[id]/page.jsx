@@ -128,7 +128,7 @@ export default function InfluencerProfile({ params }) {
           <Grid item xs={12} className={classes.coverContainer}>
             <Avatar
               alt="Cover Image"
-              src="https://images.pexels.com/photos/8413906/pexels-photo-8413906.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+              src="https://ca-times.brightspotcdn.com/dims4/default/25e1c0c/2147483647/strip/true/crop/5184x3456+0+0/resize/1200x800!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F9e%2Faf%2F0d8ec73b408ba1fde362ef73570d%2F459362-et-0717-johnson-mwy-0066.JPG"
               className={classes.large}
               variant="square"
             />
