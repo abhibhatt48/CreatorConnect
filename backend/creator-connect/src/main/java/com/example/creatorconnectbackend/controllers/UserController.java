@@ -13,15 +13,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.creatorconnectbackend.models.User;
 import com.example.creatorconnectbackend.services.UserService;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/api/users")
 public class UserController {
 	
