@@ -1,28 +1,50 @@
-import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export const useInfluencerProfileForm = () => {
-  const fileInputRef = useRef(null);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const router = useRouter();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [bio, setBio] = useState("");
+  const [gender, setGender] = useState("");
+  const [region, setRegion] = useState("");
+  const [birthdate, setBirthdate] = useState("");
 
-  const handleImageSelect = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result);
+  const handleNext = () => {
+    if (firstName && lastName && bio && gender && region && birthdate) {
+      const influencerProfileData = {
+        firstName,
+        lastName,
+        bio,
+        gender,
+        region,
+        birthdate,
       };
-      reader.readAsDataURL(file);
+      localStorage.setItem(
+        "influencerProfileData",
+        JSON.stringify(influencerProfileData)
+      );
+
+      router.push("onboarding-influencer-2");
+    } else {
+      toast.error("Please fill out all fields");
     }
   };
 
-  const handleCircularDivClick = () => {
-    fileInputRef.current.click();
-  };
-
   return {
-    fileInputRef,
-    selectedImage,
-    handleImageSelect,
-    handleCircularDivClick,
+    firstName,
+    setFirstName,
+    lastName,
+    setLastName,
+    bio,
+    setBio,
+    gender,
+    setGender,
+    region,
+    setRegion,
+    birthdate,
+    setBirthdate,
+    handleNext,
   };
 };

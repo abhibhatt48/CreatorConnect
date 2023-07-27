@@ -1,5 +1,6 @@
 package com.example.creatorconnectbackend.controllers;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -32,49 +33,54 @@ public class UserController {
 
 
 	@PostMapping("/register")
-	public ResponseEntity<String> registerUser(@Valid @RequestBody User user, BindingResult bindingResult) {
-		logger.info("Attempt to register new user.");
-	    if(bindingResult.hasErrors()){
-	        // convert the list of ObjectError objects into a single string
-	        String errorMsg = bindingResult.getAllErrors().stream()
-	            .map(ObjectError::getDefaultMessage)
-	            .collect(Collectors.joining(", "));
+	public ResponseEntity<Map<String, Object>> registerUser(@Valid @RequestBody User user, BindingResult bindingResult) {
+		logger.info("Attempt to register a new user.");
+		if (bindingResult.hasErrors()) {
+			// Convert the list of ObjectError objects into a single string
+			String errorMsg = bindingResult.getAllErrors().stream()
+					.map(ObjectError::getDefaultMessage)
+					.collect(Collectors.joining(", "));
 
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMsg);
-	    }
-	    user.setUser_type(user.getUser_type());
-	    
-	    User registeredUser = userService.userRegister(user);
-	    logger.info("User registered successfully with ID: {}", registeredUser.getUserID());
-	    return ResponseEntity.ok("Registered successfully");
+			Map<String, Object> response = new HashMap<>();
+			response.put("ok", false);
+			response.put("message", "Binding error: " + errorMsg);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}
+
+		Map<String, Object> map = userService.userRegister(user);
+		logger.info("User registered successfully with ID: {}", user.getUserID());
+		return ResponseEntity.ok(map);
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<?> loginUser(@Valid @RequestBody User user, BindingResult bindingResult) {
+	public ResponseEntity<Map<String, Object>> loginUser(@Valid @RequestBody User user, BindingResult bindingResult) {
 		logger.info("Attempt to login user.");
 	    if(bindingResult.hasErrors()){
 	        // convert the list of ObjectError objects into a single string
 	        String errorMsg = bindingResult.getAllErrors().stream()
 	            .map(ObjectError::getDefaultMessage)
 	            .collect(Collectors.joining(", "));
-
-	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMsg);
+			Map<String, Object> map1 = new HashMap<>();
+			map1.put("ok", "false");
+			map1.put("message", "Binding error!");
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(map1);
 	    }
-	    long userId = userService.userLogin(user);
-	    if (userId == -1) {
+		Map<String, Object> map = userService.userLogin(user);
+		boolean loggedIn = (boolean) map.get("ok");
+	    if (!loggedIn) {
 	        logger.info("User login failed");
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(map);
 	    } else {
 	        logger.info("User login successful");
-	        return ResponseEntity.ok(userId);
+	        return ResponseEntity.ok(map);
 	    }
 	}
 
 	@PostMapping("/forgot-password")
-	public ResponseEntity<String> forgotPassword(@RequestBody EmailBody emailBody) {
+	public ResponseEntity<Map<String, Object>> forgotPassword(@RequestBody EmailBody emailBody) {
 		logger.info("Processing forgot password request for email: {}", emailBody.getEmail());
-		userService.forgotPassword(emailBody.getEmail());
-		return ResponseEntity.ok("Email with reset password link has been sent");
+		Map<String, Object> map = userService.forgotPassword(emailBody.getEmail());
+		return ResponseEntity.ok(map);
 	}
 
 	@PostMapping("/reset-password")

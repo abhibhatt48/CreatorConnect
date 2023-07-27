@@ -1,7 +1,7 @@
 import "../../../src/styles/globals.css";
 import React from "react";
 import styles from "./OnboardingOrganizationSecondStep.module.css";
-import { InfluencerDetailsForm } from "../components/InfluencerDetailsForm/InfluencerDetailsForm";
+import { OrganizationDetailsForm } from "../components/OrganizationDetailsForm/OrganizationDetailsForm";
 
 const OnboardingOrganizationSecondStep = () => {
   return (
@@ -10,7 +10,7 @@ const OnboardingOrganizationSecondStep = () => {
         <p>Create your profile</p>
       </div>
       <div className={styles.content}>
-        <InfluencerDetailsForm />
+        <OrganizationDetailsForm />
       </div>
     </div>
   );

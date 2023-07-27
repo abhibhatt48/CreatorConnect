@@ -16,6 +16,17 @@ export const InfluencerDetailsForm = () => {
     filterSelected,
     selectedNiches,
     setSelectedNiches,
+    instagramUrl,
+    setInstagramUrl,
+    twitterUrl,
+    setTwitterUrl,
+    youtubeUrl,
+    setYoutubeUrl,
+    facebookUrl,
+    setFacebookUrl,
+    minimumRate,
+    setMinimumRate,
+    handleFinish,
   } = useInfluencerDetailsForm();
 
   return (
@@ -25,6 +36,7 @@ export const InfluencerDetailsForm = () => {
         display: "flex",
         flexDirection: "column",
         width: "60%",
+        overflow: "scroll",
       }}
     >
       <div style={{ display: "flex", flexDirection: "column" }}>
@@ -37,7 +49,7 @@ export const InfluencerDetailsForm = () => {
               textAlign: "left",
             }}
           >
-            Select the type of creators you are interested in
+            Select your niche
           </p>
           <p style={{ textAlign: "left", marginTop: "5px" }}>
             Select all that apply
@@ -119,6 +131,8 @@ export const InfluencerDetailsForm = () => {
               className={styles.input}
               placeholder="URL"
               style={{ width: "90%" }}
+              value={instagramUrl}
+              onChange={(e) => setInstagramUrl(e.target.value)}
             />
           </div>
           <div
@@ -134,6 +148,8 @@ export const InfluencerDetailsForm = () => {
               className={styles.input}
               placeholder="URL"
               style={{ width: "90%" }}
+              value={twitterUrl}
+              onChange={(e) => setTwitterUrl(e.target.value)}
             />
           </div>
           <div
@@ -149,6 +165,8 @@ export const InfluencerDetailsForm = () => {
               className={styles.input}
               placeholder="URL"
               style={{ width: "90%" }}
+              value={youtubeUrl}
+              onChange={(e) => setYoutubeUrl(e.target.value)}
             />
           </div>
           <div
@@ -164,27 +182,43 @@ export const InfluencerDetailsForm = () => {
               className={styles.input}
               placeholder="URL"
               style={{ width: "90%" }}
+              value={facebookUrl}
+              onChange={(e) => setFacebookUrl(e.target.value)}
             />
           </div>
         </Grid>
-
-        <select className={styles.input} style={{ marginTop: "2rem" }}>
-          <option value="" selected disabled hidden>
-            Choose Organization Industry
-          </option>
-          <option value="FoodManufacturing">Food Manufacturing</option>
-          <option value="Construction">Construction</option>
-          <option value="InformationTechnology">Information Technology</option>
-          <option value="Healthcare">Healthcare</option>
-          <option value="Automotive">Automotive</option>
-          <option value="Retail">Retail</option>
-          <option value="Finance">Finance</option>
-          <option value="Education">Education</option>
-          <option value="Energy">Energy</option>
-          <option value="Transportation">Transportation</option>
-        </select>
+        <Grid style={{ display: "flex", marginTop: "20px" }}>
+          <div>
+            <div style={{ alignSelf: "flex-start" }}>
+              <p
+                style={{
+                  fontSize: "20px",
+                  color: "#222aef",
+                  fontWeight: "bold",
+                  textAlign: "left",
+                }}
+              >
+                Minimum rate (Optional)
+              </p>
+              <p style={{ textAlign: "left", marginTop: "5px" }}>
+                Enter the minimum compensation you are willing to accept for
+                your promotional services
+              </p>
+            </div>
+          </div>
+          <input
+            className={styles.input}
+            type={"number"}
+            placeholder="$"
+            style={{ width: "100%", height: "80px", fontSize: "40px" }}
+            value={minimumRate}
+            onChange={(e) => setMinimumRate(e.target.value)}
+          />
+        </Grid>
       </div>
-      <button className={styles.button}>Next</button>
+      <button className={styles.button} onClick={handleFinish}>
+        Finish
+      </button>
     </Grid>
   );
 };

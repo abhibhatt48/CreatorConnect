@@ -1,143 +1,119 @@
 package com.example.creatorconnectbackend.controllers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import com.example.creatorconnectbackend.models.EmailBody;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 
+import com.example.creatorconnectbackend.models.EmailBody;
 import com.example.creatorconnectbackend.models.User;
 import com.example.creatorconnectbackend.services.UserService;
 
 public class UserControllerTest {
-
-	private UserController userController;
-
-    @Mock
     private UserService userService;
-
-    @Mock
-    private BindingResult bindingResult;
+    private UserController userController;
 
     @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
+    public void setup() {
+        userService = Mockito.mock(UserService.class);
         userController = new UserController(userService);
     }
 
     @Test
-    public void testRegisterUserValid() {
-        User user = new User();
-        when(bindingResult.hasErrors()).thenReturn(false);
-        when(userService.userRegister(user)).thenReturn(user);
-
-        ResponseEntity<String> response = userController.registerUser(user, bindingResult);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Registered successfully", response.getBody());
-    }
-
-    @Test
-    public void testRegisterUserInvalid() {
-        User user = new User();
-        List<ObjectError> errors = new ArrayList<>();
-        errors.add(new ObjectError("user", "Email is required"));
-        errors.add(new ObjectError("user", "Password must be at least 6 characters"));
-        when(bindingResult.hasErrors()).thenReturn(true);
-        when(bindingResult.getAllErrors()).thenReturn(errors);
-
-        ResponseEntity<String> response = userController.registerUser(user, bindingResult);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Email is required, Password must be at least 6 characters", response.getBody());
-    }
-    
-    @Test
-    public void testLoginUserValid() {
+    public void testRegisterUser() {
         User user = new User();
         user.setUserID(1L);
-        when(bindingResult.hasErrors()).thenReturn(false);
-        when(userService.userLogin(user)).thenReturn(user.getUserID());
+        BindingResult bindingResult = new BeanPropertyBindingResult(user, "user");
 
-        ResponseEntity<?> response = userController.loginUser(user, bindingResult);
+        when(userService.userRegister(user)).thenReturn(Collections.singletonMap("ok", true));
 
+        ResponseEntity<Map<String, Object>> response = userController.registerUser(user, bindingResult);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(user.getUserID(), response.getBody());
+        assertEquals(true, response.getBody().get("ok"));
     }
 
     @Test
-    public void testLoginUserInvalid() {
-        User user = new User();
-        List<ObjectError> errors = new ArrayList<>();
-        errors.add(new ObjectError("user", "Email is required"));
-        errors.add(new ObjectError("user", "Password is required"));
-        when(bindingResult.hasErrors()).thenReturn(true);
-        when(bindingResult.getAllErrors()).thenReturn(errors);
+    public void testLoginUserFail() {
+        User testUser = new User();
+        testUser.setUserID(123L);
+        testUser.setEmail("test@example.com");
+        testUser.setPassword("password");
 
-        ResponseEntity<?> response = userController.loginUser(user, bindingResult);
+        BindingResult bindingResult = new BeanPropertyBindingResult(testUser, "testUser");
+        
+        Map<String, Object> map = new HashMap<>();
+        map.put("ok", false);
+        map.put("message", "Invalid credentials");
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        String errorMsg = errors.stream()
-                    .map(ObjectError::getDefaultMessage)
-                    .collect(Collectors.joining(", "));
-        assertEquals(errorMsg, response.getBody());
-    }
+        when(userService.userLogin(testUser)).thenReturn(map);
 
-    @Test
-    public void testLoginUserNotFound() {
-        User user = new User();
-        user.setEmail("test@example.com");
-        user.setPassword("password");
-
-        when(bindingResult.hasErrors()).thenReturn(false);
-        when(userService.userLogin(user)).thenReturn(-1L);
-
-        ResponseEntity<?> response = userController.loginUser(user, bindingResult);
-
+        ResponseEntity<Map<String, Object>> response = userController.loginUser(testUser, bindingResult);
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        assertEquals("Invalid email or password", response.getBody());
+        assertEquals(false, response.getBody().get("ok"));
+        assertEquals("Invalid credentials", response.getBody().get("message"));
     }
-    
+
+    @Test
+    public void testRegisterUserWithBindingErrors() {
+        User user = new User();
+        user.setUserID(1L);
+        BindingResult bindingResult = new BeanPropertyBindingResult(user, "user");
+        bindingResult.rejectValue("userID", "error.userID", "User ID is not valid");
+
+        ResponseEntity<Map<String, Object>> response = userController.registerUser(user, bindingResult);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(false, response.getBody().get("ok"));
+    }
+
+    @Test
+    public void testLoginUser() {
+        User user = new User();
+        BindingResult bindingResult = new BeanPropertyBindingResult(user, "user");
+
+        when(userService.userLogin(user)).thenReturn(Collections.singletonMap("ok", true));
+
+        ResponseEntity<Map<String, Object>> response = userController.loginUser(user, bindingResult);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(true, response.getBody().get("ok"));
+    }
+
+    @Test
+    public void testLoginUserWithBindingErrors() {
+        User user = new User();
+        BindingResult bindingResult = new BeanPropertyBindingResult(user, "user");
+        bindingResult.rejectValue("userID", "error.userID", "User ID is not valid");
+
+        ResponseEntity<Map<String, Object>> response = userController.loginUser(user, bindingResult);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("false", response.getBody().get("ok"));
+    }
+
     @Test
     public void testForgotPassword() {
         EmailBody emailBody = new EmailBody();
         emailBody.setEmail("test@example.com");
 
-        ResponseEntity<String> response = userController.forgotPassword(emailBody);
+        when(userService.forgotPassword("test@example.com")).thenReturn(Collections.singletonMap("ok", true));
 
+        ResponseEntity<Map<String, Object>> response = userController.forgotPassword(emailBody);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Email with reset password link has been sent", response.getBody());
-
-        verify(userService).forgotPassword(emailBody.getEmail());
+        assertEquals(true, response.getBody().get("ok"));
     }
 
     @Test
     public void testResetPassword() {
-        String token = "testToken";
-        String newPassword = "newPassword";
-        Map<String, String> request = new HashMap<>();
-        request.put("token", token);
-        request.put("password", newPassword);
-
-        ResponseEntity<String> response = userController.resetPassword(request);
-
+        ResponseEntity<String> response = userController.resetPassword(Collections.singletonMap("token", "test-token"));
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Password has been reset", response.getBody());
-
-        verify(userService).resetPassword(token, newPassword);
     }
 }
