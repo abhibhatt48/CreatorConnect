@@ -4,31 +4,31 @@ import java.util.Date;
 
 public class ViewCounter {
 
-    private Long influencerId;
-    private Long orgId;
-    private Date date;
+    private Long InfluencerID;
+    private Long OrgId;
+    private Date Date;
 
     public Long getInfluencerId() {
-        return influencerId;
+        return InfluencerID;
     }
 
-    public void setInfluencerId(Long influencerId) {
-        this.influencerId = influencerId;
+    public void setInfluencerId(Long InfluencerID) {
+        this.InfluencerID = InfluencerID;
     }
 
     public Long getOrgId() {
-        return orgId;
+        return OrgId;
     }
 
-    public void setOrgId(Long orgId) {
-        this.orgId = orgId;
+    public void setOrgId(Long OrgId) {
+        this.OrgId = OrgId;
     }
 
     public Date getDate() {
-        return date;
+        return Date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(Date Date) {
+        this.Date = Date;
     }
 }

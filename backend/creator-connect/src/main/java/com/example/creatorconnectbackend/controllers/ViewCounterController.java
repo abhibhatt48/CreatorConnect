@@ -22,9 +22,9 @@ public class ViewCounterController {
     }
 
     @PostMapping("/addView")
-    public ResponseEntity<String> addView(@Valid @RequestBody ViewCounter viewCounter) {
+    public ResponseEntity<ViewCounter> addView(@Valid @RequestBody ViewCounter viewCounter) {
         ViewCounter vc = viewCounterService.addView(viewCounter);
-        return ResponseEntity.ok("Successfully Added the view!");
+        return ResponseEntity.ok(vc);
     }
 
     @GetMapping("/getByID/{id}")
@@ -33,7 +33,7 @@ public class ViewCounterController {
         return ResponseEntity.ok(map);
     }
 
-    @GetMapping("/getByCompnayType/{id}")
+    @GetMapping("/getByCompanyType/{id}")
     public ResponseEntity<Map<String, Integer>> getProfileViewsByCompanyType(@PathVariable("id") Long id) {
         Map<String, Integer> map = viewCounterService.getProfileViewsByCompanyType(id);
         return ResponseEntity.ok(map);

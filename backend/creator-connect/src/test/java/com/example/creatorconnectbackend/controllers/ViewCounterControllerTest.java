@@ -39,10 +39,10 @@ public class ViewCounterControllerTest {
 
         when(viewCounterService.addView(viewCounter)).thenReturn(viewCounter);
 
-        ResponseEntity<String> response = viewCounterController.addView(viewCounter);
+        ResponseEntity<ViewCounter> response = viewCounterController.addView(viewCounter);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Successfully Added the view!", response.getBody());
+        assertEquals(viewCounter, response.getBody());
     }
 
     @Test
