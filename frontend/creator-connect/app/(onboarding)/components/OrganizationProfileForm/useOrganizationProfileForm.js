@@ -4,11 +4,11 @@ import { toast } from "react-toastify";
 
 export const useOrganizationProfileForm = () => {
   const router = useRouter();
-  const [organizationName, setOrganizationName] = useState("asdf");
-  const [description, setDescription] = useState("asdf");
-  const [websiteLink, setWebsiteLink] = useState("asdf");
-  const [region, setRegion] = useState("asdf");
-  const [organizationSize, setOrganizationSize] = useState("asdf");
+  const [organizationName, setOrganizationName] = useState("");
+  const [description, setDescription] = useState("");
+  const [websiteLink, setWebsiteLink] = useState("");
+  const [region, setRegion] = useState("");
+  const [organizationSize, setOrganizationSize] = useState("");
 
   const handleNext = () => {
     if (
