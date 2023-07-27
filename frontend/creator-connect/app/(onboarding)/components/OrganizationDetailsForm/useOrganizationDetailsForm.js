@@ -59,33 +59,15 @@ export const useOrganizationDetailsForm = () => {
   const [industry, setIndustry] = useState("");
 
   const handleFinish = async () => {
-    console.log("hello");
     const organizationProfileDataString = localStorage.getItem(
       "organizationProfileData"
     );
 
-    const organizationProfileData = JSON.parse(organizationProfileDataString);
-    console.log(
-      "🚀 ~ file: useOrganizationDetailsForm.js:67 ~ handleFinish ~ organizationProfileData:",
-      organizationProfileData
-    );
+    let userData = localStorage.getItem("userData");
 
-    // {
-    //   "orgName": "McDonald",
-    //   "profileImage": "https://example.com/profile.jpg",
-    //   "companyType": "Food",
-    //   "size": 1000,
-    //   "websiteLink": "https://www.mcdonalds.com/ca/en-ca.html",
-    //   "targetInfluencerNiche": ["Food", "Wellness"],
-    //   "location": "New York",
-    //   "bio": "We are a food company specializing in healthy snacks.",
-    //   "instagram": "https://www.instagram.com/examplecompany",
-    //   "facebook": "https://www.facebook.com/examplecompany",
-    //   "twitter": "https://twitter.com/examplecompany",
-    //   "tiktok": "https://www.tiktok.com/@examplecompany",
-    //   "youtube": "https://www.youtube.com/user/examplecompany",
-    //   "twitch": "https://www.twitch.tv/examplecompany"
-    // }
+    userData = JSON.parse(userData);
+
+    const organizationProfileData = JSON.parse(organizationProfileDataString);
 
     const organizationOnboardingInfo = {
       orgName: organizationProfileData?.organizationName,
@@ -104,15 +86,10 @@ export const useOrganizationDetailsForm = () => {
       tiktok: "",
       twitch: "",
     };
-    console.log(
-      "🚀 ~ file: useOrganizationDetailsForm.js:102 ~ handleFinish ~ organizationOnboardingInfo:",
-      organizationOnboardingInfo
-    );
 
     try {
       const res = await fetch(
-        // "https://asdc-project-group2.onrender.com/api/organizations/register/75",
-        "http://localhost:8080/api/organizations/register/76",
+        `http://localhost:8080/api/organizations/register/${userData?.userID}`,
         {
           method: "POST", // *GET, POST, PUT, DELETE, etc.
           // mode: "cors", // no-cors, *cors, same-origin
@@ -127,10 +104,6 @@ export const useOrganizationDetailsForm = () => {
           // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin,
           body: JSON.stringify(organizationOnboardingInfo), // body data type must match "Content-Type" header
         }
-      );
-      console.log(
-        "🚀 ~ file: useOrganizationDetailsForm.js:131 ~ handleFinish ~ res:",
-        res
       );
 
       if (!res.error) router.push("organization-dashboard");

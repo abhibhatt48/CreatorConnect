@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export const useLoginBox = () => {
   const [email, setEmail] = useState("");
@@ -13,7 +14,7 @@ export const useLoginBox = () => {
     };
 
     try {
-      const res = await fetch("http://localhost:8080/api/users/login", {
+      let res = await fetch("http://localhost:8080/api/users/login", {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin
         // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
@@ -27,18 +28,21 @@ export const useLoginBox = () => {
         body: JSON.stringify(signinData), // body data type must match "Content-Type" header
       });
 
-      if (!res?.error) {
-        toast.success("Sucessfully registered");
-        router.push("login");
+      res = await res.json();
 
-        // localStorage.setItem("userId", 3);
-        return res;
+      if (res?.ok) {
+        toast.success(res.message);
+        localStorage.setItem("userData", JSON.stringify(res.data[0]));
+
+        if (res.data[0].user_type === "Influencer")
+          router.push("onboarding-influencer-1");
+        else router.push("onboarding-organization-1");
+      } else {
+        toast.error(res.message);
       }
-
-      return res;
     } catch (error) {
-      toast.error(res);
-      console.log("Error", e);
+      toast.error("Error logging in");
+      console.log("Error", error);
     }
   };
 
