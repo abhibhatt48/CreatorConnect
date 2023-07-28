@@ -19,6 +19,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 
+import com.example.creatorconnectbackend.auth.JwtUtil;
 import com.example.creatorconnectbackend.interfaces.UserServiceInterface;
 import com.example.creatorconnectbackend.models.User;
 
@@ -27,8 +28,8 @@ public class UserService implements UserServiceInterface {
     
     private final JdbcTemplate jdbcTemplate;
     private final EmailService emailService;
-    private static final SecureRandom RANDOM = new SecureRandom();
-    private static final int OTP_LENGTH = 6;
+    @Autowired
+    private JwtUtil jwtUtil;
     
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
@@ -89,8 +90,10 @@ public class UserService implements UserServiceInterface {
 
         Long userId = keyHolder.getKey().longValue();
         user.setUserID(userId);
+        String jwt = jwtUtil.generateToken(user.getEmail());
         LOGGER.info("Registered User ID: {}", userId);
         map.put("ok", true);
+        map.put("jwt", jwt);
         map.put("message", "Registered Successfully!");
         map.put("data", user);
         return map;
@@ -107,8 +110,10 @@ public class UserService implements UserServiceInterface {
             map.put("message", "Login error! Incorrect Email or password!");
             return map;
         }
-
+        String jwt = jwtUtil.generateToken(user.getEmail());
+        
         map.put("ok", true);
+        map.put("jwt", jwt);
         map.put("message", "Login Successful!");
         map.put("data", users);
 
