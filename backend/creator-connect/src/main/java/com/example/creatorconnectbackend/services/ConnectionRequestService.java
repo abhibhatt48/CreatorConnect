@@ -18,21 +18,59 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * -------------------------------------------------------------
+ * |                                                           |
+ * |            ConnectionRequestService Class                 |
+ * |                                                           |
+ * |  This class implements the ConnectionRequestServiceInterface   |
+ * |  and provides methods for managing connection requests in  |
+ * |  the system. It interacts with the database using         |
+ * |  JdbcTemplate for CRUD operations.                        |
+ * |                                                           |
+ * |  Functions:                                               |
+ * |  1. createRequest(ConnectionRequest): ConnectionRequest   |
+ * |     - Create a new connection request and return the      |
+ * |       persisted entity.                                   |
+ * |  2. getConnectionRequestByID(Long): ConnectionRequest    |
+ * |     - Retrieve a specific connection request by its ID.   |
+ * |  3. updateStatus(Long, RequestStatus): ConnectionRequest |
+ * |     - Update the status of a specific connection request.|
+ * |  4. getRequestsByInfluencerID(Long): List<ConnectionRequest> |
+ * |     - Retrieve all connection requests for a specific    |
+ * |       influencer.                                         |
+ * |  5. getRequestsByOrgID(Long): List<ConnectionRequest>    |
+ * |     - Retrieve all connection requests for a specific    |
+ * |       organization.                                      |
+ * |  6. getRequestsByStatus(Long, String): List<ConnectionRequest> |
+ * |     - Retrieve all connection requests based on a specific |
+ * |       status for a specific organization.                |
+ * |  7. getAllRequests(): List<ConnectionRequest>            |
+ * |     - Retrieve all connection requests from the database.|
+ * |  8. deleteByID(Long): void                               |
+ * |     - Delete a specific connection request based on its ID. |
+ * |  9. updateMessage(Long, Map<String, String>): ConnectionRequest |
+ * |     - Update the message of a specific connection request. |
+ * |                                                           |
+ * -------------------------------------------------------------
+ */
+
+
 @Service
 public class ConnectionRequestService implements ConnectionRequestServiceInterface {
 
-    // JdbcTemplate for querying the database
+
     private final JdbcTemplate jdbcTemplate;
     
-    // Logger instance for logging purposes
+
     private final Logger logger = LoggerFactory.getLogger(ConnectionRequestService.class);
 
-    // Constructor injecting JdbcTemplate
+
     public ConnectionRequestService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // RowMapper is a callback interface used by JdbcTemplate's query methods for mapping rows of a ResultSet
+
     private RowMapper<ConnectionRequest> rowMapper = (rs, rowNum) -> {
         ConnectionRequest connectionRequest = new ConnectionRequest();
         connectionRequest.setRequestID(rs.getLong("RequestID"));
@@ -43,15 +81,15 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         return connectionRequest;
     };
 
-    // Getter for the rowMapper
+
     public RowMapper<ConnectionRequest> getRowMapper() {
         return rowMapper;
     }
 
-    // Method to create a new connection request and return the persisted entity
+
     public ConnectionRequest createRequest(ConnectionRequest connectionRequest) {
         logger.info("Attempting to create connection request.");
-        // Check if the input is valid
+
         if (connectionRequest != null) {
             SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
             jdbcInsert.withTableName("connection_requests").usingGeneratedKeyColumns("RequestID");
@@ -73,7 +111,7 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
-    // Method to retrieve a specific connection request by its ID
+
     public ConnectionRequest getConnectionRequestByID(Long requestID) {
         String query = "SELECT * FROM connection_requests WHERE RequestID = ?";
         logger.info("Fetching connection request with ID: {}", requestID);
@@ -85,7 +123,7 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
-    // Method to update the status of a specific connection request
+
     public ConnectionRequest updateStatus(Long id, RequestStatus newStatus) {
         String query = "UPDATE connection_requests SET RequestStatus = ? WHERE RequestID = ?";
         logger.info("Updating status for connection request with ID: {}", id);
@@ -97,7 +135,7 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         return getConnectionRequestByID(id);
     }
 
-    // Method to retrieve all connection requests for a specific influencer
+
     public List<ConnectionRequest> getRequestsByInfluencerID(Long id) {
         String query = "SELECT * FROM connection_requests WHERE InfluencerID = ?";
         try {
@@ -107,7 +145,7 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
-    // Method to retrieve all connection requests for a specific organization
+
     public List<ConnectionRequest> getRequestsByOrgID(Long orgID) {
         String query = "SELECT * FROM connection_requests WHERE OrgID = ?";
         try {
@@ -117,7 +155,7 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
-    // Method to retrieve all connection requests based on a specific status for a specific organization
+
     public List<ConnectionRequest> getRequestsByStatus(Long orgID, String status) {
         String query = "SELECT * FROM connection_requests WHERE OrgID = ? AND RequestStatus = ?";
         try {
@@ -127,7 +165,7 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
-    // Method to retrieve all connection requests from the database
+
     public List<ConnectionRequest> getAllRequests() {
         String query = "SELECT * FROM connection_requests";
         try {
@@ -137,7 +175,7 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
-    // Method to delete a specific connection request based on its ID
+
     public void deleteByID(Long id) {
         String query = "DELETE FROM connection_requests WHERE RequestID = ?";
         logger.info("Deleting connection request with ID: {}", id);
@@ -148,7 +186,7 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
-    // Method to update the message of a specific connection request
+
     public ConnectionRequest updateMessage(Long id, Map<String, String> map) {
         String query = "UPDATE connection_requests SET RequestMessage = ? WHERE RequestID = ?";
         logger.info("Updating message for connection request with ID: {}", id);

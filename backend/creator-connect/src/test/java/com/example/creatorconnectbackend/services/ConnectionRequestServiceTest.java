@@ -24,6 +24,40 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * ConnectionRequestServiceTest
+ * 
+ * This class provides unit tests for the ConnectionRequestService class.
+ * 
+ * Functions:
+ * - setUp() : Initial setup before running tests.
+ * - createMockResultSet() : Mocks a ResultSet for testing.
+ * - testRowMapper() : Tests if the row mapper correctly maps a ResultSet.
+ * - testCreateRequest_NotNullConnectionRequest_ReturnsCreatedRequest() : Tests creation of a valid connection request.
+ * - testCreateRequest_NullConnectionRequest_ReturnsNull() : Tests null handling during request creation.
+ * - testCreateRequest_NullRequest_ReturnsNull() : Tests handling of null request.
+ * - testGetConnectionRequestByID_ValidID_ReturnsConnectionRequest() : Tests retrieval of a connection request by its ID.
+ * - testGetConnectionRequestByID_InvalidID_ThrowsException() : Tests exception handling for invalid ID.
+ * - testUpdateStatus_ValidID_ReturnsUpdatedConnectionRequest() : Tests the status update of a connection request.
+ * - testUpdateStatus_InvalidID_ThrowsException() : Tests exception handling for status update with an invalid ID.
+ * - testGetRequestsByInfluencerID_ValidID_ReturnsListOfConnectionRequests() : Tests retrieval of requests by influencer ID.
+ * - testGetRequestsByInfluencerID_InvalidID_ReturnsEmptyList() : Tests result when using an invalid influencer ID.
+ * - testGetRequestsByOrgID_ValidID_ReturnsListOfConnectionRequests() : Tests retrieval of requests by organization ID.
+ * - testGetRequestsByOrgID_InvalidID_ReturnsEmptyList() : Tests result when using an invalid organization ID.
+ * - testGetRequestsByStatus_ValidParameters_ReturnsListOfConnectionRequests() : Tests retrieval of requests by status.
+ * - testGetRequestsByStatus_InvalidParameters_ReturnsEmptyList() : Tests result when using invalid status parameters.
+ * - testGetAllRequests_ReturnsListOfConnectionRequests() : Tests retrieval of all connection requests.
+ * - testGetAllRequests_ReturnsEmptyList() : Tests result when there are no connection requests.
+ * - testDeleteByID_ValidID_DeletesConnectionRequest() : Tests deletion of a connection request by its ID.
+ * - testDeleteByID_InvalidID_ThrowsException() : Tests exception handling for deletion with an invalid ID.
+ * - testUpdateMessage_ValidID_ReturnsUpdatedConnectionRequest() : Tests the message update of a connection request.
+ * - testUpdateMessage_InvalidID_ThrowsException() : Tests exception handling for message update with an invalid ID.
+ *
+ * @author [Your Name]
+ * @version 1.0
+ * @since [date]
+ */
+
 class ConnectionRequestServiceTest {
 
     @Mock

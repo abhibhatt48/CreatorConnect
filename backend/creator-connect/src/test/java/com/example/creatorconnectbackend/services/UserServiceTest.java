@@ -34,6 +34,22 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+/**
+ * UserServiceTest
+ * 
+ * A test class for the UserService. This class aims to test various functionalities 
+ * associated with user operations such as password reset, user data retrieval, and more.
+ * 
+ * Functions:
+ * 1. setUp(): Initializes the testing environment.
+ * 2. testGetUserRowMapper(): Tests the functionality that maps rows from the database to User objects.
+ * 3. testForgotPassword(): Tests the 'forgot password' functionality.
+ * 4. testResetPassword(): Tests the password reset functionality using a token.
+ * 
+ * Note: Always ensure that the test suite is run after making any changes to the associated methods
+ * to validate consistent functionality.
+ */
+
 public class UserServiceTest {
 	
     private UserService userService;

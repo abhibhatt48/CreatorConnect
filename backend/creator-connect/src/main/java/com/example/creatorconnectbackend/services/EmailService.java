@@ -12,16 +12,27 @@ import org.springframework.stereotype.Service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
+/**
+ * EmailService class is responsible for sending emails using Spring's JavaMailSender interface.
+ * It provides methods to send simple text-based emails to a specified recipient.
+ *
+ * Functions:
+ * 1. sendEmail: Sends a simple email to the specified recipient with the given subject and content.
+ *    - Parameters:
+ *        - to (String): Email recipient
+ *        - subject (String): Subject of the email
+ *        - text (String): Content of the email
+ *    - Exceptions:
+ *        - MailException: If there is an issue while sending the email, it logs an error.
+ */
+
 @Service
 public class EmailService {
 
-    // Instance of JavaMailSender which is Spring's interface for sending mails
     private JavaMailSender javaMailSender;
 
-    // Logger instance for logging purposes
     private final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
-    // Constructor injecting the JavaMailSender dependency
     public EmailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
     }
@@ -36,20 +47,16 @@ public class EmailService {
     public void sendEmail(String to, String subject, String text) {
         logger.info("Attempting to send email to {}", to);
 
-        // Creating a new simple email message
         SimpleMailMessage message = new SimpleMailMessage();
 
-        // Setting the recipient, subject, and content of the email
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
 
         try {
-            // Using JavaMailSender to send the constructed email
             javaMailSender.send(message);
             logger.info("Email sent successfully to {}", to);
         } catch (MailException e) {
-            // Handling any exceptions that arise during the email sending process
             logger.error("Failed to send email to {}", to, e);
         }
     }

@@ -19,10 +19,48 @@ import com.example.creatorconnectbackend.models.Gender;
 import com.example.creatorconnectbackend.models.Influencer;
 import com.example.creatorconnectbackend.models.User;
 
-@Service // Indicates that this class is a Spring Service
+/**
+ * InfluencerService class provides various functions to manage influencers in the system.
+ * It interacts with the database using JdbcTemplate and SimpleJdbcInsert for CRUD operations on influencers.
+ *
+ * Functions:
+ * 1. register: Registers a new influencer in the system based on the provided influencer object and userId.
+ *    - Parameters:
+ *        - influencer (Influencer): The influencer object to be registered.
+ *        - userId (Long): The user ID associated with the influencer.
+ *    - Returns:
+ *        - Influencer: The registered influencer object.
+ *
+ * 2. getById: Fetches influencer details based on their ID.
+ *    - Parameters:
+ *        - id (Long): The ID of the influencer to fetch.
+ *    - Returns:
+ *        - Influencer: The influencer object with the specified ID.
+ *
+ * 3. update: Updates the details of an existing influencer based on their ID.
+ *    - Parameters:
+ *        - id (Long): The ID of the influencer to update.
+ *        - updatedInfluencer (Influencer): The updated influencer object containing new details.
+ *    - Returns:
+ *        - Influencer: The updated influencer object after the update operation.
+ *
+ * 4. getAll: Fetches all influencers from the database.
+ *    - Returns:
+ *        - List<Influencer>: A list of all influencers in the system.
+ *
+ * 5. deleteById: Deletes an influencer from the system based on their ID.
+ *    - Parameters:
+ *        - id (Long): The ID of the influencer to delete.
+ *
+ * Dependencies:
+ * - JdbcTemplate: Used for querying the database and mapping rows to Influencer objects.
+ * - UserService: Used to fetch user details associated with an influencer during registration.
+ * - Logger: Used for logging purposes to record information and errors.
+ */
+
+@Service 
 public class InfluencerService implements InfluencerServiceInterface {
 
-    // Dependencies and logger initialized
     private final JdbcTemplate jdbcTemplate;
     private final Logger logger = LoggerFactory.getLogger(InfluencerService.class);
 
@@ -31,17 +69,14 @@ public class InfluencerService implements InfluencerServiceInterface {
 
 	private SimpleJdbcInsert jdbcInsert;
 
-    // Constructor for initializing JdbcTemplate and UserService
     public InfluencerService(JdbcTemplate jdbcTemplate, UserService userService ) {
         this.jdbcTemplate = jdbcTemplate;
         this.userService = userService;
     }
     
-    // Setter for SimpleJdbcInsert
     public void setJdbcInsert(SimpleJdbcInsert jdbcInsert) {
         this.jdbcInsert = jdbcInsert;
     }
-    // RowMapper for converting rows from the database into Influencer objects
     private RowMapper<Influencer> rowMapper = (rs, rowNum) -> {
         Influencer influencer = new Influencer();
         influencer.setInfluencerID(rs.getLong("influencerID"));
@@ -65,13 +100,10 @@ public class InfluencerService implements InfluencerServiceInterface {
         influencer.setBestPosts(Arrays.asList(rs.getString("bestPosts").split(",")));
         return influencer;
     };
-    // Method to register an influencer in the system
     public Influencer register(Influencer influencer, Long userId) {
     	logger.info("Attempting to register influencer with userId {}", userId);
-        // Fetch the user using the provided userId
         User user = jdbcTemplate.queryForObject("SELECT * FROM users WHERE UserID = ?", new Object[]{userId}, userService.getUserRowMapper());
 
-        // Only proceed if the user type is 'Influencer'
         if (user != null && user.getUser_type().equals("Influencer")) {
 
             SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
@@ -106,7 +138,6 @@ public class InfluencerService implements InfluencerServiceInterface {
         }
     }
 
-    // Method to fetch influencer details based on their ID
     public Influencer getById(Long id) {
         String sql = "SELECT * FROM influencers WHERE influencerID = ?";
         logger.info("Attempting to get influencer by id {}", id);
@@ -118,7 +149,6 @@ public class InfluencerService implements InfluencerServiceInterface {
         }
     }
 
-    // Method to update details of an influencer based on their ID
     public Influencer update(Long id, Influencer updatedInfluencer) {
     	String sql = "UPDATE influencers SET name = ?, profileImage = ?, gender = ?, influencerName = ?, influencerType = ?, influencerNiche = ?, minRate = ?, previousBrands = ?, location = ?, bestPosts = ?, bio = ?, birthdate = ?, instagram = ?, tikTok = ?, tweeter = ?, youtube = ?, facebook = ?, twitch = ? WHERE influencerID = ?";
 
@@ -132,14 +162,12 @@ public class InfluencerService implements InfluencerServiceInterface {
         return getById(id);
     }
 
-    // Method to fetch all influencers from the database
     public List<Influencer> getAll() {
         String sql = "SELECT * FROM influencers";
         logger.info("Attempting to get all influencers");
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    // Method to delete an influencer based on their ID
     public void deleteById(Long id) {
         String sql = "DELETE FROM influencers WHERE influencerID = ?";
         logger.info("Attempting to delete influencer by id {}", id);

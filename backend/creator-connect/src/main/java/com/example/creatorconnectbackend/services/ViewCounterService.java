@@ -13,18 +13,42 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-// Marking this class as a Spring Service bean
-@Service
+/**
+ * ViewCounterService class provides functions for managing view counts in the system.
+ * It interacts with the database using JdbcTemplate and SimpleJdbcInsert for adding view records and querying view counts.
+ *
+ * Functions:
+ * 1. addView: Adds a view record to the 'View_counter' table.
+ *    - Parameters:
+ *        - viewCounter (ViewCounter): The ViewCounter object containing information about the view.
+ *    - Returns:
+ *        - ViewCounter: The updated ViewCounter object with the view record added, or null if an exception occurs.
+ *
+ * 2. getViewsByInfluencerID: Retrieves the number of views for a specific influencer based on their ID.
+ *    - Parameters:
+ *        - id (Long): The ID of the influencer.
+ *    - Returns:
+ *        - Map<Long, Integer>: A map containing the influencer ID as the key and the view count as the value.
+ *
+ * 3. getProfileViewsByCompanyType: Retrieves the number of views for a specific influencer grouped by the company type of the organizations viewing them.
+ *    - Parameters:
+ *        - id (Long): The ID of the influencer.
+ *    - Returns:
+ *        - Map<String, Integer>: A map containing the company type as the key and the corresponding view count as the value.
+ *
+ * Dependencies:
+ * - JdbcTemplate: Used for querying the database and mapping rows to ViewCounter objects.
+ * - RowMapper: Used for converting a row in the 'View_counter' table to a ViewCounter object.
+ * - SimpleJdbcInsert: Used for adding view records to the 'View_counter' table.
+ * - ViewCounter: Model class representing the view counter data.
+ */@Service
 public class ViewCounterService implements ViewCounterServiceInterface {
-    // JDBC template for database operations
     private final JdbcTemplate jdbcTemplate;
 
-    // Constructor-based Dependency Injection for JdbcTemplate
     public ViewCounterService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // RowMapper to convert a row in the 'View_counter' table to a ViewCounter object
     private RowMapper<ViewCounter> rowMapper = (rs, rowNum) -> {
         ViewCounter viewCounter = new ViewCounter();
         viewCounter.setOrgId(rs.getLong("OrgID"));
@@ -33,7 +57,6 @@ public class ViewCounterService implements ViewCounterServiceInterface {
         return viewCounter;
     };
 
-    // Add a view record to the 'View_counter' table
     public ViewCounter addView(ViewCounter viewCounter) {
         try {
             SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
@@ -52,24 +75,20 @@ public class ViewCounterService implements ViewCounterServiceInterface {
         }
     }
 
-    // Get the number of views for a specific influencer based on their ID
     public Map<Long, Integer> getViewsByInfluencerID(Long id) {
         String query = "SELECT COUNT(*) AS profile_views FROM View_counter WHERE InfluencerID = ?";
         try {
-            // Use jdbcTemplate to execute the query and return a map of influencer ID and view count
             return jdbcTemplate.query(query, new Object[]{id}, (rs, rowNum) -> {
                 int viewCount = rs.getInt("profile_views");
                 return new AbstractMap.SimpleEntry<>(id, viewCount);
             }).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         } catch (EmptyResultDataAccessException e) {
-            // If the query returns no results, return a map with influencer ID and view count as 0
             Map<Long, Integer> map = new HashMap<>();
             map.put(id, 0);
             return map;
         }
     }
 
-    // Get the number of views for a specific influencer grouped by company type of the organizations viewing them
     public Map<String, Integer> getProfileViewsByCompanyType(Long id) {
         String sql = "SELECT o.CompanyType, COUNT(*) AS view_count " +
                 "FROM View_counter v " +
@@ -78,7 +97,6 @@ public class ViewCounterService implements ViewCounterServiceInterface {
                 "GROUP BY o.CompanyType";
 
         try {
-            // Use jdbcTemplate to execute the query and return a map of company type and view count
             return jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
                 String companyType = rs.getString("companyType");
                 int viewCount = rs.getInt("view_count");

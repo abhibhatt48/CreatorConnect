@@ -4,28 +4,38 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 /**
- * Represents a user entity with its details.
+ * -----------------------------------------------------------------------------
+ *                                User Class
+ * -----------------------------------------------------------------------------
+ * Purpose of Class:
+ *  Represents a user entity with its details and encapsulates the data and behaviors
+ *  associated with the user in the Creator Connect system. The user can be categorized as
+ *  either an Influencer or an Organization.
+ *
+ * Functions:
+ *  - Getters & Setters for:
+ *    - userID: To get and set the unique identifier of the user.
+ *    - email: To get and set the email address of the user.
+ *    - password: To get and set the user's password.
+ *    - user_type: To determine the type of user (Influencer or Organization).
+ *    - reset_token: To get and set the token used for password reset functionality.
+ *
+ * -----------------------------------------------------------------------------
  */
 public class User {
 
-    // Fields of the User class
 
-    /** The unique identifier for a user. */
     private Long userID;
 
-    /** The email address of the user. */
     @Pattern(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "Email should be valid")
     private String email;
 
-    /** The password for the user account. */
     @Size(min = 8, message = "Password should have at least 8 characters")
     private String password;
 
-    /** The type of user. Can be either "Influencer" or "Organization". */
     @Pattern(regexp="^(Influencer|Organization)$", message = "User type must be either Influencer or Organization")
     private String user_type;
 
-    /** Token used for password reset functionality. */
     private String reset_token;
 
     // Getters and Setters

@@ -1,21 +1,45 @@
+/**
+ * -----------------------------------------------------------------------------
+ *                  User Service Interface
+ * -----------------------------------------------------------------------------
+ * Purpose:
+ * The 'UserServiceInterface' outlines a clear contract for services linked to 
+ * user authentication and account management within the 
+ * 'com.example.creatorconnectbackend' application. By defining this interface, 
+ * a consistent procedure for user-related operations like registration, 
+ * login, and password management is established.
+ *
+ * Key Features:
+ * 1. User Registration: Allows a new user to sign up and join the platform.
+ * 2. User Login: Facilitates user authentication and access control based on 
+ *    provided credentials.
+ * 3. Password Assistance: Provides mechanisms for users who have forgotten 
+ *    their passwords to initiate a recovery process.
+ * 4. Password Reset: Enables users to securely change their passwords using 
+ *    a token-based approach.
+ *
+ * Data Models:
+ * - User: Represents the structure of a user, including attributes like 
+ *   email, password, roles, and other pertinent details.
+ *
+ * -----------------------------------------------------------------------------
+ */
+
 package com.example.creatorconnectbackend.interfaces;
 
 import com.example.creatorconnectbackend.models.User;
 
 import java.util.Map;
 
-//defining the contract for services related to user authentication and account management.
 public interface UserServiceInterface {
 
-    // Register a new user in the system and return a map containing details about the registration outcome.
+
     Map<String, Object> userRegister(User user);
 
-    // Authenticate a user based on their credentials and return a map containing details about the login outcome.
+
     Map<String, Object> userLogin(User user);
 
-    // Process a password recovery request based on the user's email and return a map containing details about the recovery request outcome.
     Map<String, Object> forgotPassword(String email);
 
-    // Reset the user's password based on a token (typically sent to the user's email) and the new password.
     void resetPassword(String token, String newPassword);
 }

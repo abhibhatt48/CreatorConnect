@@ -38,6 +38,25 @@ import com.example.creatorconnectbackend.models.Influencer;
 import com.example.creatorconnectbackend.models.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * InfluencerServiceTest
+ * 
+ * This test class focuses on validating the functionalities of the InfluencerService class.
+ * The class uses Mockito framework for creating mock objects and verifying behaviors.
+ * It provides tests for registering, updating, fetching, and deleting influencers.
+ * 
+ * Methods:
+ * - setUp(): Initializes the test environment and dependencies.
+ * - testRegister_NonInfluencerUser(): Validates the registration of a non-influencer user.
+ * - testUpdate_InfluencerExists(): Tests the update functionality for an existing influencer.
+ * - testUpdate_InfluencerDoesNotExist(): Ensures exceptions are raised for non-existing influencers during updates.
+ * - testGetById_ExistingId(): Checks retrieval of an influencer by its ID.
+ * - testGetById_NonExistingId(): Validates the behavior when trying to retrieve a non-existing influencer.
+ * - testGetAll_InfluencersExist(): Tests the retrieval of all existing influencers.
+ * - testDeleteById(): Validates influencer deletion by ID.
+ * - testDeleteById_InfluencerNotFound(): Checks the behavior when trying to delete a non-existing influencer.
+ */
+
 class InfluencerServiceTest {
 	
 	private Influencer rowMapper = new Influencer();

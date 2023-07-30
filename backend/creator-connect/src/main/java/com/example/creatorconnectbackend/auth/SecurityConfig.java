@@ -1,3 +1,39 @@
+/**
+ * -----------------------------------------------------------------------------
+ *                            Security Configuration
+ * -----------------------------------------------------------------------------
+ * Purpose: 
+ * The 'SecurityConfig' class is a pivotal component of the 'com.example.creatorconnectbackend.auth' package,
+ * providing configuration that initializes and tailors Spring's web security features. Additionally, it 
+ * supplies bean definitions to the Spring IoC container for specific security components.
+ *
+ * Annotations:
+ * - @Configuration: This class is a source of bean definitions for the Spring IoC container.
+ * - @EnableWebSecurity: Activates Spring's web security features.
+ *
+ * Main Components:
+ * - jwtRequestFilter: An instance of JwtRequestFilter used to filter and process JWT tokens in incoming requests.
+ *
+ * Key Functions:
+ * - securityFilterChain(HttpSecurity http): This function outlines the application's security configurations.
+ *   - CSRF protections are disabled, as JWT is inherently resistant to CSRF attacks.
+ *   - Certain endpoints, like registration and login, are universally accessible.
+ *   - All other endpoints mandate authentication.
+ *   - Defines the behavior when authentication fails.
+ *   - Configures session management to be stateless, consistent with JWT-based authentication.
+ *   - The JwtRequestFilter is set up to operate before the standard UsernamePasswordAuthenticationFilter.
+ *
+ * Dependencies:
+ * - JwtRequestFilter: A filter used for processing JWT tokens present in incoming requests.
+ * - HttpSecurity: Used for configuring web-based security for specific http requests.
+ * - JwtAuthenticationEntryPoint: A component that handles authentication exceptions.
+ *
+ * Notes:
+ * It's essential to keep the configuration updated, especially the public endpoints, to ensure the application's
+ * security remains uncompromised.
+ * -----------------------------------------------------------------------------
+ */
+
 package com.example.creatorconnectbackend.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,52 +46,57 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-// This class is a Configuration class, which means it can provide bean definitions to the Spring IoC container.
+/**
+ * Annotate the class as a Configuration class to provide bean definitions to the Spring IoC container.
+ */
 @Configuration
-// This annotation enables Spring's web security features.
+/**
+ * Enable Spring's web security features.
+ */
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // This is a reference to our JWT request filter that will be used to authenticate requests with JWT.
     private final JwtRequestFilter jwtRequestFilter;
 
-    // Constructor-based dependency injection of the JwtRequestFilter.
     @Autowired
     public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
         this.jwtRequestFilter = jwtRequestFilter;
     }
 
-    // This method is defining the security filter chain for our application using the provided HttpSecurity object.
-    @Bean	
+    /**
+     * Defines the security filter chain for the application using the provided HttpSecurity object.
+     *
+     * @param http The HttpSecurity object to configure the security filter chain.
+     * @return The configured SecurityFilterChain object.
+     * @throws Exception If an exception occurs during the configuration.
+     */
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // Disable CSRF (Cross-Site Request Forgery) protections as JWT is immune to CSRF.
             .csrf().disable()
 
-            // Define which requests should be secured.
             .authorizeRequests(authorizeRequests ->
                 authorizeRequests
                     // Allow anyone to access registration and login endpoints.
-                    .requestMatchers("/api/users/register", "/api/users/login").permitAll()
+                    .requestMatchers(
+                        "/api/users/register",
+                        "/api/users/login"
+                    ).permitAll()
 
                     // Any other request should be authenticated.
                     .anyRequest().authenticated()
             )
 
-            // Handle exceptions (like unauthorized requests).
             .exceptionHandling(exceptionHandling ->
                 exceptionHandling.authenticationEntryPoint(new JwtAuthenticationEntryPoint())
             )
 
-            // Define the session management policy. Here, it's stateless meaning no session will be created.
             .sessionManagement(sessionManagement ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             );
 
-        // Add our JWT filter before the default UsernamePasswordAuthenticationFilter.
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
-        // Return the built security filter chain.
         return http.build();
     }
 }

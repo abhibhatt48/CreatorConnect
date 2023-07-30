@@ -20,6 +20,26 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+/**
+ * GlobalExceptionHandlerTest
+ *
+ * This class is intended to test the exception handling behaviors of the GlobalExceptionHandler.
+ * Specifically, it tests the methods that handle validation exceptions occurring during the processing 
+ * of API requests. The class checks that the appropriate HTTP status and error messages are returned
+ * when such exceptions are thrown.
+ *
+ * Key Test Functions:
+ * 
+ * 1. testHandleValidationExceptions() - This function tests the scenario where validation exceptions
+ *                                        are raised for two fields. It ensures that the GlobalExceptionHandler 
+ *                                        correctly consolidates these error messages and returns them 
+ *                                        with a BAD_REQUEST status. 
+ *
+ * Note: 
+ * The tests here use mock objects to simulate the occurrence of validation exceptions and allow for 
+ * controlled testing of the GlobalExceptionHandler's behavior.
+ *
+ */
 public class GlobalExceptionHandlerTest {
 
     @InjectMocks

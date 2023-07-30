@@ -5,22 +5,56 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Represents an organization entity with its details.
+ * -----------------------------------------------------------------------------
+ *                           Organization Model
+ * -----------------------------------------------------------------------------
+ * 
+ * Purpose:
+ * The `Organization` class captures the various attributes and details related 
+ * to an organization within the 'com.example.creatorconnectbackend' application.
+ * 
+ * Key Attributes:
+ * - orgID: A unique identifier for each organization.
+ * - userId: Associated user ID, which could be used for authentication or contact.
+ * - orgName: Name of the organization.
+ * - profileImage: A reference to the organization's profile image.
+ * - companyType: Indicates the type or nature of the company.
+ * - size: The number of employees or size of the organization.
+ * - websiteLink: URL for the organization's website.
+ * - location: The geographical location or headquarters of the organization.
+ * - targetInfluencerNiche: Niches or specialties of influencers the organization aims to collaborate with.
+ * - bio: A brief introduction or description about the organization.
+ * - Social Media Handles: Links or usernames for platforms like Instagram, Facebook, etc.
+ * 
+ * Usage:
+ * The model serves various purposes including:
+ * - Registering a new organization.
+ * - Displaying organization profiles.
+ * - Updating and editing organization details.
+ * 
+ * Validations:
+ * Several fields come with validation constraints to ensure data consistency 
+ * and integrity. For instance, certain fields cannot be null or exceed a 
+ * specific character length.
+ * 
+ * Enhancements (Future Consideration):
+ * - Add more attributes like founding year, revenue, etc.
+ * - Consider methods to evaluate organization reputation or ratings.
+ * - Integrate with an analytics module to get insights on organization interactions with influencers.
+ * 
+ * -----------------------------------------------------------------------------
  */
+
 public class Organization {
 	
-    // Unique identifier for the organization
 	private Long orgID;
 
-    // Associated user ID for the organization
     private Long userId;
 
-    // Name of the organization with validation constraints
     @NotNull(message = "Organization name cannot be null")
     @Size(min = 1, message = "Organization name cannot be empty")
     private String orgName;
 
-    // URL or path of the organization's profile image
     private String profileImage;
 
     // Type of company with validation constraints
@@ -28,16 +62,12 @@ public class Organization {
     @Size(min = 1, message = "Company type cannot be empty")
     private String companyType;
 
-    // Size of the organization
     private Long size;
 
-    // Website link of the organization
     private String websiteLink;
 
-    // Location of the organization
     private String location;
 
-    // List containing niches of target influencers for the organization
     private List<String> targetInfluencerNiche;
 
     // Short bio or description of the organization with validation constraint

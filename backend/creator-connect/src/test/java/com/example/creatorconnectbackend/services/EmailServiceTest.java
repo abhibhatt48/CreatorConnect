@@ -12,6 +12,17 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+/**
+ * EmailServiceTest
+ * 
+ * This class provides tests for the EmailService which handles the sending of emails.
+ * The class leverages Mockito framework for creating mock objects and defining mock behaviors.
+ * 
+ * Methods:
+ * - setUp(): Initializes the test environment and dependencies.
+ * - testSendEmail(): Tests the scenario where an email is sent successfully.
+ * - testSendEmail_ExceptionThrown(): Tests the scenario where an exception occurs during the email sending process.
+ */
 
 public class EmailServiceTest {
 

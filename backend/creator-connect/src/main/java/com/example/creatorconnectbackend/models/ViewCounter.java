@@ -3,19 +3,29 @@ package com.example.creatorconnectbackend.models;
 import java.util.Date;
 
 /**
- * Represents a view counter entity
+ * -----------------------------------------------------------------------------
+ *                            ViewCounter Class
+ * -----------------------------------------------------------------------------
+ * Purpose of Class:
+ *  Represents a view counter entity that tracks the number of views for an influencer
+ *  by an organization in the Creator Connect system. It encapsulates the data related to
+ *  views and interactions between influencers and organizations.
+ *
+ * Functions:
+ *  - Getters & Setters for:
+ *    - InfluencerID: To get and set the unique identifier of the influencer.
+ *    - OrgId: To get and set the unique identifier of the organization.
+ *    - Date: To get and set the date when the interaction occurred.
+ *
+ * -----------------------------------------------------------------------------
  */
 public class ViewCounter {
 
-    // Fields of the ViewCounter class
 
-    /** The unique identifier for an influencer. */
     private Long InfluencerID;
 
-    /** The unique identifier for an organization. */
     private Long OrgId;
 
-    /** The date when the interaction occurred. */
     private Date Date;
 
     // Getters and Setters

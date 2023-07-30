@@ -19,6 +19,38 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+/**
+ * ConnectionRequestControllerTests.java
+ * 
+ * Description:
+ * This class contains test cases for the ConnectionRequestController.
+ * The tests utilize Mockito framework for mocking dependencies.
+ * 
+ * Functions:
+ * - setup(): Initializes mock objects and sets up the test environment.
+ * 
+ * - testCreateRequest_ValidConnectionRequest_ReturnsCreatedRequest(): Tests the scenario where a valid connection request is made.
+ * 
+ * - testCreateRequest_InvalidConnectionRequest_ReturnsBadRequest(): Tests the scenario where an invalid connection request is made.
+ * 
+ * - testGetConnectionById_ValidRequestId_ReturnsConnectionRequest(): Tests fetching a connection request by its ID.
+ * 
+ * - testUpdateConnectionRequestStatus_ValidRequestIdAndPayload_ReturnsSuccessMessage(): Tests updating the status of a connection request with a valid ID and payload.
+ * 
+ * - testUpdateConnectionRequestStatus_InvalidPayload_ReturnsBadRequest(): Tests updating the status of a connection request with an invalid payload.
+ * 
+ * - testGetRequestsByInfluencerID_ValidInfluencerId_ReturnsConnectionRequests(): Tests fetching connection requests by influencer ID.
+ * 
+ * - testGetRequestsByOrganizationID_ValidOrganizationId_ReturnsConnectionRequests(): Tests fetching connection requests by organization ID.
+ * 
+ * - testGetRequestsByStatus_ValidOrganizationIdAndStatus_ReturnsConnectionRequests(): Tests fetching connection requests by their status.
+ * 
+ * - testGetAllRequests_ValidRequest_ReturnsAllConnectionRequests(): Tests fetching all connection requests.
+ * 
+ * - testDeleteByID_ValidRequestId_ReturnsNoContent(): Tests deleting a connection request by its ID.
+ * 
+ * - testUpdateRequestMessage_ValidRequestIdAndMessage_ReturnsUpdatedConnectionRequest(): Tests updating the message of a connection request.
+ */
 
 class ConnectionRequestControllerTests {
 
@@ -107,125 +139,94 @@ class ConnectionRequestControllerTests {
 
     @Test
     void testUpdateConnectionRequestStatus_InvalidPayload_ReturnsBadRequest() {
-        // Prepare the request ID and an invalid payload
         Long requestId = 1L;
         Map<String, String> payload = new HashMap<>();
 
-        // Invoke the updateConnectionRequestStatus method
         ResponseEntity<String> response = connectionRequestController.updateConnectionRequestStatus(requestId, payload);
 
-        // Verify that the service method was not called
         verify(connectionRequestService, never()).updateStatus(anyLong(), any(RequestStatus.class));
 
-        // Verify the response status code and body
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Invalid request payload", response.getBody());
     }
 
     @Test
     void testGetRequestsByInfluencerID_ValidInfluencerId_ReturnsConnectionRequests() {
-        // Prepare the expected connection requests
         List<ConnectionRequest> requests = Arrays.asList(mock(ConnectionRequest.class), mock(ConnectionRequest.class));
 
-        // Configure the mock service to return the connection requests
         when(connectionRequestService.getRequestsByInfluencerID(1L)).thenReturn(requests);
 
-        // Invoke the getRequestsByInfluencerID method
         ResponseEntity<List<ConnectionRequest>> response = connectionRequestController.getRequestsByInfluencerID(1L);
 
-        // Verify that the service method was called
         verify(connectionRequestService).getRequestsByInfluencerID(1L);
 
-        // Verify the response status code and body
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(requests, response.getBody());
     }
 
     @Test
     void testGetRequestsByOrganizationID_ValidOrganizationId_ReturnsConnectionRequests() {
-        // Prepare the expected connection requests
         List<ConnectionRequest> requests = Arrays.asList(mock(ConnectionRequest.class), mock(ConnectionRequest.class));
 
-        // Configure the mock service to return the connection requests
         when(connectionRequestService.getRequestsByOrgID(1L)).thenReturn(requests);
 
-        // Invoke the getRequestsByOrganizationID method
         ResponseEntity<List<ConnectionRequest>> response = connectionRequestController.getRequestsByOrganizationID(1L);
 
-        // Verify that the service method was called
         verify(connectionRequestService).getRequestsByOrgID(1L);
 
-        // Verify the response status code and body
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(requests, response.getBody());
     }
 
     @Test
     void testGetRequestsByStatus_ValidOrganizationIdAndStatus_ReturnsConnectionRequests() {
-        // Prepare the expected connection requests
         List<ConnectionRequest> requests = Arrays.asList(mock(ConnectionRequest.class), mock(ConnectionRequest.class));
 
-        // Configure the mock service to return the connection requests
         when(connectionRequestService.getRequestsByStatus(1L, "Pending")).thenReturn(requests);
 
-        // Invoke the getRequestsByStatus method
         ResponseEntity<List<ConnectionRequest>> response = connectionRequestController.getRequestsByStatus(1L, "Pending");
 
-        // Verify that the service method was called
         verify(connectionRequestService).getRequestsByStatus(1L, "Pending");
 
-        // Verify the response status code and body
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(requests, response.getBody());
     }
 
     @Test
     void testGetAllRequests_ValidRequest_ReturnsAllConnectionRequests() {
-        // Prepare the expected connection requests
         List<ConnectionRequest> requests = Arrays.asList(mock(ConnectionRequest.class), mock(ConnectionRequest.class));
 
-        // Configure the mock service to return the connection requests
         when(connectionRequestService.getAllRequests()).thenReturn(requests);
 
-        // Invoke the getAllRequests method
         List<ConnectionRequest> response = connectionRequestController.getAllRequests();
 
-        // Verify that the service method was called
         verify(connectionRequestService).getAllRequests();
 
-        // Verify the response body
         assertEquals(requests, response);
     }
     @Test
     void testDeleteByID_ValidRequestId_ReturnsNoContent() {
-        // Invoke the deleteByID method
         ResponseEntity<String> response = connectionRequestController.deleteByID(1L);
 
-        // Verify that the service method was called
         verify(connectionRequestService).deleteByID(1L);
 
-        // Verify the response status code and body
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertEquals(null, response.getBody());
     }
 
     @Test
     void testUpdateRequestMessage_ValidRequestIdAndMessage_ReturnsUpdatedConnectionRequest() {
-        // Prepare the expected updated request
         ConnectionRequest updatedRequest = mock(ConnectionRequest.class);
 
-        // Configure the mock service to return the updated request
         Map<String, String> map = new HashMap<>();
         map.put("Message", "Hello!");
         when(connectionRequestService.updateMessage(1L, map)).thenReturn(updatedRequest);
 
-        // Invoke the updateRequestMessage method
         ResponseEntity<ConnectionRequest> response = connectionRequestController.updateRequestMessage(1L, map);
 
-        // Verify that the service method was called
+
         verify(connectionRequestService).updateMessage(1L, map);
 
-        // Verify the response status code and body
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(updatedRequest, response.getBody());
     }

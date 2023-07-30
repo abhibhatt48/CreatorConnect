@@ -1,32 +1,50 @@
-// Define the package to which this class belongs.
+/**
+ * -----------------------------------------------------------------------------
+ *                               JWT Authentication Entry Point
+ * -----------------------------------------------------------------------------
+ * Purpose: This class serves as the entry point for handling authentication
+ *          exceptions related to JWT (JSON Web Token) within the
+ *          'com.example.creatorconnectbackend.auth' package.
+ *
+ * Main Components:
+ * - JwtAuthenticationEntryPoint: A class that implements the AuthenticationEntryPoint
+ *   interface for handling exceptions related to JWT authentication. It provides a
+ *   response to the client whenever an AuthenticationException is thrown.
+ *   
+ * Main Functions:
+ * - commence(): Called when an AuthenticationException is raised by a protected
+ *   endpoint. It sends a 401 (Unauthorized) HTTP response to indicate that the
+ *   user is not authenticated.
+ * -----------------------------------------------------------------------------
+ */
 package com.example.creatorconnectbackend.auth;
 
-// Import necessary classes for handling authentication exceptions and defining entry points.
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-
-// Import the Spring `Component` annotation, which marks this class as a Spring component.
 import org.springframework.stereotype.Component;
 
-// Import necessary classes for handling HTTP servlet requests and responses.
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
-import java.io.IOException; // Import IOException for handling potential input-output exceptions.
 
-// Annotate the class with `@Component` so that Spring recognizes it as a component
-// and manages its lifecycle.
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    // Override the `commence` method of the `AuthenticationEntryPoint` interface.
-    // This method is called whenever an AuthenticationException is thrown by the 
-    // protected endpoint, meaning that the user is not authenticated.
+    /**
+     * Overrides the `commence` method of the `AuthenticationEntryPoint` interface.
+     * This method is called whenever an AuthenticationException is thrown by the protected endpoint,
+     * indicating that the user is not authenticated.
+     *
+     * @param request        The HTTP servlet request.
+     * @param response       The HTTP servlet response.
+     * @param authException  The AuthenticationException that triggered the entry point.
+     * @throws IOException   If there is an input-output exception during processing.
+     */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
 
-        // If the user is not authenticated, send an HTTP 401 (Unauthorized) response.
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
     }
 }

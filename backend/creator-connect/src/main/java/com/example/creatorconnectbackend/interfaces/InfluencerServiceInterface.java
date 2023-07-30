@@ -1,23 +1,43 @@
+/**
+ * -----------------------------------------------------------------------------
+ *           Influencer Service Interface
+ * -----------------------------------------------------------------------------
+ * Purpose:
+ * The 'InfluencerServiceInterface' delineates a standardized contract for 
+ * the management and manipulation of influencers within the 
+ * 'com.example.creatorconnectbackend' application. This interface is crucial
+ * for ensuring a uniform approach to influencer operations, such as registration, 
+ * retrieval, updating, listing, and deletion.
+ *
+ * Key Features:
+ * 1. Registration: Facilitates the addition of a new influencer tied to a user ID.
+ * 2. Retrieval: Offers methods to fetch influencers either individually by ID 
+ *    or as an entire list.
+ * 3. Update: Enables the modification of existing influencer data.
+ * 4. Deletion: Grants the ability to remove an influencer based on their unique ID.
+ *
+ * Data Models:
+ * - Influencer: Represents the influencer model, encapsulating properties 
+ *   like their profile, metrics, niche, and any other relevant attributes.
+ * -----------------------------------------------------------------------------
+ */
+
 package com.example.creatorconnectbackend.interfaces;
 
 import java.util.List;
 import com.example.creatorconnectbackend.models.Influencer;
 
-//defining the contract for services related to influencers.
 public interface InfluencerServiceInterface {
-    
-    // Register a new influencer associated with a user ID and return the registered influencer.
+
+
     Influencer register(Influencer influencer, Long userId);
 
-    // Retrieve an influencer based on its unique ID.
+
     Influencer getById(Long id);
 
-    // Update the details of an existing influencer based on its unique ID and return the updated influencer.
     Influencer update(Long id, Influencer updatedInfluencer);
 
-    // Fetch a list of all influencers present in the database.
     List<Influencer> getAll();
 
-    // Delete an influencer based on its unique ID.
     void deleteById(Long id);
 }

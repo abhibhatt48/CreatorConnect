@@ -25,7 +25,25 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-
+/**
+ * OrganizationServiceTest
+ * 
+ * A test class for the OrganizationService.
+ * 
+ * Functions:
+ * 1. setUp(): Sets up the testing environment.
+ * 2. createMockOrganization(long id): Utility function to create a mock organization.
+ * 3. testRegister(): Tests the registration of an organization.
+ * 4. testGetById_InvalidId_ThrowsException(): Tests if an invalid ID throws an exception.
+ * 5. testUpdate_OrganizationExists(): Tests the update functionality when the organization exists.
+ * 6. testUpdate_OrganizationDoesNotExist(): Tests the update functionality when the organization does not exist.
+ * 7. testGetAll_ReturnsListOfOrganizations(): Tests if all organizations are returned.
+ * 8. testDeleteById_ValidId_DeletesOrganization(): Tests if deletion works with a valid ID.
+ * 9. testDeleteById_InvalidId_ThrowsException(): Tests if an invalid ID for deletion throws an exception.
+ * 
+ * Note: Always make sure to run this test suite after changes to ensure the functionality remains consistent.
+ * 
+ */
 class OrganizationServiceTest {
 
     @Mock

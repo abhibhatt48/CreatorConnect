@@ -20,27 +20,57 @@ import com.example.creatorconnectbackend.interfaces.OrganizationServiceInterface
 import com.example.creatorconnectbackend.models.Organization;
 import com.example.creatorconnectbackend.models.User;
 
-// Indicating this class is a Spring Service
-@Service
+/**
+ * OrganizationService class provides various functions to manage organizations in the system.
+ * It interacts with the database using JdbcTemplate and SimpleJdbcInsert for CRUD operations on organizations.
+ *
+ * Functions:
+ * 1. register: Registers a new organization in the system based on the provided organization object and userId.
+ *    - Parameters:
+ *        - organization (Organization): The organization object to be registered.
+ *        - userId (Long): The user ID associated with the organization.
+ *    - Returns:
+ *        - Organization: The registered organization object.
+ *
+ * 2. getById: Fetches organization details based on their ID.
+ *    - Parameters:
+ *        - id (Long): The ID of the organization to fetch.
+ *    - Returns:
+ *        - Organization: The organization object with the specified ID.
+ *
+ * 3. update: Updates the details of an existing organization based on their ID.
+ *    - Parameters:
+ *        - id (Long): The ID of the organization to update.
+ *        - updatedOrganization (Organization): The updated organization object containing new details.
+ *    - Returns:
+ *        - Organization: The updated organization object after the update operation.
+ *
+ * 4. getAll: Fetches all organizations from the database.
+ *    - Returns:
+ *        - List<Organization>: A list of all organizations in the system.
+ *
+ * 5. deleteById: Deletes an organization from the system based on their ID.
+ *    - Parameters:
+ *        - id (Long): The ID of the organization to delete.
+ *
+ * Dependencies:
+ * - JdbcTemplate: Used for querying the database and mapping rows to Organization objects.
+ * - UserService: Used to fetch user details associated with an organization during registration.
+ * - Logger: Used for logging purposes to record information and errors.
+ */@Service
 public class OrganizationService implements OrganizationServiceInterface {
-    // Injecting JdbcTemplate for database operations
     private final JdbcTemplate jdbcTemplate;
-    // Logger instance for logging operations and events
     private final Logger logger = LoggerFactory.getLogger(OrganizationService.class);
     
-    // Autowiring the UserService for user-related operations
     @Autowired
     private UserService userService;
 
-    // Constructor that initializes the JdbcTemplate
     public OrganizationService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    // Mapper to convert database rows into Organization objects
     private RowMapper<Organization> rowMapper = (rs, rowNum) -> {
         Organization organization = new Organization();
-        // Mapping each column in the row to a field in the Organization object
         organization.setOrgID(rs.getLong("orgID"));
         organization.setOrgName(rs.getString("orgName"));
         organization.setProfileImage(rs.getString("profileImage"));
@@ -59,11 +89,8 @@ public class OrganizationService implements OrganizationServiceInterface {
         return organization;
     };
 
-    // Method to register an organization
     public Organization register(Organization organization, Long userId) {
-    	// Logging the registration attempt
     	logger.info("Attempting to register organization with userId {}", userId);
-    	// Fetch the user using the provided userId
         User user = jdbcTemplate.queryForObject("SELECT * FROM users WHERE UserID = ?", new Object[]{userId}, userService.getUserRowMapper());
         
         if (user != null && user.getUser_type().equals("Organization")) {
@@ -96,9 +123,7 @@ public class OrganizationService implements OrganizationServiceInterface {
     }
 
     
-    // Method to fetch an organization by its ID
     public Organization getById(Long id) {
-    	// Logging the retrieval attempt
         String sql = "SELECT * FROM organizations WHERE orgID = ?";
         logger.info("Attempting to get organization by id {}", id);
         try {
@@ -109,9 +134,7 @@ public class OrganizationService implements OrganizationServiceInterface {
         }
     }
 
-     // Method to update an organization's details
      public Organization update(Long id, Organization updatedOrganization) {
-    	// Logging the update attempt
     	String sql = "UPDATE organizations SET orgName = ?, profileImage = ?, companyType = ?, size = ?, websiteLink = ?, targetInfluencerNiche = ?, location = ?, bio = ?, instagram = ?, facebook = ?, twitter = ?, tiktok = ?, youtube = ?, twitch = ? WHERE orgID = ?";
         logger.info("Attempting to update organization with id {}", id);
         int updated = jdbcTemplate.update(sql, updatedOrganization.getOrgName(), updatedOrganization.getProfileImage(), updatedOrganization.getCompanyType(), updatedOrganization.getSize(), updatedOrganization.getWebsiteLink(), String.join(",", updatedOrganization.getTargetInfluencerNiche()), updatedOrganization.getLocation(), updatedOrganization.getBio(), updatedOrganization.getInstagram(), updatedOrganization.getFacebook(), updatedOrganization.getTwitter(), updatedOrganization.getTiktok(), updatedOrganization.getYoutube(), updatedOrganization.getTwitch(), id);
@@ -123,15 +146,12 @@ public class OrganizationService implements OrganizationServiceInterface {
         return getById(id);
     }
 
-    // Method to fetch all organizations
     public List<Organization> getAll() {
-    	// Logging the retrieval attempt
     	logger.info("Attempting to get all organizations");
         String sql = "SELECT * FROM organizations";
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    // Method to delete an organization by its ID
     public void deleteById(Long id) {
         String sql = "DELETE FROM organizations WHERE orgID = ?";
         logger.info("Attempting to delete organization by id {}", id);
