@@ -10,8 +10,6 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,51 +34,6 @@ public class ViewCounterServiceTest {
         MockitoAnnotations.openMocks(this);
         viewCounterService = new ViewCounterService(jdbcTemplate);
     }
-
-//    @Test
-//    void testAddView() {
-//        ViewCounter viewCounter = new ViewCounter();
-//        viewCounter.setInfluencerId(1L);
-//        viewCounter.setOrgId(2L);
-//        viewCounter.setDate(java.sql.Date.valueOf("2023-07-26"));
-//
-//        when(jdbcTemplate.update(any(String.class), anyLong(), anyLong(), any(java.sql.Date.class))).thenReturn(1);
-//
-//        ViewCounter result = viewCounterService.addView(viewCounter);
-//        assertNotNull(result);
-//
-//        verify(jdbcTemplate, times(1)).update(any(String.class), eq(1L), eq(2L), eq(java.sql.Date.valueOf("2023-07-26")));
-//    }
-//
-//    @Test
-//    void testAddViewException() {
-//        ViewCounter viewCounter = new ViewCounter();
-//        viewCounter.setInfluencerId(1L);
-//        viewCounter.setOrgId(2L);
-//        viewCounter.setDate(java.sql.Date.valueOf("2023-07-26"));
-//
-//        when(jdbcTemplate.update(any(String.class), anyLong(), anyLong(), any(java.sql.Date.class))).thenThrow(new RuntimeException());
-//
-//        ViewCounter result = viewCounterService.addView(viewCounter);
-//        assertNull(result);
-//
-//        verify(jdbcTemplate, times(1)).update(any(String.class), eq(1L), eq(2L), eq(java.sql.Date.valueOf("2023-07-26")));
-//    }
-//
-//    @Test
-//    void testAddViewNotUpdated() {
-//        ViewCounter viewCounter = new ViewCounter();
-//        viewCounter.setInfluencerId(1L);
-//        viewCounter.setOrgId(2L);
-//        viewCounter.setDate(java.sql.Date.valueOf("2023-07-26"));
-//
-//        when(jdbcTemplate.update(any(String.class), anyLong(), anyLong(), any(java.sql.Date.class))).thenReturn(0);
-//
-//        ViewCounter result = viewCounterService.addView(viewCounter);
-//        assertNull(result);
-//
-//        verify(jdbcTemplate, times(1)).update(any(String.class), eq(1L), eq(2L), eq(java.sql.Date.valueOf("2023-07-26")));
-//    }
 
     @Test
     void testGetViewsByInfluencerIDException() {

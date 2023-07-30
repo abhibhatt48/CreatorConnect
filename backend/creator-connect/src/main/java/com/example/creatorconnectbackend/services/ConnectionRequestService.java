@@ -21,14 +21,18 @@ import java.util.Map;
 @Service
 public class ConnectionRequestService implements ConnectionRequestServiceInterface {
 
+    // JdbcTemplate for querying the database
     private final JdbcTemplate jdbcTemplate;
+    
+    // Logger instance for logging purposes
     private final Logger logger = LoggerFactory.getLogger(ConnectionRequestService.class);
 
-
+    // Constructor injecting JdbcTemplate
     public ConnectionRequestService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    // RowMapper is a callback interface used by JdbcTemplate's query methods for mapping rows of a ResultSet
     private RowMapper<ConnectionRequest> rowMapper = (rs, rowNum) -> {
         ConnectionRequest connectionRequest = new ConnectionRequest();
         connectionRequest.setRequestID(rs.getLong("RequestID"));
@@ -39,12 +43,15 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         return connectionRequest;
     };
 
+    // Getter for the rowMapper
     public RowMapper<ConnectionRequest> getRowMapper() {
         return rowMapper;
     }
 
+    // Method to create a new connection request and return the persisted entity
     public ConnectionRequest createRequest(ConnectionRequest connectionRequest) {
-    	logger.info("Attempting to create connection request.");
+        logger.info("Attempting to create connection request.");
+        // Check if the input is valid
         if (connectionRequest != null) {
             SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
             jdbcInsert.withTableName("connection_requests").usingGeneratedKeyColumns("RequestID");
@@ -61,34 +68,36 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
 
             return connectionRequest;
         } else {
-        	logger.warn("Connection request creation failed. Provided connection request is null.");
+            logger.warn("Connection request creation failed. Provided connection request is null.");
             return null;
         }
     }
 
+    // Method to retrieve a specific connection request by its ID
     public ConnectionRequest getConnectionRequestByID(Long requestID) {
         String query = "SELECT * FROM connection_requests WHERE RequestID = ?";
         logger.info("Fetching connection request with ID: {}", requestID);
         try {
             return jdbcTemplate.queryForObject(query, new Object[]{requestID}, rowMapper);
         } catch (EmptyResultDataAccessException e) {
-        	logger.error("Failed to update message for connection request with ID: {}", requestID, e);
+            logger.error("Failed to update message for connection request with ID: {}", requestID, e);
             throw new RuntimeException("Connection request not found with ID: " + requestID);
         }
     }
 
-
+    // Method to update the status of a specific connection request
     public ConnectionRequest updateStatus(Long id, RequestStatus newStatus) {
         String query = "UPDATE connection_requests SET RequestStatus = ? WHERE RequestID = ?";
         logger.info("Updating status for connection request with ID: {}", id);
         int updated = jdbcTemplate.update(query, newStatus.name(), id);
         if (updated == 0) {
-        	logger.error("Failed to update message for connection request with ID: {}", newStatus);
+            logger.error("Failed to update message for connection request with ID: {}", newStatus);
             throw new RuntimeException("Could not update the status of requestID: " + id);
         }
         return getConnectionRequestByID(id);
     }
 
+    // Method to retrieve all connection requests for a specific influencer
     public List<ConnectionRequest> getRequestsByInfluencerID(Long id) {
         String query = "SELECT * FROM connection_requests WHERE InfluencerID = ?";
         try {
@@ -98,6 +107,7 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
+    // Method to retrieve all connection requests for a specific organization
     public List<ConnectionRequest> getRequestsByOrgID(Long orgID) {
         String query = "SELECT * FROM connection_requests WHERE OrgID = ?";
         try {
@@ -107,6 +117,7 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
+    // Method to retrieve all connection requests based on a specific status for a specific organization
     public List<ConnectionRequest> getRequestsByStatus(Long orgID, String status) {
         String query = "SELECT * FROM connection_requests WHERE OrgID = ? AND RequestStatus = ?";
         try {
@@ -116,7 +127,7 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
-
+    // Method to retrieve all connection requests from the database
     public List<ConnectionRequest> getAllRequests() {
         String query = "SELECT * FROM connection_requests";
         try {
@@ -126,29 +137,27 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
-
+    // Method to delete a specific connection request based on its ID
     public void deleteByID(Long id) {
         String query = "DELETE FROM connection_requests WHERE RequestID = ?";
         logger.info("Deleting connection request with ID: {}", id);
         int deletedRows = jdbcTemplate.update(query, id);
         if (deletedRows == 0) {
-        	logger.error("Failed to update message for connection request with ID: {}", id);
+            logger.error("Failed to update message for connection request with ID: {}", id);
             throw new RuntimeException("Failed to delete connection request with ID: " + id);
         }
     }
 
-
+    // Method to update the message of a specific connection request
     public ConnectionRequest updateMessage(Long id, Map<String, String> map) {
         String query = "UPDATE connection_requests SET RequestMessage = ? WHERE RequestID = ?";
-        logger.info("Updating message for connection request with ID: {}", id);	
+        logger.info("Updating message for connection request with ID: {}", id);
         String message = map.get("Message");
         int updatedRows = jdbcTemplate.update(query, message, id);
         if (updatedRows == 0) {
-        	logger.error("Failed to update message for connection request with ID: {}", id);
+            logger.error("Failed to update message for connection request with ID: {}", id);
             throw new RuntimeException("Failed to update message for connection request with ID: " + id);
         }
         return getConnectionRequestByID(id);
     }
-
-
 }

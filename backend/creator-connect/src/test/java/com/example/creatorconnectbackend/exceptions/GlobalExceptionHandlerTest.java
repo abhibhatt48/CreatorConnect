@@ -1,5 +1,4 @@
 package com.example.creatorconnectbackend.exceptions;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -59,6 +58,4 @@ public class GlobalExceptionHandlerTest {
                 fieldName2 + ": " + errorMessage2;
         assertEquals(expectedErrorMessage, responseEntity.getBody());
     }
-
 }
-

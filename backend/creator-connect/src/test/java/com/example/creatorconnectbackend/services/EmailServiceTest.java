@@ -1,6 +1,5 @@
 package com.example.creatorconnectbackend.services;
 
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -37,13 +36,14 @@ public class EmailServiceTest {
 
         verify(javaMailSender).send(any(SimpleMailMessage.class));
     }
-    
+
     @Test
     public void testSendEmail_ExceptionThrown() {
         String to = "test@example.com";
         String subject = "Test Subject";
         String text = "Test Body";
 
+        // Mocking a MailSendException to simulate an exception being thrown when sending the email
         doThrow(MailSendException.class).when(javaMailSender).send(any(SimpleMailMessage.class));
 
         emailService.sendEmail(to, subject, text);

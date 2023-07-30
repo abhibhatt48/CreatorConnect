@@ -1,5 +1,6 @@
 package com.example.creatorconnectbackend.controllers;
 
+// Imports for the Spring Framework functionalities such as REST, dependency injection, and validation.
 import com.example.creatorconnectbackend.models.ConnectionRequest;
 import com.example.creatorconnectbackend.models.RequestStatus;
 import com.example.creatorconnectbackend.services.ConnectionRequestService;
@@ -13,24 +14,30 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+// Imports related to Java utility functionalities like lists and maps.
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin
-@RequestMapping("/api/connectionReq")
+@CrossOrigin // Allows cross-origin requests, useful for web applications on different domains.
+@RequestMapping("/api/connectionReq") // Base URL for this controller.
 public class ConnectionRequestController {
 
-    private final ConnectionRequestService connectionRequestService;
+    private final ConnectionRequestService connectionRequestService; // Service for operations on connection requests.
     private final Logger logger = LoggerFactory.getLogger(ConnectionRequestController.class);
 
+    /**
+     * Constructor for dependency injection.
+     */
     @Autowired
     public ConnectionRequestController(ConnectionRequestService connectionRequestService) {
         this.connectionRequestService = connectionRequestService;
     }
-
+    /**
+     * Endpoint to create a new connection request.
+     */
     @PostMapping("/create")
     public ResponseEntity<?> createRequest(@Valid @RequestBody ConnectionRequest connectionRequest, BindingResult bindingResult) {
     	if (bindingResult.hasErrors()) {
@@ -43,13 +50,17 @@ public class ConnectionRequestController {
         logger.info("Created connection request with ID: {}", createdRequest.getRequestID());
         return new ResponseEntity<>(createdRequest, HttpStatus.CREATED);
     }
-
+    
+    /**
+     * Endpoint to retrieve a connection request by its ID.
+     */
     @GetMapping("/getByRequestID/{requestId}")
     public ResponseEntity<ConnectionRequest> getConnectionById(@PathVariable("requestId") Long requestId) {
     	logger.info("Getting connection request with ID: {}", requestId);
         ConnectionRequest connectionRequest = connectionRequestService.getConnectionRequestByID(requestId);
         return ResponseEntity.ok(connectionRequest);
     }
+
 
     @PutMapping("/update/{requestId}")
     public ResponseEntity<String> updateConnectionRequestStatus(
@@ -94,7 +105,9 @@ public class ConnectionRequestController {
         return ResponseEntity.ok(allRequests).getBody();
     }
 
-
+    /**
+     * Endpoint to delete a connection request by its ID.
+     */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteByID(@PathVariable("id") Long id) {
     	logger.info("Deleting connection request with ID: {}", id);
@@ -103,6 +116,9 @@ public class ConnectionRequestController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Endpoint to update the message of a connection request.
+     */
     @PutMapping("/updateMessage/{id}")
     public ResponseEntity<ConnectionRequest> updateRequestMessage(@PathVariable("id") Long requestId, @RequestBody Map<String, String> map) {
     	logger.info("Updating connection request message with ID: {}", requestId);

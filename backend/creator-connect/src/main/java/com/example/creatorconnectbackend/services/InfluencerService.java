@@ -19,8 +19,10 @@ import com.example.creatorconnectbackend.models.Gender;
 import com.example.creatorconnectbackend.models.Influencer;
 import com.example.creatorconnectbackend.models.User;
 
-@Service
+@Service // Indicates that this class is a Spring Service
 public class InfluencerService implements InfluencerServiceInterface {
+
+    // Dependencies and logger initialized
     private final JdbcTemplate jdbcTemplate;
     private final Logger logger = LoggerFactory.getLogger(InfluencerService.class);
 
@@ -29,15 +31,17 @@ public class InfluencerService implements InfluencerServiceInterface {
 
 	private SimpleJdbcInsert jdbcInsert;
 
+    // Constructor for initializing JdbcTemplate and UserService
     public InfluencerService(JdbcTemplate jdbcTemplate, UserService userService ) {
         this.jdbcTemplate = jdbcTemplate;
         this.userService = userService;
     }
     
+    // Setter for SimpleJdbcInsert
     public void setJdbcInsert(SimpleJdbcInsert jdbcInsert) {
         this.jdbcInsert = jdbcInsert;
     }
-
+    // RowMapper for converting rows from the database into Influencer objects
     private RowMapper<Influencer> rowMapper = (rs, rowNum) -> {
         Influencer influencer = new Influencer();
         influencer.setInfluencerID(rs.getLong("influencerID"));
@@ -61,7 +65,7 @@ public class InfluencerService implements InfluencerServiceInterface {
         influencer.setBestPosts(Arrays.asList(rs.getString("bestPosts").split(",")));
         return influencer;
     };
-
+    // Method to register an influencer in the system
     public Influencer register(Influencer influencer, Long userId) {
     	logger.info("Attempting to register influencer with userId {}", userId);
         // Fetch the user using the provided userId
@@ -102,7 +106,7 @@ public class InfluencerService implements InfluencerServiceInterface {
         }
     }
 
-
+    // Method to fetch influencer details based on their ID
     public Influencer getById(Long id) {
         String sql = "SELECT * FROM influencers WHERE influencerID = ?";
         logger.info("Attempting to get influencer by id {}", id);
@@ -114,6 +118,7 @@ public class InfluencerService implements InfluencerServiceInterface {
         }
     }
 
+    // Method to update details of an influencer based on their ID
     public Influencer update(Long id, Influencer updatedInfluencer) {
     	String sql = "UPDATE influencers SET name = ?, profileImage = ?, gender = ?, influencerName = ?, influencerType = ?, influencerNiche = ?, minRate = ?, previousBrands = ?, location = ?, bestPosts = ?, bio = ?, birthdate = ?, instagram = ?, tikTok = ?, tweeter = ?, youtube = ?, facebook = ?, twitch = ? WHERE influencerID = ?";
 
@@ -127,12 +132,14 @@ public class InfluencerService implements InfluencerServiceInterface {
         return getById(id);
     }
 
+    // Method to fetch all influencers from the database
     public List<Influencer> getAll() {
         String sql = "SELECT * FROM influencers";
         logger.info("Attempting to get all influencers");
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    // Method to delete an influencer based on their ID
     public void deleteById(Long id) {
         String sql = "DELETE FROM influencers WHERE influencerID = ?";
         logger.info("Attempting to delete influencer by id {}", id);

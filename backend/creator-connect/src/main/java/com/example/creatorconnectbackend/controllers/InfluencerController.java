@@ -16,25 +16,32 @@ import org.springframework.web.bind.annotation.*;
 import com.example.creatorconnectbackend.models.Influencer;
 import com.example.creatorconnectbackend.services.InfluencerService;
 
+// Define the class as a REST controller
 @RestController
+// Enable Cross-Origin requests for the entire controller
 @CrossOrigin
+// Base URL for all endpoints in this controller
 @RequestMapping("/api/influencers")
 public class InfluencerController {
 
+    // Service to manage Influencer related operations
 	private final InfluencerService influencerService;
+    // Logger for logging messages related to operations in this class
 	private final Logger logger = LoggerFactory.getLogger(InfluencerController.class);
 
+    // Constructor-based dependency injection for the InfluencerService
     @Autowired
     public InfluencerController(InfluencerService influencerService) {
         this.influencerService = influencerService;
     }
 
+    // Endpoint to register a new Influencer
     @PostMapping("/register/{userId}")
     public ResponseEntity<?> registerInfluencer(@PathVariable Long userId, @RequestBody Influencer influencer, BindingResult bindingResult) {
     	if (bindingResult.hasErrors()) {
             logger.error("Validation errors while registering influencer by user with ID: {}", userId);
 
-            // Collect all the error messages in a map and send it as response
+            // Convert validation errors into a map for a more structured response
             Map<String, String> errors = bindingResult.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
             
@@ -46,6 +53,7 @@ public class InfluencerController {
         return new ResponseEntity<>(registeredInfluencer, HttpStatus.CREATED);       
     }
 
+    // Endpoint to fetch a specific Influencer by their ID
     @GetMapping("/{id}")
     public ResponseEntity<Influencer> getInfluencerById(@PathVariable("id") Long id) {
     	logger.info("Request to get influencer with ID: {}", id);
@@ -53,12 +61,13 @@ public class InfluencerController {
         return new ResponseEntity<>(influencer, HttpStatus.OK);
     }
 
+    // Endpoint to update details of an existing Influencer
     @PutMapping("/{id}")
     public ResponseEntity<?> updateInfluencer(@PathVariable("id") Long id, @RequestBody Influencer updatedInfluencer, BindingResult bindingResult) {
     	if (bindingResult.hasErrors()) {
             logger.error("Validation errors while updating influencer with ID: {}", id);
 
-            // Collect all the error messages in a map and send it as response
+            // Convert validation errors into a map for a more structured response
             Map<String, String> errors = bindingResult.getFieldErrors().stream()
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
 
@@ -70,6 +79,7 @@ public class InfluencerController {
         return new ResponseEntity<>(influencer, HttpStatus.OK);
     }
 
+    // Endpoint to fetch all registered Influencers
     @GetMapping
     public ResponseEntity<List<Influencer>> getAllInfluencers() {
     	logger.info("Request to get all influencers");
@@ -77,6 +87,7 @@ public class InfluencerController {
         return new ResponseEntity<>(influencers, HttpStatus.OK);
     }
 
+    // Endpoint to delete a specific Influencer by their ID
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteInfluencerById(@PathVariable("id") Long id) {
     	logger.info("Attempt to delete influencer with ID: {}", id);
