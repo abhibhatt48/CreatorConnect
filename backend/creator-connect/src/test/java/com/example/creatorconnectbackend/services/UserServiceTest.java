@@ -101,6 +101,7 @@ public class UserServiceTest {
     @Test
     public void testForgotPassword() {
         String email = "test@example.com";
+        when(jdbcTemplate.queryForObject(any(String.class), eq(Integer.class), eq(email))).thenReturn(1);
 
         userService.forgotPassword(email);
 
