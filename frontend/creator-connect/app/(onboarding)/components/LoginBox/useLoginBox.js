@@ -33,7 +33,7 @@ export const useLoginBox = () => {
       if (res?.ok) {
         toast.success(res.message);
         localStorage.setItem("userData", JSON.stringify(res.data[0]));
-
+        localStorage.setItem("token", res.jwt);
         if (res.data[0].user_type === "Influencer")
           router.push("onboarding-influencer-1");
         else router.push("onboarding-organization-1");

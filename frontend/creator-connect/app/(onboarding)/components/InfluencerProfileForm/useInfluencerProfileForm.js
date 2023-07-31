@@ -10,6 +10,7 @@ export const useInfluencerProfileForm = () => {
   const [gender, setGender] = useState("");
   const [region, setRegion] = useState("");
   const [birthdate, setBirthdate] = useState("");
+  const [token, setToken] = useState(null);
 
   const handleNext = () => {
     if (firstName && lastName && bio && gender && region && birthdate) {
@@ -20,6 +21,7 @@ export const useInfluencerProfileForm = () => {
         gender,
         region,
         birthdate,
+        token,
       };
       localStorage.setItem(
         "influencerProfileData",
@@ -32,6 +34,7 @@ export const useInfluencerProfileForm = () => {
     }
   };
 
+  console.log("Inside inee funtion");
   return {
     firstName,
     setFirstName,
@@ -46,5 +49,7 @@ export const useInfluencerProfileForm = () => {
     birthdate,
     setBirthdate,
     handleNext,
+    token,
+    setToken,
   };
 };
