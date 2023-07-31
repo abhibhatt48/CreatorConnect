@@ -19,6 +19,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,6 +33,7 @@ import java.lang.reflect.Field;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 /**
@@ -53,6 +55,8 @@ import org.mockito.MockitoAnnotations;
 public class UserServiceTest {
 	
     private UserService userService;
+    
+    KeyHolder mockKeyHolder = Mockito.mock(KeyHolder.class);
 
     @Mock
     private JdbcTemplate jdbcTemplate;
@@ -65,7 +69,7 @@ public class UserServiceTest {
         MockitoAnnotations.openMocks(this);
         userService = new UserService(jdbcTemplate, emailService);
     }
-
+    
     @Test
     void testGetUserRowMapper() {
         // Arrange
