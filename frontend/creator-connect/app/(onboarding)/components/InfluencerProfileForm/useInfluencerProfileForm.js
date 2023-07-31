@@ -21,6 +21,7 @@ export const useInfluencerProfileForm = () => {
         gender,
         region,
         birthdate,
+        token,
       };
       if (typeof window !== "undefined") {
         localStorage.setItem(
