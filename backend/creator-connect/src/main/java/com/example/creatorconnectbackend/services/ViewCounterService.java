@@ -21,6 +21,11 @@ public class ViewCounterService implements ViewCounterServiceInterface {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    /**
+     * RowMapper for ViewCounter objects, used to map a row in a ResultSet to a ViewCounter object.
+     *
+     * @return RowMapper for ViewCounter objects.
+     */
     private RowMapper<ViewCounter> rowMapper = (rs, rowNum) -> {
         ViewCounter viewCounter = new ViewCounter();
         viewCounter.setOrgId(rs.getLong("OrgID"));
@@ -29,6 +34,12 @@ public class ViewCounterService implements ViewCounterServiceInterface {
         return viewCounter;
     };
 
+    /**
+     * Adds a new ViewCounter.
+     *
+     * @param viewCounter The ViewCounter to be added.
+     * @return The added ViewCounter. Returns null if there was an exception.
+     */
     public ViewCounter addView(ViewCounter viewCounter) {
         try {
             SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
@@ -47,6 +58,12 @@ public class ViewCounterService implements ViewCounterServiceInterface {
         }
     }
 
+    /**
+     * Retrieves the number of views for a particular influencer.
+     *
+     * @param id The ID of the influencer.
+     * @return A map where the key is the influencer's ID and the value is the number of views.
+     */
     public Map<Long, Integer> getViewsByInfluencerID(Long id) {
         String query = "SELECT COUNT(*) AS profile_views FROM View_counter WHERE InfluencerID = ?";
         try {
@@ -61,6 +78,12 @@ public class ViewCounterService implements ViewCounterServiceInterface {
         }
     }
 
+    /**
+     * Retrieves the number of views for an influencer's profile based on the company type.
+     *
+     * @param id The ID of the influencer.
+     * @return A map where the key is the company type and the value is the number of views.
+     */
     public Map<String, Integer> getProfileViewsByCompanyType(Long id) {
         String sql = "SELECT o.CompanyType, COUNT(*) AS view_count " +
                 "FROM View_counter v " +

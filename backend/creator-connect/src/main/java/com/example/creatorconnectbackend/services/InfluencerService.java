@@ -61,6 +61,14 @@ public class InfluencerService implements InfluencerServiceInterface {
         influencer.setBestPosts(Arrays.asList(rs.getString("bestPosts").split(",")));
         return influencer;
     };
+    
+    /**
+     * Registers an Influencer if the user type matches.
+     *
+     * @param influencer The influencer to be registered.
+     * @param userId The user ID of the influencer.
+     * @return The registered influencer.
+     */	
     public Influencer register(Influencer influencer, Long userId) {
     	logger.info("Attempting to register influencer with userId {}", userId);
         User user = jdbcTemplate.queryForObject("SELECT * FROM users WHERE UserID = ?", new Object[]{userId}, userService.getUserRowMapper());
@@ -99,6 +107,12 @@ public class InfluencerService implements InfluencerServiceInterface {
         }
     }
 
+    /**
+     * Retrieves an Influencer by ID.
+     *
+     * @param id The ID of the influencer to be retrieved.
+     * @return The retrieved influencer.
+     */
     public Influencer getById(Long id) {
         String sql = "SELECT * FROM influencers WHERE influencerID = ?";
         logger.info("Attempting to get influencer by id {}", id);
@@ -110,6 +124,13 @@ public class InfluencerService implements InfluencerServiceInterface {
         }
     }
 
+    /**
+     * Updates an Influencer by ID.
+     *
+     * @param id The ID of the influencer to be updated.
+     * @param updatedInfluencer The updated influencer.
+     * @return The updated influencer.
+     */
     public Influencer update(Long id, Influencer updatedInfluencer) {
     	String sql = "UPDATE influencers SET name = ?, profileImage = ?, gender = ?, influencerName = ?, influencerType = ?, influencerNiche = ?, minRate = ?, previousBrands = ?, location = ?, bestPosts = ?, bio = ?, birthdate = ?, instagram = ?, tikTok = ?, tweeter = ?, youtube = ?, facebook = ?, twitch = ? WHERE influencerID = ?";
 
@@ -123,12 +144,22 @@ public class InfluencerService implements InfluencerServiceInterface {
         return getById(id);
     }
 
+    /**
+     * Retrieves all Influencers.
+     *
+     * @return A list of all influencers.
+     */
     public List<Influencer> getAll() {
         String sql = "SELECT * FROM influencers";
         logger.info("Attempting to get all influencers");
         return jdbcTemplate.query(sql, rowMapper);
     }
 
+    /**
+     * Deletes an Influencer by ID.
+     *
+     * @param id The ID of the influencer to be deleted.
+     */	
     public void deleteById(Long id) {
         String sql = "DELETE FROM influencers WHERE influencerID = ?";
         logger.info("Attempting to delete influencer by id {}", id);

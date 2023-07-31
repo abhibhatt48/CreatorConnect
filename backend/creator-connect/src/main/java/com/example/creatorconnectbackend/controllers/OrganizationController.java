@@ -26,13 +26,23 @@ public class OrganizationController {
 
     private final Logger logger = LoggerFactory.getLogger(OrganizationController.class);
 
+    /**
+     * Class constructor for OrganizationController.
+     *
+     * @param organizationService service class for executing organization operations.
+     */
     @Autowired
     public OrganizationController(OrganizationService organizationService) {
         this.organizationService = organizationService;
     }
 
     /**
-     * Endpoint to register a new Organization.
+     * Handles POST requests to register a new organization.
+     *
+     * @param userId ID of the user registering the organization.
+     * @param organization the organization to register.
+     * @param bindingResult object holding the result of the validation process.
+     * @return response entity containing the registered organization or the validation errors.
      */
     @PostMapping("/register/{userId}")
     public ResponseEntity<?> registerOrganization(@PathVariable Long userId, @RequestBody Organization organization, BindingResult bindingResult) {
@@ -49,6 +59,12 @@ public class OrganizationController {
         return new ResponseEntity<>(registeredOrganization, HttpStatus.CREATED);
     }
 
+    /**
+     * Handles GET requests to retrieve an organization by its ID.
+     *
+     * @param id the ID of the organization to retrieve.
+     * @return the requested organization.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Organization> getOrganizationById(@PathVariable("id") Long id) {
         logger.info("Request to get organization with ID: {}", id);
@@ -56,6 +72,14 @@ public class OrganizationController {
         return new ResponseEntity<>(organization, HttpStatus.OK);
     }
 
+    /**
+     * Handles PUT requests to update an organization.
+     *
+     * @param id the ID of the organization to update.
+     * @param updatedOrganization organization object containing the updated details.
+     * @param bindingResult object holding the result of the validation process.
+     * @return response entity containing the updated organization or the validation errors.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<?> updateOrganization(@PathVariable("id") Long id, @RequestBody Organization updatedOrganization, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -71,6 +95,11 @@ public class OrganizationController {
         return new ResponseEntity<>(organization, HttpStatus.OK);
     }
 
+    /**
+     * Handles GET requests to retrieve all organizations.
+     *
+     * @return all organizations.
+     */
     @GetMapping
     public ResponseEntity<List<Organization>> getAllOrganizations() {
         logger.info("Request to get all organizations");
@@ -78,6 +107,12 @@ public class OrganizationController {
         return new ResponseEntity<>(organizations, HttpStatus.OK);
     }
 
+    /**
+     * Handles DELETE requests to delete an organization by its ID.
+     *
+     * @param id the ID of the organization to delete.
+     * @return a no content response.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteOrganizationById(@PathVariable("id") Long id) {
         logger.info("Attempt to delete organization with ID: {}", id);

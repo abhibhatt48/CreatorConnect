@@ -21,7 +21,9 @@ public class ViewCounterController {
     private final ViewCounterService viewCounterService;
 
     /**
-     * Constructor-based dependency injection for ViewCounterService.
+     * Class constructor for ViewCounterController.
+     *
+     * @param viewCounterService service class for executing view counter operations.
      */
     @Autowired
     public ViewCounterController(ViewCounterService viewCounterService) {
@@ -29,7 +31,10 @@ public class ViewCounterController {
     }
 
     /**
-     * Endpoint to add a new view record.
+     * Handles POST requests to add a new view record.
+     *
+     * @param viewCounter view counter object to add a view.
+     * @return response entity containing the updated view counter.
      */
     @PostMapping("/addView")
     public ResponseEntity<ViewCounter> addView(@Valid @RequestBody ViewCounter viewCounter) {
@@ -40,7 +45,10 @@ public class ViewCounterController {
     }
 
     /**
-     * Endpoint to get the number of views by a particular influencer identified by ID.
+     * Handles GET requests to fetch the number of views by a particular influencer identified by ID.
+     *
+     * @param id the ID of the influencer.
+     * @return response entity containing a map with influencer ID as key and number of views as value.
      */
     @GetMapping("/getByID/{id}")
     public ResponseEntity<Map<Long, Integer>> getViewsByInfluencerID(@PathVariable("id") Long id) {
@@ -51,7 +59,10 @@ public class ViewCounterController {
     }
 
     /**
-     * Endpoint to get profile views based on a particular company type, possibly for categorizing views.
+     * Handles GET requests to fetch the number of profile views based on a particular company type.
+     *
+     * @param id the ID of the company type.
+     * @return response entity containing a map with company type as key and number of profile views as value.
      */
     @GetMapping("/getByCompanyType/{id}")
     public ResponseEntity<Map<String, Integer>> getProfileViewsByCompanyType(@PathVariable("id") Long id) {

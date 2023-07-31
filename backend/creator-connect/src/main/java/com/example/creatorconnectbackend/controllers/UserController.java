@@ -32,14 +32,20 @@ public class UserController {
 	private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	/**
-	 * Constructor-based dependency injection for UserService.
-	 */
+     * Class constructor for UserController.
+     *
+     * @param userService service class for executing user operations.
+     */
 	public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    /**
-     * Endpoint to register a new user.
+	/**
+     * Handles POST requests to register a new user.
+     *
+     * @param user user object to register.
+     * @param bindingResult object holding the result of the validation process.
+     * @return response entity containing the registration status or the validation errors.
      */
 	@PostMapping("/register")
 	public ResponseEntity<Map<String, Object>> registerUser(@Valid @RequestBody User user, BindingResult bindingResult) {
@@ -62,8 +68,12 @@ public class UserController {
 	}
 	
 	/**
-	 * Endpoint for user login.
-	 */
+     * Handles POST requests for user login.
+     *
+     * @param user user object with username and password.
+     * @param bindingResult object holding the result of the validation process.
+     * @return response entity containing the login status or the validation errors.
+     */
 	@PostMapping("/login")
 	public ResponseEntity<Map<String, Object>> loginUser(@Valid @RequestBody User user, BindingResult bindingResult) {
 		logger.info("Attempt to login user.");
@@ -89,8 +99,11 @@ public class UserController {
 	}
 
 	/**
-	 * Endpoint to handle forgot password requests.
-	 */
+     * Handles POST requests for forgotten password cases. Sends reset password link to the user's email.
+     *
+     * @param emailBody email object containing user's email.
+     * @return response entity containing the status of the password reset request.
+     */
 	@PostMapping("/forgot-password")
 	public ResponseEntity<Map<String, Object>> forgotPassword(@RequestBody EmailBody emailBody) {
 		logger.info("Processing forgot password request for email: {}", emailBody.getEmail());
@@ -100,8 +113,11 @@ public class UserController {
 	}
 
 	/**
-	 * Endpoint to reset a user's password.
-	 */
+     * Handles POST requests for forgotten password cases. Sends reset password link to the user's email.
+     *
+     * @param emailBody email object containing user's email.
+     * @return response entity containing the status of the password reset request.
+     */
 	@PostMapping("/reset-password")
 	public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> request) {
 		String token = request.get("token");

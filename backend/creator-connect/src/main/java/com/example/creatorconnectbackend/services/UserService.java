@@ -1,6 +1,5 @@
 package com.example.creatorconnectbackend.services;
 
-import java.security.SecureRandom;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.HashMap;
@@ -11,7 +10,6 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -40,6 +38,11 @@ public class UserService implements UserServiceInterface {
         LOGGER.info("UserService Initialized");
     }
 
+    /**
+     * RowMapper for User objects, used to map a row in a ResultSet to a User object.
+     *
+     * @return RowMapper for User objects.
+     */
     private RowMapper<User> rowMapper = (rs, rowNum) -> {
         User user = new User();
         user.setUserID(rs.getLong("userID"));
@@ -50,11 +53,22 @@ public class UserService implements UserServiceInterface {
         return user;
     };
 
+    /**
+     * Retrieves the RowMapper for User objects.
+     *
+     * @return The RowMapper for User objects.
+     */
     public RowMapper<User> getUserRowMapper() {
     	LOGGER.info("Fetching User RowMapper");
         return rowMapper;
     }
 
+    /**
+     * Checks if a user already exists in the database.
+     *
+     * @param email The email of the user.
+     * @return True if the user exists, false otherwise.
+     */
     private boolean checkDuplicate(String email) {
         // If duplicate found return true, else false
         String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
@@ -69,6 +83,12 @@ public class UserService implements UserServiceInterface {
         }
     }
     
+    /**
+     * Registers a new User.
+     *
+     * @param user The user to be registered.
+     * @return A map with information on the registration process.
+     */
     public Map<String, Object> userRegister(User user) {
         Map<String, Object> map = new HashMap<>();
         if (checkDuplicate(user.getEmail())) {
@@ -99,6 +119,12 @@ public class UserService implements UserServiceInterface {
         return map;
     }
     
+    /**
+     * Logs in a User.
+     *
+     * @param user The user to be logged in.
+     * @return A map with information on the login process.
+     */
     public Map<String, Object> userLogin(User user) {
         Map<String, Object> map = new HashMap<>();
         String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
@@ -121,6 +147,12 @@ public class UserService implements UserServiceInterface {
         return map;
     }
 
+    /**
+     * Initiates the password recovery process for a User.
+     *
+     * @param email The email of the user who forgot their password.
+     * @return A map with information on the password recovery process.
+     */
     public Map<String, Object> forgotPassword(String email) {
         Map<String, Object> map = new HashMap<>();
         if (checkDuplicate(email)) {
@@ -142,6 +174,12 @@ public class UserService implements UserServiceInterface {
         return map;
     }
 
+    /**
+     * Resets the password for a User using a recovery token.
+     *
+     * @param token The recovery token.
+     * @param newPassword The new password.
+     */
     public void resetPassword(String token, String newPassword) {
         String sql = "UPDATE users SET password = ? WHERE reset_token = ?";
         jdbcTemplate.update(sql, newPassword, token);

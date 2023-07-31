@@ -28,7 +28,9 @@ public class ConnectionRequestController {
     private final Logger logger = LoggerFactory.getLogger(ConnectionRequestController.class);
 
     /**
-     * Constructor for dependency injection.
+     * Class constructor for ConnectionRequestController.
+     *
+     * @param connectionRequestService service class for executing connection request operations.
      */
     @Autowired
     public ConnectionRequestController(ConnectionRequestService connectionRequestService) {
@@ -36,7 +38,11 @@ public class ConnectionRequestController {
     }
 
     /**
-     * Endpoint to create a new connection request.
+     * Handles POST requests to create a new connection request.
+     *
+     * @param connectionRequest the connection request to create.
+     * @param bindingResult object holding the result of the validation process.
+     * @return response entity containing the created connection request or the validation errors.
      */
     @PostMapping("/create")
     public ResponseEntity<?> createRequest(@Valid @RequestBody ConnectionRequest connectionRequest, BindingResult bindingResult) {
@@ -52,7 +58,10 @@ public class ConnectionRequestController {
     }
 
     /**
-     * Endpoint to retrieve a connection request by its ID.
+     * Handles GET requests to retrieve a connection request by its ID.
+     *
+     * @param requestId the ID of the connection request to retrieve.
+     * @return the requested connection request.
      */
     @GetMapping("/getByRequestID/{requestId}")
     public ResponseEntity<ConnectionRequest> getConnectionById(@PathVariable("requestId") Long requestId) {
@@ -62,7 +71,11 @@ public class ConnectionRequestController {
     }
 
     /**
-     * Endpoint to update the status of a connection request.
+     * Handles PUT requests to update the status of a connection request.
+     *
+     * @param requestId the ID of the connection request to update.
+     * @param payload request body containing the new status.
+     * @return response entity containing a success message or an error message.
      */
     @PutMapping("/update/{requestId}")
     public ResponseEntity<String> updateConnectionRequestStatus(
@@ -83,7 +96,10 @@ public class ConnectionRequestController {
     }
 
     /**
-     * Endpoint to retrieve all connection requests by the influencer ID.
+     * Handles GET requests to retrieve all connection requests by the influencer ID.
+     *
+     * @param influencerID the ID of the influencer.
+     * @return all connection requests of the specified influencer.
      */
     @GetMapping("/influencer/getByID/{id}")
     public ResponseEntity<List<ConnectionRequest>> getRequestsByInfluencerID(@PathVariable("id") Long influencerID) {
@@ -91,24 +107,48 @@ public class ConnectionRequestController {
         return ResponseEntity.ok(requests);
     }
 
+    /**
+     * Handles GET requests to retrieve all connection requests by the organization ID.
+     *
+     * @param orgID the ID of the organization.
+     * @return all connection requests of the specified organization.
+     */
     @GetMapping("/organization/getByID/{id}")
     public ResponseEntity<List<ConnectionRequest>> getRequestsByOrganizationID(@PathVariable("id") Long orgID) {
         List<ConnectionRequest> requests = connectionRequestService.getRequestsByOrgID(orgID);
         return ResponseEntity.ok(requests);
     }
 
+    /**
+     * Handles GET requests to retrieve all connection requests by their status.
+     *
+     * @param orgID the ID of the organization.
+     * @param status the status of the connection requests.
+     * @return all connection requests of the specified organization with the specified status.
+     */
     @GetMapping("/organization/{orgID}/status/{status}")
     public ResponseEntity<List<ConnectionRequest>> getRequestsByStatus(@PathVariable("orgID") Long orgID, @PathVariable("status") String status) {
         List<ConnectionRequest> requests = connectionRequestService.getRequestsByStatus(orgID, status);
         return ResponseEntity.ok(requests);
     }
 
+    /**
+     * Handles GET requests to retrieve all connection requests.
+     *
+     * @return all connection requests.
+     */
     @GetMapping("/getAll")
     public List<ConnectionRequest> getAllRequests() {
         List<ConnectionRequest> allRequests = connectionRequestService.getAllRequests();
         return ResponseEntity.ok(allRequests).getBody();
     }
 
+    /**
+     * Handles DELETE requests to delete a connection request by its ID.
+     *
+     * @param id the ID of the connection request to delete.
+     * @return a no content response.
+     */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteByID(@PathVariable("id") Long id) {
         logger.info("Deleting connection request with ID: {}", id);
@@ -116,6 +156,14 @@ public class ConnectionRequestController {
         logger.info("Deleted connection request with ID: {}", id);
         return ResponseEntity.noContent().build();
     }
+    
+    /**
+     * Handles PUT requests to update the message of a connection request.
+     *
+     * @param requestId the ID of the connection request to update.
+     * @param map request body containing the new message.
+     * @return the updated connection request.
+     */
     @PutMapping("/updateMessage/{id}")
     public ResponseEntity<ConnectionRequest> updateRequestMessage(@PathVariable("id") Long requestId, @RequestBody Map<String, String> map) {
         logger.info("Updating connection request message with ID: {}", requestId);

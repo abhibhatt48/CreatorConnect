@@ -27,13 +27,24 @@ public class InfluencerController {
 
     private final Logger logger = LoggerFactory.getLogger(InfluencerController.class);
 
-    
+    /**
+     * Class constructor for InfluencerController.
+     *
+     * @param influencerService service class for executing influencer operations.
+     */
     @Autowired
     public InfluencerController(InfluencerService influencerService) {
         this.influencerService = influencerService;
     }
 
-    
+    /**
+     * Handles POST requests to register a new influencer.
+     *
+     * @param userId ID of the user registering the influencer.
+     * @param influencer the influencer to register.
+     * @param bindingResult object holding the result of the validation process.
+     * @return response entity containing the registered influencer or the validation errors.
+     */
     @PostMapping("/register/{userId}")
     public ResponseEntity<?> registerInfluencer(@PathVariable Long userId, @RequestBody Influencer influencer, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -51,7 +62,12 @@ public class InfluencerController {
         return new ResponseEntity<>(registeredInfluencer, HttpStatus.CREATED);
     }
 
-    
+    /**
+     * Handles GET requests to retrieve an influencer by its ID.
+     *
+     * @param id the ID of the influencer to retrieve.
+     * @return the requested influencer.
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Influencer> getInfluencerById(@PathVariable("id") Long id) {
         logger.info("Request to get influencer with ID: {}", id);
@@ -59,7 +75,14 @@ public class InfluencerController {
         return new ResponseEntity<>(influencer, HttpStatus.OK);
     }
 
-    
+    /**
+     * Handles PUT requests to update an influencer.
+     *
+     * @param id the ID of the influencer to update.
+     * @param updatedInfluencer influencer object containing the updated details.
+     * @param bindingResult object holding the result of the validation process.
+     * @return response entity containing the updated influencer or the validation errors.
+     */
     @PutMapping("/{id}")
     public ResponseEntity<?> updateInfluencer(@PathVariable("id") Long id, @RequestBody Influencer updatedInfluencer, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -77,7 +100,11 @@ public class InfluencerController {
         return new ResponseEntity<>(influencer, HttpStatus.OK);
     }
 
-    
+    /**
+     * Handles GET requests to retrieve all influencer.
+     *
+     * @return all influencer.
+     */
     @GetMapping
     public ResponseEntity<List<Influencer>> getAllInfluencers() {
         logger.info("Request to get all influencers");
@@ -85,7 +112,12 @@ public class InfluencerController {
         return new ResponseEntity<>(influencers, HttpStatus.OK);
     }
 
-    
+    /**
+     * Handles DELETE requests to delete an influencer by its ID.
+     *
+     * @param id the ID of the influencer to delete.
+     * @return a no content response.
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteInfluencerById(@PathVariable("id") Long id) {
         logger.info("Attempt to delete influencer with ID: {}", id);

@@ -27,12 +27,18 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
 
     private final Logger logger = LoggerFactory.getLogger(ConnectionRequestService.class);
 
-
+    /**
+     * Constructor for ConnectionRequestService.
+     *
+     * @param jdbcTemplate an instance of JdbcTemplate for database operations.
+     */
     public ConnectionRequestService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
+    /**
+     * RowMapper for converting SQL result set rows into ConnectionRequest objects.
+     */
     private RowMapper<ConnectionRequest> rowMapper = (rs, rowNum) -> {
         ConnectionRequest connectionRequest = new ConnectionRequest();
         connectionRequest.setRequestID(rs.getLong("RequestID"));
@@ -43,12 +49,21 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         return connectionRequest;
     };
 
-
+    /**
+     * Getter for the rowMapper.
+     *
+     * @return the rowMapper instance.
+     */
     public RowMapper<ConnectionRequest> getRowMapper() {
         return rowMapper;
     }
 
-
+    /**
+     * Creates a new connection request in the database.
+     *
+     * @param connectionRequest the connection request object to be created.
+     * @return the created connection request with a generated ID.
+     */
     public ConnectionRequest createRequest(ConnectionRequest connectionRequest) {
         logger.info("Attempting to create connection request.");
 
@@ -73,7 +88,12 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
-
+    /**
+     * Fetches a connection request by its ID.
+     *
+     * @param requestID the ID of the connection request to fetch.
+     * @return the fetched connection request object.
+     */
     public ConnectionRequest getConnectionRequestByID(Long requestID) {
         String query = "SELECT * FROM connection_requests WHERE RequestID = ?";
         logger.info("Fetching connection request with ID: {}", requestID);
@@ -85,7 +105,13 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
-
+    /**
+     * Updates the status of a connection request.
+     *
+     * @param id the ID of the connection request to update.
+     * @param newStatus the new status for the connection request.
+     * @return the updated connection request object.
+     */
     public ConnectionRequest updateStatus(Long id, RequestStatus newStatus) {
         String query = "UPDATE connection_requests SET RequestStatus = ? WHERE RequestID = ?";
         logger.info("Updating status for connection request with ID: {}", id);
@@ -97,7 +123,12 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         return getConnectionRequestByID(id);
     }
 
-
+    /**
+     * Fetches all connection requests for a specific influencer.
+     *
+     * @param id the influencer's ID.
+     * @return a list of connection requests associated with the influencer.
+     */
     public List<ConnectionRequest> getRequestsByInfluencerID(Long id) {
         String query = "SELECT * FROM connection_requests WHERE InfluencerID = ?";
         try {
@@ -107,7 +138,12 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
-
+    /**
+     * Fetches all connection requests for a specific organization.
+     *
+     * @param orgID the organization's ID.
+     * @return a list of connection requests associated with the organization.
+     */
     public List<ConnectionRequest> getRequestsByOrgID(Long orgID) {
         String query = "SELECT * FROM connection_requests WHERE OrgID = ?";
         try {
@@ -117,7 +153,13 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
-
+    /**
+     * Fetches all connection requests for a specific organization and status.
+     *
+     * @param orgID the organization's ID.
+     * @param status the status of the connection requests.
+     * @return a list of connection requests associated with the organization and status.
+     */
     public List<ConnectionRequest> getRequestsByStatus(Long orgID, String status) {
         String query = "SELECT * FROM connection_requests WHERE OrgID = ? AND RequestStatus = ?";
         try {
@@ -127,7 +169,11 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
-
+    /**
+     * Fetches all connection requests.
+     *
+     * @return a list of all connection requests.
+     */
     public List<ConnectionRequest> getAllRequests() {
         String query = "SELECT * FROM connection_requests";
         try {
@@ -137,7 +183,11 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
-
+    /**
+     * Deletes a connection request by its ID.
+     *
+     * @param id the ID of the connection request to delete.
+     */
     public void deleteByID(Long id) {
         String query = "DELETE FROM connection_requests WHERE RequestID = ?";
         logger.info("Deleting connection request with ID: {}", id);
@@ -148,7 +198,13 @@ public class ConnectionRequestService implements ConnectionRequestServiceInterfa
         }
     }
 
-
+    /**
+     * Updates the message of a connection request.
+     *
+     * @param id the ID of the connection request to update.
+     * @param map a map containing the new message.
+     * @return the updated connection request object.
+     */
     public ConnectionRequest updateMessage(Long id, Map<String, String> map) {
         String query = "UPDATE connection_requests SET RequestMessage = ? WHERE RequestID = ?";
         logger.info("Updating message for connection request with ID: {}", id);
