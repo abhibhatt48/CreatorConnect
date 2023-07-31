@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -6,6 +7,32 @@ export const useLoginBox = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+
+  const fetchInfluencerData = async (id) => {
+    try {
+      const res = await axios.get(
+        "http://localhost:8080/api/influencers/" + id
+      );
+      console.log(res.data);
+      return res.data;
+    } catch (error) {
+      console.log("Error:");
+      console.error(error);
+    }
+  };
+
+  const fetchOrganizationData = async (id) => {
+    try {
+      const res = await axios.get(
+        "http://localhost:8080/api/organizations/" + id
+      );
+      console.log(res.data);
+      return res.data;
+    } catch (error) {
+      console.log("Error:");
+      console.error(error);
+    }
+  };
 
   const handleSignin = async () => {
     const signinData = {
@@ -34,9 +61,25 @@ export const useLoginBox = () => {
         toast.success(res.message);
         localStorage.setItem("userData", JSON.stringify(res.data[0]));
 
-        if (res.data[0].user_type === "Influencer")
-          router.push("onboarding-influencer-1");
-        else router.push("onboarding-organization-1");
+        if (res.data[0].user_type === "Influencer") {
+          const influencerData = await fetchInfluencerData(res.data[0].userID);
+
+          if (influencerData?.name) {
+            router.push("influencer-dashboard");
+          } else {
+            router.push("onboarding-influencer-1");
+          }
+        } else {
+          const organizationData = await fetchOrganizationData(
+            res.data[0].userID
+          );
+
+          if (organizationData?.orgName) {
+            router.push("organization-dashboard");
+          } else {
+            router.push("onboarding-organization-1");
+          }
+        }
       } else {
         toast.error(res.message);
       }

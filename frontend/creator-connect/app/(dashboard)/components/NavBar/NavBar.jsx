@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import {
   Avatar,
   AppBar,
@@ -16,12 +17,22 @@ import {
 export default function ButtonAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const settings = ["Account", "Logout"];
+  const router = useRouter();
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const handleClick = (setting) => {
+    if (setting === "Logout") {
+      localStorage.clear();
+      router.replace("/login");
+    }
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ backgroundColor: "#D9D9D9" }}>
@@ -69,7 +80,12 @@ export default function ButtonAppBar() {
           >
             {settings.map((setting) => (
               <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">{setting}</Typography>
+                <Typography
+                  textAlign="center"
+                  onClick={() => handleClick(setting)}
+                >
+                  {setting}
+                </Typography>
               </MenuItem>
             ))}
           </Menu>

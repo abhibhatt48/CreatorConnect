@@ -58,6 +58,7 @@ export default function InfluencerProfile({ params }) {
   const [requests, setRequests] = useState(null);
   let userData = localStorage.getItem("userData");
   userData = JSON.parse(userData);
+  let userID = userData.userID;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -111,6 +112,25 @@ export default function InfluencerProfile({ params }) {
     };
 
     fetchRequests();
+    const addProfileView = async () => {
+      try {
+        const viewObject = {
+          influencerId: parseInt(influencerID),
+          orgId: userID,
+          date: new Date(),
+        };
+
+        const res = await axios.post(
+          "http://localhost:8080/api/viewCounters/addView",
+          viewObject
+        );
+      } catch (error) {
+        console.log("Error:");
+        console.error(error);
+      }
+    };
+
+    addProfileView();
 
     fetchInfluencerData();
   }, []);
@@ -118,7 +138,7 @@ export default function InfluencerProfile({ params }) {
   const handleConnect = async (requestMessage) => {
     try {
       await axios.post("http://localhost:8080/api/connectionReq/create", {
-        orgID: 2,
+        orgID: userID,
         influencerID: influencerID, // ID coming from the state or props
         requestMessage: requestMessage,
         requestStatus: "Pending",

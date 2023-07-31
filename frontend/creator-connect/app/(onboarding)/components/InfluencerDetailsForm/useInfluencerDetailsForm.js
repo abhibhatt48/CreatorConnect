@@ -74,14 +74,14 @@ export const useInfluencerDetailsForm = () => {
         name: `${influencerProfileData?.firstName} ${influencerProfileData.lastName}`,
         gender: influencerProfileData.gender,
         influencerName: `${influencerProfileData?.firstName} ${influencerProfileData.lastName}`,
-        influencerType: "", //not needed
+        influencerType: "asdf", //not needed
         influencerNiche: getSelectedNicheNames(selectedNiches),
         minRate: parseInt(minimumRate),
         location: influencerProfileData?.region,
         bio: influencerProfileData?.bio,
-        previousBrands: "",
-        profileImage: "",
-        // birthdate: influencerProfileData?.birthdate,
+        previousBrands: "asdf",
+        profileImage: "asdf",
+        birthdate: influencerProfileData?.birthdate,
         instagram: instagramUrl,
         tweeter: twitterUrl,
         youtube: youtubeUrl,

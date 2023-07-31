@@ -206,6 +206,7 @@ export const OrganizationDetailsForm = () => {
           <option value="Education">Education</option>
           <option value="Energy">Energy</option>
           <option value="Transportation">Transportation</option>
+          <option value="Food">Food</option>
         </select>
       </div>
       <button className={styles.button} onClick={handleFinish}>

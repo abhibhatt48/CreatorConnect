@@ -22,7 +22,6 @@ export default function RecommendedInfluencerCard({ influencer }) {
   };
 
   const {
-    profileImage,
     name,
     instagram,
     tikTok,
