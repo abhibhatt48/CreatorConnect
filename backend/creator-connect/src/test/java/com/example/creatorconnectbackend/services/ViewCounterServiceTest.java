@@ -1,5 +1,6 @@
 package com.example.creatorconnectbackend.services;
 
+import org.mockito.*;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -10,6 +11,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,12 +20,11 @@ import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import com.example.creatorconnectbackend.models.ViewCounter;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
- /* ViewCounterServiceTest
+/* ViewCounterServiceTest
  * 
  * A test class for the ViewCounterService. The purpose is to test various functionalities 
  * associated with the view counting operations such as retrieving views by influencer ID,
@@ -42,16 +44,70 @@ import com.example.creatorconnectbackend.models.ViewCounter;
 
 public class ViewCounterServiceTest {
 
-    private ViewCounterService viewCounterService;
-
     @Mock
     private JdbcTemplate jdbcTemplate;
+
+    @InjectMocks
+    private ViewCounterService viewCounterService;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        viewCounterService = new ViewCounterService(jdbcTemplate);
     }
+
+    private static java.sql.ResultSet createMockResultSet() throws java.sql.SQLException {
+        java.sql.ResultSet rs = Mockito.mock(java.sql.ResultSet.class);
+        when(rs.getLong("OrgID")).thenReturn(1L);
+        when(rs.getLong("InfluencerID")).thenReturn(2L);
+        when(rs.getDate("Date")).thenReturn(new Date(2023, 7, 21));
+        return rs;
+    }
+
+    @Test
+    void testRowMapper() throws SQLException {
+        RowMapper<ViewCounter> rm = viewCounterService.getRowMapper();
+        ViewCounter viewCounter = rm.mapRow(createMockResultSet(), 1);
+
+        assertEquals(1L, viewCounter.getOrgId());
+        assertEquals(2L, viewCounter.getInfluencerId());
+        assertEquals(new Date(2023,7,21), viewCounter.getDate());
+    }
+
+    @Test
+    void testValidAddView() {
+        ViewCounter viewCounter = Mockito.mock(ViewCounter.class);
+        ViewCounterService viewCounterService1 = Mockito.mock(ViewCounterService.class);
+
+        when(viewCounter.getOrgId()).thenReturn(1L);
+        when(viewCounter.getInfluencerId()).thenReturn(2L);
+        when(viewCounter.getDate()).thenReturn(new Date(2023,7,21));
+
+        Mockito.doReturn(viewCounter).when(viewCounterService1).addView(Mockito.any(ViewCounter.class));
+        ViewCounter res = viewCounterService1.addView(viewCounter);
+
+        assertEquals(viewCounter, res);
+    }
+
+    @Test
+    void testAddViewException() {
+
+        JdbcTemplate jdbcTemplate = mock(JdbcTemplate.class);
+        SimpleJdbcInsert jdbcInsert = mock(SimpleJdbcInsert.class);
+
+        ViewCounterService viewCounterService = new ViewCounterService(jdbcTemplate);
+
+        ViewCounter viewCounter = new ViewCounter();
+        viewCounter.setInfluencerId(1L);
+        viewCounter.setOrgId(2L);
+        viewCounter.setDate(Date.valueOf("2023-07-26"));
+
+        when(jdbcInsert.execute(any(Map.class))).thenThrow(new RuntimeException());
+
+        ViewCounter result = viewCounterService.addView(viewCounter);
+
+        assertNull(result);
+    }
+
 
     /**
      * Test scenario when there are no views for the given influencer ID.

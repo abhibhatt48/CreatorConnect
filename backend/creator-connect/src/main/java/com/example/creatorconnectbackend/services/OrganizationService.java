@@ -52,6 +52,10 @@ public class OrganizationService implements OrganizationServiceInterface {
         return organization;
     };
 
+    public RowMapper<Organization> getRowMapper() {
+        return rowMapper;
+    }
+
     /**
      * Registers an Organization if the user type matches.
      *

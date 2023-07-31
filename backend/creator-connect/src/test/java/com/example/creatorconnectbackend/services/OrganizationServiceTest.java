@@ -17,6 +17,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -81,6 +82,50 @@ class OrganizationServiceTest {
         organization.setYoutube("https://youtube.com/example");
         organization.setTwitch("https://twitch.com/example");
         return organization;
+    }
+
+    private static java.sql.ResultSet createMockResultSet() throws java.sql.SQLException {
+        java.sql.ResultSet rs = Mockito.mock(java.sql.ResultSet.class);
+        when(rs.getLong("orgID")).thenReturn(1L);
+        when(rs.getString("orgName")).thenReturn("Example Org");
+        when(rs.getString("profileImage")).thenReturn("https://example.com/org_profile.jpg");
+        when(rs.getString("companyType")).thenReturn("Tech");
+        when(rs.getLong("size")).thenReturn(1000L);
+        when(rs.getString("websiteLink")).thenReturn("https://exampleorg.com");
+        when(rs.getString("targetInfluencerNiche")).thenReturn("Fashion,Health");
+        when(rs.getString("location")).thenReturn("New York");
+        when(rs.getString("bio")).thenReturn("Tech Company");
+        when(rs.getString("instagram")).thenReturn("https://www.instagram.com/exampleorg/");
+        when(rs.getString("facebook")).thenReturn("https://www.facebook.com/exampleorg/");
+        when(rs.getString("twitter")).thenReturn("https://www.twitter.com/exampleorg/");
+        when(rs.getString("tiktok")).thenReturn("https://www.tiktok.com/@exampleorg");
+        when(rs.getString("youtube")).thenReturn("https://www.youtube.com/exampleorg");
+        when(rs.getString("twitch")).thenReturn("");
+        return rs;
+    }
+
+    @Test
+    void testOrganizationRowMapper() throws SQLException {
+        // Prepare a mock ResultSet with the required values
+        RowMapper<Organization> rowMapper = organizationService.getRowMapper();
+        Organization organization = rowMapper.mapRow(createMockResultSet(), 1);
+
+        // Verify that the Organization object is correctly mapped
+        assertEquals(1L, organization.getOrgID());
+        assertEquals("Example Org", organization.getOrgName());
+        assertEquals("https://example.com/org_profile.jpg", organization.getProfileImage());
+        assertEquals("Tech", organization.getCompanyType());
+        assertEquals(1000L, organization.getSize());
+        assertEquals("https://exampleorg.com", organization.getWebsiteLink());
+        assertEquals(Arrays.asList("Fashion", "Health"), organization.getTargetInfluencerNiche());
+        assertEquals("New York", organization.getLocation());
+        assertEquals("Tech Company", organization.getBio());
+        assertEquals("https://www.instagram.com/exampleorg/", organization.getInstagram());
+        assertEquals("https://www.facebook.com/exampleorg/", organization.getFacebook());
+        assertEquals("https://www.twitter.com/exampleorg/", organization.getTwitter());
+        assertEquals("https://www.tiktok.com/@exampleorg", organization.getTiktok());
+        assertEquals("https://www.youtube.com/exampleorg", organization.getYoutube());
+        assertEquals("", organization.getTwitch());
     }
 
     @Test

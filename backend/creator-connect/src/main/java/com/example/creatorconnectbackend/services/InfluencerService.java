@@ -61,6 +61,10 @@ public class InfluencerService implements InfluencerServiceInterface {
         influencer.setBestPosts(Arrays.asList(rs.getString("bestPosts").split(",")));
         return influencer;
     };
+
+    public RowMapper<Influencer> getRowMapper() {
+        return rowMapper;
+    }
     
     /**
      * Registers an Influencer if the user type matches.
