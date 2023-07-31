@@ -44,9 +44,9 @@ public class SecurityConfig {
                     // Allow anyone to access registration and login endpoints.
                     .requestMatchers(
                         "/api/users/register",
-                        "/api/users/login"
+                        "/api/users/login",
+                        "/api/users/forgot-password"
                     ).permitAll()
-
                     // Any other request should be authenticated.
                     .anyRequest().authenticated()
             )

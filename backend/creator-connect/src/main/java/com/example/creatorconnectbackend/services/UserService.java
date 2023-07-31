@@ -155,7 +155,7 @@ public class UserService implements UserServiceInterface {
      */
     public Map<String, Object> forgotPassword(String email) {
         Map<String, Object> map = new HashMap<>();
-        if (checkDuplicate(email)) {
+        if (!checkDuplicate(email)) {
             map.put("ok", false);
             map.put("message", "Email does not exist! Please register or create a new account!");
             LOGGER.info("Forgot password request for Email " + email + ". It doesn't exist! ");
