@@ -1,32 +1,3 @@
-/**
- * -----------------------------------------------------------------------------
- *                     Influencer Controller
- * -----------------------------------------------------------------------------
- * Purpose:
- * The 'InfluencerController' class is a primary controller of the 'com.example.creatorconnectbackend.controllers'
- * package. It manages the operations and functionalities related to influencers in the application.
- *
- * Key Features:
- * - Registration of influencers based on user IDs.
- * - Retrieval, updating, and deletion of influencers.
- * - Specialized endpoints to fetch influencer details based on influencer ID and retrieve all influencers.
- *
- * Annotations:
- * - @RestController: Marks the class as a RESTful web service controller.
- * - @CrossOrigin: Allows cross-origin requests, useful for frontend-backend separation during development.
- * - @RequestMapping: All endpoints in this controller will start with "/api/influencers".
- *
- * Dependencies:
- * - InfluencerService: A service layer component that provides logic and operations related to influencers.
- *
- * Core Endpoints:
- * - /register/{userId}: Registers a new influencer using a specified user ID.
- * - /{id}: Retrieves or updates influencer details using influencer ID.
- * - (GET) /: Fetches a list of all influencers.
- * - /{id} (DELETE): Deletes an influencer using influencer ID.
- *
- */
-
 package com.example.creatorconnectbackend.controllers;
 
 import java.util.List;

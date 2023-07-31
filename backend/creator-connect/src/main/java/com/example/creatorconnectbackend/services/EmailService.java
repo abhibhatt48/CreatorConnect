@@ -12,19 +12,6 @@ import org.springframework.stereotype.Service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
-/**
- * EmailService class is responsible for sending emails using Spring's JavaMailSender interface.
- * It provides methods to send simple text-based emails to a specified recipient.
- *
- * Functions:
- * 1. sendEmail: Sends a simple email to the specified recipient with the given subject and content.
- *    - Parameters:
- *        - to (String): Email recipient
- *        - subject (String): Subject of the email
- *        - text (String): Content of the email
- *    - Exceptions:
- *        - MailException: If there is an issue while sending the email, it logs an error.
- */
 
 @Service
 public class EmailService {

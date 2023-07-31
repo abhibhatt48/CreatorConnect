@@ -1,35 +1,3 @@
-/**
- * -----------------------------------------------------------------------------
- *                                JWT Utility
- * -----------------------------------------------------------------------------
- * Purpose: 
- * This class, a component of the 'com.example.creatorconnectbackend.auth' package,
- * is designed for various JWT token operations. It assists in token generation, 
- * validation, and claim extraction.
- *
- * Main Components:
- * - SECRET_KEY: A key used to sign and validate JWT tokens. It is fetched from application properties.
- * 
- * Key Functions:
- * - extractEmail(): Extracts the email (subject of the JWT) from the provided token.
- * - extractExpiration(): Fetches the expiration date of the token.
- * - extractClaim(): A generic function to retrieve any claim from the token.
- * - isTokenExpired(): Determines whether a given JWT token has expired.
- * - generateToken(): Public function to produce a JWT token for a provided email.
- * - createToken(): Constructs a JWT with a set expiration time (10 hours in this case).
- * - validateToken(): Verifies the provided token against the given email and checks for expiration.
- *
- * Dependencies:
- * - io.jsonwebtoken.Jwts: Used for token parsing, claim extraction, and token creation.
- * - io.jsonwebtoken.Claims: Represents JWT token claims.
- *
- * Notes:
- * This utility assumes that the email is used as the subject in the JWT tokens. Adjustments may 
- * be needed if other subjects or claims are introduced.
- * -----------------------------------------------------------------------------
- */
-
-
 package com.example.creatorconnectbackend.auth;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -97,7 +65,7 @@ public class JwtUtil {
      * @param token The JWT token to check for expiration.
      * @return True if the token has expired, false otherwise.
      */
-    private Boolean isTokenExpired(String token) {
+    public Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 

@@ -1,35 +1,3 @@
-/**
- * -----------------------------------------------------------------------------
- *                 User Controller
- * -----------------------------------------------------------------------------
- * Purpose:
- * The 'UserController' class is an essential controller within the 
- * 'com.example.creatorconnectbackend.controllers' package. It provides endpoints 
- * to manage user-related operations in the application, such as registration, 
- * login, and password reset functionalities.
- *
- * Key Features:
- * - User Registration: Enables new users to register their details.
- * - User Login: Validates user credentials and grants access.
- * - Password Reset: Provides a mechanism for users to reset their password if forgotten.
- *
- * Annotations:
- * - @RestController: Denotes that this class offers RESTful web service endpoints.
- * - @CrossOrigin: Allows for cross-origin requests, facilitating frontend-backend communication.
- * - @RequestMapping: Determines that the endpoints in this controller will use a prefix of "/api/users".
- *
- * Dependencies:
- * - UserService: This service layer component contains logic and operations related 
- *   to user functionalities.
- *
- * Core Endpoints:
- * - /register: Accepts user details and processes their registration.
- * - /login: Validates user credentials and offers access if correct.
- * - /forgot-password: Sends a password reset link to the specified email.
- * - /reset-password: Resets the user's password using a provided token.
- * -----------------------------------------------------------------------------
- */
-
 package com.example.creatorconnectbackend.controllers;
 
 import java.util.HashMap;

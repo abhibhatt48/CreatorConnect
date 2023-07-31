@@ -1,38 +1,3 @@
-/**
- * -----------------------------------------------------------------------------
- *                 Organization Controller
- * -----------------------------------------------------------------------------
- * Purpose:
- * The 'OrganizationController' class is a vital controller within the 
- * 'com.example.creatorconnectbackend.controllers' package. Its primary role is
- * to manage the operations associated with organizations in the application.
- *
- * Key Features:
- * - Registration of new organizations based on user IDs.
- * - Retrieval, updating, and deletion of organizations.
- * - Specialized endpoints to fetch organization details based on organization ID 
- *   and retrieve all organizations in the system.
- *
- * Annotations:
- * - @RestController: Specifies that this class provides RESTful web service endpoints.
- * - @CrossOrigin: Enables cross-origin requests, allowing for frontend-backend integration.
- * - @RequestMapping: Indicates that the endpoints in this controller will have a prefix of "/api/organizations".
- *
- * Dependencies:
- * - OrganizationService: This service layer component offers logic and operations 
- *   specific to organizations.
- *
- * Core Endpoints:
- * - /register/{userId}: Facilitates the registration of a new organization linked to 
- *   a specific user ID.
- * - /{id}: Allows for the retrieval or updating of organization details via the 
- *   organization's ID.
- * - (GET) /: Provides a list of all existing organizations.
- * - /{id} (DELETE): Handles the removal of an organization, identified by its ID.
- *
- */
-
-
 package com.example.creatorconnectbackend.controllers;
 
 import java.util.List;

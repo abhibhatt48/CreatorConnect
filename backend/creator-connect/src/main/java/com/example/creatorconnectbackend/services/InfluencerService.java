@@ -19,45 +19,6 @@ import com.example.creatorconnectbackend.models.Gender;
 import com.example.creatorconnectbackend.models.Influencer;
 import com.example.creatorconnectbackend.models.User;
 
-/**
- * InfluencerService class provides various functions to manage influencers in the system.
- * It interacts with the database using JdbcTemplate and SimpleJdbcInsert for CRUD operations on influencers.
- *
- * Functions:
- * 1. register: Registers a new influencer in the system based on the provided influencer object and userId.
- *    - Parameters:
- *        - influencer (Influencer): The influencer object to be registered.
- *        - userId (Long): The user ID associated with the influencer.
- *    - Returns:
- *        - Influencer: The registered influencer object.
- *
- * 2. getById: Fetches influencer details based on their ID.
- *    - Parameters:
- *        - id (Long): The ID of the influencer to fetch.
- *    - Returns:
- *        - Influencer: The influencer object with the specified ID.
- *
- * 3. update: Updates the details of an existing influencer based on their ID.
- *    - Parameters:
- *        - id (Long): The ID of the influencer to update.
- *        - updatedInfluencer (Influencer): The updated influencer object containing new details.
- *    - Returns:
- *        - Influencer: The updated influencer object after the update operation.
- *
- * 4. getAll: Fetches all influencers from the database.
- *    - Returns:
- *        - List<Influencer>: A list of all influencers in the system.
- *
- * 5. deleteById: Deletes an influencer from the system based on their ID.
- *    - Parameters:
- *        - id (Long): The ID of the influencer to delete.
- *
- * Dependencies:
- * - JdbcTemplate: Used for querying the database and mapping rows to Influencer objects.
- * - UserService: Used to fetch user details associated with an influencer during registration.
- * - Logger: Used for logging purposes to record information and errors.
- */
-
 @Service 
 public class InfluencerService implements InfluencerServiceInterface {
 

@@ -1,31 +1,3 @@
-/**
- * -----------------------------------------------------------------------------
- *                           JWT Request Filter
- * -----------------------------------------------------------------------------
- * Purpose: 
- * This class is responsible for filtering and processing JWT tokens present 
- * in incoming requests. It belongs to the 'com.example.creatorconnectbackend.auth' package.
- * The filter validates the JWT, extracts the username (in this case, an email), 
- * and sets the user's authentication in the security context.
- *
- * Main Components:
- * - JwtRequestFilter: A class that extends the OncePerRequestFilter, ensuring the
- *   doFilterInternal method is executed once per request. It handles the JWT extraction,
- *   validation, and user authentication.
- * - LOGGER: A static logger instance for logging exceptions and warnings.
- *
- * Main Functions:
- * - doFilterInternal(): Called for each request. This method checks for the presence of 
- *   a JWT token in the request header, validates it, and sets the user's authentication 
- *   in the security context. If the token is invalid or expired, appropriate logging 
- *   messages are captured.
- *
- * Dependencies:
- * - JwtUtil: A utility class (not provided) presumably responsible for JWT operations such 
- *   as token validation and extracting the email from the token.
- * -----------------------------------------------------------------------------
- */
-
 package com.example.creatorconnectbackend.auth;
 
 import java.io.IOException;

@@ -6,47 +6,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
-/**
- * -----------------------------------------------------------------------------
- *                        Influencer Model
- * -----------------------------------------------------------------------------
- * 
- * Purpose:
- * The `Influencer` class represents the model for influencers in the 
- * 'com.example.creatorconnectbackend' application. It encapsulates the various 
- * attributes that define an influencer's online presence and identity.
- * 
- * Attributes:
- * - influencerID: The unique ID representing the influencer.
- * - name: The real name of the influencer.
- * - profileImage: The URL or reference to the influencer's profile image.
- * - gender: The gender identity of the influencer.
- * - influencerName: Online alias or handle for the influencer.
- * - influencerType: The type or category of influencer.
- * - influencerNiche: The areas of expertise or niches the influencer focuses on.
- * - minRate: Minimum rate/fee for collaborations or partnerships.
- * - previousBrands: Past brands the influencer has worked or collaborated with.
- * - location: Geographical location of the influencer.
- * - bio: A brief description or biography of the influencer.
- * - birthdate: The birthdate of the influencer.
- * - Social Media Handles: Instagram, TikTok, Twitter, YouTube, Facebook, Twitch.
- * - bestPosts: A list of references to the influencer's top content/posts.
- * - user: An associated user account, possibly containing authentication or 
- *   contact details.
- * 
- * Usage:
- * This model can be employed in various parts of the application, such as 
- * creating influencer profiles, updating details, searching for influencers, 
- * and building influencer analytics.
- * 
- * Enhancements (Future Consideration):
- * - Incorporate metrics like followers count, engagement rate, average views, etc.
- * - Add support for more social media platforms.
- * - Consider adding methods for influencer analytics or insights.
- * 
- * -----------------------------------------------------------------------------
- */
-
 public class Influencer {
 	
 	private Long influencerID;

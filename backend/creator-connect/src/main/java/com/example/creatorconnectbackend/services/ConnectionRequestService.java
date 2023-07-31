@@ -18,44 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * -------------------------------------------------------------
- * |                                                           |
- * |            ConnectionRequestService Class                 |
- * |                                                           |
- * |  This class implements the ConnectionRequestServiceInterface   |
- * |  and provides methods for managing connection requests in  |
- * |  the system. It interacts with the database using         |
- * |  JdbcTemplate for CRUD operations.                        |
- * |                                                           |
- * |  Functions:                                               |
- * |  1. createRequest(ConnectionRequest): ConnectionRequest   |
- * |     - Create a new connection request and return the      |
- * |       persisted entity.                                   |
- * |  2. getConnectionRequestByID(Long): ConnectionRequest    |
- * |     - Retrieve a specific connection request by its ID.   |
- * |  3. updateStatus(Long, RequestStatus): ConnectionRequest |
- * |     - Update the status of a specific connection request.|
- * |  4. getRequestsByInfluencerID(Long): List<ConnectionRequest> |
- * |     - Retrieve all connection requests for a specific    |
- * |       influencer.                                         |
- * |  5. getRequestsByOrgID(Long): List<ConnectionRequest>    |
- * |     - Retrieve all connection requests for a specific    |
- * |       organization.                                      |
- * |  6. getRequestsByStatus(Long, String): List<ConnectionRequest> |
- * |     - Retrieve all connection requests based on a specific |
- * |       status for a specific organization.                |
- * |  7. getAllRequests(): List<ConnectionRequest>            |
- * |     - Retrieve all connection requests from the database.|
- * |  8. deleteByID(Long): void                               |
- * |     - Delete a specific connection request based on its ID. |
- * |  9. updateMessage(Long, Map<String, String>): ConnectionRequest |
- * |     - Update the message of a specific connection request. |
- * |                                                           |
- * -------------------------------------------------------------
- */
-
-
 @Service
 public class ConnectionRequestService implements ConnectionRequestServiceInterface {
 

@@ -23,44 +23,6 @@ import com.example.creatorconnectbackend.auth.JwtUtil;
 import com.example.creatorconnectbackend.interfaces.UserServiceInterface;
 import com.example.creatorconnectbackend.models.User;
 
-/**
- * UserService class provides various functions for user management in the system.
- * It interacts with the database using JdbcTemplate and SimpleJdbcInsert for CRUD operations on users.
- *
- * Functions:
- * 1. getUserRowMapper: Fetches the RowMapper for converting rows from the database into User objects.
- *    - Returns:
- *        - RowMapper<User>: The RowMapper instance for User objects.
- *
- * 2. userRegister: Registers a new user in the system based on the provided user object.
- *    - Parameters:
- *        - user (User): The user object to be registered.
- *    - Returns:
- *        - Map<String, Object>: A map containing the registration result and associated data, such as JWT token and message.
- *
- * 3. userLogin: Authenticates a user during the login process and generates a JWT token on successful login.
- *    - Parameters:
- *        - user (User): The user object containing login credentials (email and password).
- *    - Returns:
- *        - Map<String, Object>: A map containing the login result and associated data, such as JWT token and user data.
- *
- * 4. forgotPassword: Initiates the process of resetting a user's password by generating a reset token and sending a reset password link via email.
- *    - Parameters:
- *        - email (String): The email address associated with the user.
- *    - Returns:
- *        - Map<String, Object>: A map containing the result of the forgot password request and a corresponding message.
- *
- * 5. resetPassword: Resets a user's password based on the provided reset token.
- *    - Parameters:
- *        - token (String): The reset token associated with the user.
- *        - newPassword (String): The new password to be set for the user.
- *
- * Dependencies:
- * - JdbcTemplate: Used for querying the database and mapping rows to User objects.
- * - EmailService: Used for sending emails during the password reset process.
- * - JwtUtil: Used for generating JWT tokens for user authentication.
- * - Logger: Used for logging purposes to record information and errors.
- */
 @Service
 public class UserService implements UserServiceInterface {
     

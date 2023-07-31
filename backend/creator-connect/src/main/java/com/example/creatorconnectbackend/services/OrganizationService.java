@@ -20,44 +20,8 @@ import com.example.creatorconnectbackend.interfaces.OrganizationServiceInterface
 import com.example.creatorconnectbackend.models.Organization;
 import com.example.creatorconnectbackend.models.User;
 
-/**
- * OrganizationService class provides various functions to manage organizations in the system.
- * It interacts with the database using JdbcTemplate and SimpleJdbcInsert for CRUD operations on organizations.
- *
- * Functions:
- * 1. register: Registers a new organization in the system based on the provided organization object and userId.
- *    - Parameters:
- *        - organization (Organization): The organization object to be registered.
- *        - userId (Long): The user ID associated with the organization.
- *    - Returns:
- *        - Organization: The registered organization object.
- *
- * 2. getById: Fetches organization details based on their ID.
- *    - Parameters:
- *        - id (Long): The ID of the organization to fetch.
- *    - Returns:
- *        - Organization: The organization object with the specified ID.
- *
- * 3. update: Updates the details of an existing organization based on their ID.
- *    - Parameters:
- *        - id (Long): The ID of the organization to update.
- *        - updatedOrganization (Organization): The updated organization object containing new details.
- *    - Returns:
- *        - Organization: The updated organization object after the update operation.
- *
- * 4. getAll: Fetches all organizations from the database.
- *    - Returns:
- *        - List<Organization>: A list of all organizations in the system.
- *
- * 5. deleteById: Deletes an organization from the system based on their ID.
- *    - Parameters:
- *        - id (Long): The ID of the organization to delete.
- *
- * Dependencies:
- * - JdbcTemplate: Used for querying the database and mapping rows to Organization objects.
- * - UserService: Used to fetch user details associated with an organization during registration.
- * - Logger: Used for logging purposes to record information and errors.
- */@Service
+
+@Service
 public class OrganizationService implements OrganizationServiceInterface {
     private final JdbcTemplate jdbcTemplate;
     private final Logger logger = LoggerFactory.getLogger(OrganizationService.class);

@@ -1,39 +1,3 @@
-/**
- * -----------------------------------------------------------------------------
- *                     Connection Request Controller
- * -----------------------------------------------------------------------------
- * Purpose:
- * The 'ConnectionRequestController' class is a primary controller of the 'com.example.creatorconnectbackend.controllers'
- * package. It manages connection requests between influencers and organizations in the application.
- *
- * Key Features:
- * - Creation, retrieval, updating, and deletion of connection requests.
- * - Specialized endpoints to fetch requests based on various criteria.
- *
- * Annotations:
- * - @RestController: Marks the class as a RESTful web service controller.
- * - @CrossOrigin: Allows cross-origin requests, useful for frontend-backend separation during development.
- * - @RequestMapping: All endpoints in this controller will start with "/api/connectionReq".
- *
- * Dependencies:
- * - ConnectionRequestService: A service layer component that provides logic and operations related to connection requests.
- *
- * Core Endpoints:
- * - /create: Creates a new connection request.
- * - /getByRequestID/{requestId}: Retrieves a connection request by its unique ID.
- * - /update/{requestId}: Updates the status of an existing connection request.
- * - /influencer/getByID/{id} & /organization/getByID/{id}: Fetches connection requests based on influencer or organization ID.
- * - /organization/{orgID}/status/{status}: Fetches connection requests for a given organization with a specific status.
- * - /getAll: Retrieves all connection requests in the system.
- * - /delete/{id}: Deletes a connection request by its ID.
- * - /updateMessage/{id}: Updates the message of an existing connection request.
- *
- * Note:
- * Always ensure that validation and security mechanisms are in place when managing sensitive data or operations
- * through endpoints.
- * -----------------------------------------------------------------------------
- */
-
 package com.example.creatorconnectbackend.controllers;
 
 import com.example.creatorconnectbackend.models.ConnectionRequest;
