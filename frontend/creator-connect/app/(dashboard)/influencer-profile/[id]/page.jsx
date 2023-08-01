@@ -56,7 +56,10 @@ export default function InfluencerProfile({ params }) {
   const [open, setOpen] = useState(false);
   const [requestMessage, setRequestMessage] = useState("");
   const [requests, setRequests] = useState(null);
+  const router = useRouter();
+
   let userData;
+  let userID;
   if (typeof window !== "undefined") {
     userData = localStorage.getItem("userData");
     userData = JSON.parse(userData);
