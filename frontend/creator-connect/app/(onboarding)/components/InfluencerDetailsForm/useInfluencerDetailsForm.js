@@ -64,12 +64,14 @@ export const useInfluencerDetailsForm = () => {
       let influencerProfileDataString;
       let userData;
       let influencerProfileData;
+      let token;
       if (typeof window !== "undefined") {
         influencerProfileDataString = localStorage.getItem(
           "influencerProfileData"
         );
         influencerProfileData = JSON.parse(influencerProfileDataString);
         userData = localStorage.getItem("userData");
+        token = localStorage.getItem("token");
       }
 
       const influencerOnboardingInfo = {

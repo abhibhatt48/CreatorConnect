@@ -10,10 +10,11 @@ export const InfluencerProfileForm = () => {
   const router = useRouter();
   useEffect(() => {
     // Retrieve JWT token from local storage
-    setToken(localStorage.getItem("token"));
+    let tempToken;
+    if (window !== undefined) {
+      tempToken = localStorage.getItem("token");
+    }
 
-    console.log("Inside useEffect");
-    console.log(token);
     // If token does not exist, redirect to login page
     if (!localStorage.getItem("token")) {
       alert("Please login to continue");
