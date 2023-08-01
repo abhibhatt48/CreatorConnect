@@ -19,34 +19,56 @@ export default function InfluencerDashboard() {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:8080/api/connectionReq/influencer/getByID/" + userID
+        const token = localStorage.getItem("token");
+        const res = await fetch(
+          `/api/proxy?url=connectionReq/influencer/getByID/${userID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
-        console.log("Response:");
-        let pendingRequests = res.data.filter(
-          (request) => request.requestStatus === "Pending"
-        );
-        setRequests(pendingRequests);
-        console.log(res.data);
+
+        if (res.status < 400) {
+          const result = await res.json();
+          let pendingRequests = result.filter(
+            (request) => request.requestStatus === "Pending"
+          );
+          setRequests(pendingRequests);
+        } else {
+          console.error("An error occurred.");
+        }
       } catch (error) {
-        console.log("Error:");
-        console.error(error);
+        console.error("Error: " + error);
       }
     };
 
     const fetchCount = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:8080/api/viewCounters/getByID/" + userID
+        const token = localStorage.getItem("token");
+        const res = await fetch(
+          `/api/proxy?url=viewCounters/getByID/${userID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
-        if (res.data) {
-          setProfileViews(res.data[userID]);
-        }
 
-        console.log(res.data);
+        if (res.status < 400) {
+          const result = await res.json();
+          if (result.data) {
+            setProfileViews(result.data[userID]);
+          }
+        } else {
+          console.error("An error occurred.");
+        }
       } catch (error) {
-        console.log("Error:");
-        console.error(error);
+        console.error("Error: " + error);
       }
     };
 
