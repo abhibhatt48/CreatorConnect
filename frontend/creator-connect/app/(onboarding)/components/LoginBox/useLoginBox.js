@@ -59,7 +59,9 @@ export const useLoginBox = () => {
 
       if (res?.ok) {
         toast.success(res.message);
-        localStorage.setItem("userData", JSON.stringify(res.data[0]));
+        if (typeof window !== "undefined") {
+          localStorage.setItem("userData", JSON.stringify(res.data[0]));
+        }
 
         if (res.data[0].user_type === "Influencer") {
           const influencerData = await fetchInfluencerData(res.data[0].userID);

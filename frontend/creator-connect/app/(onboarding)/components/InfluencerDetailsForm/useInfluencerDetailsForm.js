@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
@@ -60,15 +61,16 @@ export const useInfluencerDetailsForm = () => {
 
   const handleFinish = async () => {
     if (getSelectedNicheNames(selectedNiches).length && minimumRate) {
-      const influencerProfileDataString = localStorage.getItem(
-        "influencerProfileData"
-      );
-
-      let userData = localStorage.getItem("userData");
-
-      userData = JSON.parse(userData);
-
-      const influencerProfileData = JSON.parse(influencerProfileDataString);
+      let influencerProfileDataString;
+      let userData;
+      let influencerProfileData;
+      if (typeof window !== "undefined") {
+        influencerProfileDataString = localStorage.getItem(
+          "influencerProfileData"
+        );
+        influencerProfileData = JSON.parse(influencerProfileDataString);
+        userData = localStorage.getItem("userData");
+      }
 
       const influencerOnboardingInfo = {
         name: `${influencerProfileData?.firstName} ${influencerProfileData.lastName}`,

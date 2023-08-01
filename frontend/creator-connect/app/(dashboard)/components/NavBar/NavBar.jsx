@@ -28,7 +28,9 @@ export default function ButtonAppBar() {
 
   const handleClick = (setting) => {
     if (setting === "Logout") {
-      localStorage.clear();
+      if (typeof window !== "undefined") {
+        localStorage.clear();
+      }
       router.replace("/login");
     }
   };
