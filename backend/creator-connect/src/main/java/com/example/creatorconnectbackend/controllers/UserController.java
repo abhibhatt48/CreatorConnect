@@ -115,7 +115,7 @@ public class UserController {
 	/**
      * Handles POST requests for forgotten password cases. Sends reset password link to the user's email.
      *
-     * @param emailBody email object containing user's email.
+     * @param request: a map object containing user's new email and a token.
      * @return response entity containing the status of the password reset request.
      */
 	@PostMapping("/reset-password")

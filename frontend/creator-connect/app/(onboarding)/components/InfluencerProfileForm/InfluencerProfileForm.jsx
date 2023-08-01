@@ -1,11 +1,28 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./InfluencerProfileForm.module.css";
 import { Avatar, Grid } from "@mui/material";
 import { useInfluencerProfileForm } from "./useInfluencerProfileForm";
+import { useRouter } from "next/navigation";
 
 export const InfluencerProfileForm = () => {
+  const router = useRouter();
+  useEffect(() => {
+    // Retrieve JWT token from local storage
+    let tempToken;
+    if (window !== undefined) {
+      tempToken = localStorage.getItem("token");
+    }
+
+    // If token does not exist, redirect to login page
+    if (!localStorage.getItem("token")) {
+      alert("Please login to continue");
+      // router.push("/login");
+      return;
+    }
+  }, []);
+
   const {
     firstName,
     setFirstName,
@@ -20,8 +37,12 @@ export const InfluencerProfileForm = () => {
     birthdate,
     setBirthdate,
     handleNext,
+    token,
+    setToken,
   } = useInfluencerProfileForm();
 
+  console.log("Outside useEffect");
+  console.log(token?.length);
   return (
     <Grid
       rowGap={2}

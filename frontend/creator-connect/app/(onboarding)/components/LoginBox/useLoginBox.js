@@ -61,6 +61,7 @@ export const useLoginBox = () => {
         toast.success(res.message);
         if (typeof window !== "undefined") {
           localStorage.setItem("userData", JSON.stringify(res.data[0]));
+          localStorage.setItem("token", res.jwt);
         }
 
         if (res.data[0].user_type === "Influencer") {
