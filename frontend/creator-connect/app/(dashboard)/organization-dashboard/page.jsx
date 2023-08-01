@@ -4,25 +4,64 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import axios from "axios";
 import InfluencerListTable from "../components/InfluencerListTable/InfluencerListTable";
+import { useRouter } from "next/navigation";
 
 export default function OrganizationDashboard() {
   const [influencers, setInfluencers] = useState(null);
   const [requests, setRequests] = useState(null);
-  const orgID = 2;
+  let userData = localStorage.getItem("userData");
+  userData = JSON.parse(userData);
+  let orgID = userData.userID;
+  const [acceptedRequests, setAcceptedRequests] = useState();
+  const [pendingRequests, setPendingRequests] = useState();
+  const router = useRouter();
 
   useEffect(() => {
+    if (requests?.length) {
+      setAcceptedRequests(
+        requests.filter((request) => request.requestStatus === "Accepted")
+      );
+
+      setPendingRequests(
+        requests.filter(
+          (request) =>
+            request.requestStatus === "Pending" ||
+            request.requestStatus === "Denied"
+        )
+      );
+    }
+  }, [requests]);
+
+  useEffect(() => {
+    // Retrieve JWT token from local storage
+    const tempToken = localStorage.getItem("token");
+    // If token does not exist, redirect to login page
+    if (!tempToken) {
+      alert("Please login to continue");
+      router.push("/login");
+      return;
+    }
     const fetchRequests = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:8080/api/connectionReq/organization/getByID/" +
-            orgID
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(
+          `/api/proxy?url=connectionReq/organization/getByID/${orgID}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
-        console.log("Response:");
-        setRequests(res.data);
-        console.log(res.data);
+
+        if (res.status < 400) {
+          const result = await res.json();
+          setRequests(result);
+        } else {
+          throw new Error("An error occurred.");
+        }
       } catch (error) {
-        console.log("Error:");
-        console.error(error);
+        console.log("Error:", error);
       }
     };
 
@@ -30,11 +69,21 @@ export default function OrganizationDashboard() {
 
     const fetchInfluencers = async () => {
       try {
-        const res = await axios.get("http://localhost:8080/api/influencers");
-        setInfluencers(res.data);
+        const token = localStorage.getItem("token");
+        const res = await fetch("/api/proxy?url=influencers", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.status < 400) {
+          const result = await res.json();
+          setInfluencers(result);
+        } else {
+          throw new Error("An error occurred.");
+        }
       } catch (error) {
-        console.log("Error:");
-        console.error(error);
+        console.log("Error:", error);
       }
     };
 
@@ -66,65 +115,52 @@ export default function OrganizationDashboard() {
     <Box height="100%" overflow="auto">
       <Grid container spacing={2} direction="column" mt={7}>
         <Container maxWidth="lg">
-          <Grid item xs={12}>
-            <Grid container spacing={2} direction="column">
-              <Grid item xs={12}>
-                <Typography variant="h5" color="#222AEF" fontWeight="600">
-                  Requests
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Container maxWidth="lg">
-                  <Tabs variant="scrollable" scrollButtons="auto">
-                    {requests &&
-                      requests
-                        .filter(
-                          (request) => request.requestStatus !== "Accepted"
-                        )
-                        .map((request, index) => (
-                          <Tab
-                            key={index}
-                            label={<RequestCard {...request} />}
-                          />
-                        ))}
-                  </Tabs>
-                </Container>
+          {pendingRequests?.length ? (
+            <Grid item xs={12}>
+              <Grid container spacing={2} direction="column">
+                <Grid item xs={12}>
+                  <Typography variant="h5" color="#222AEF" fontWeight="600">
+                    Requests
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Container maxWidth="lg">
+                    <Tabs variant="scrollable" scrollButtons="auto">
+                      {pendingRequests.map((request, index) => (
+                        <Tab key={index} label={<RequestCard {...request} />} />
+                      ))}
+                    </Tabs>
+                  </Container>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          ) : null}
 
-          {/* Grid for Connected Influencers */}
-          <Grid item xs={12}>
-            <Grid container spacing={2} direction="column">
-              <Grid item xs={12}>
-                <Typography
-                  variant="h5"
-                  color="#222AEF"
-                  fontWeight="600"
-                  mt={3}
-                >
-                  Connected Influencers
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Container maxWidth="lg">
-                  <Tabs variant="scrollable" scrollButtons="auto">
-                    {requests &&
-                      requests
-                        .filter(
-                          (request) => request.requestStatus === "Accepted"
-                        )
-                        .map((request, index) => (
-                          <Tab
-                            key={index}
-                            label={<RequestCard {...request} />}
-                          />
-                        ))}
-                  </Tabs>
-                </Container>
+          {acceptedRequests?.length ? (
+            <Grid item xs={12}>
+              <Grid container spacing={2} direction="column">
+                <Grid item xs={12}>
+                  <Typography
+                    variant="h5"
+                    color="#222AEF"
+                    fontWeight="600"
+                    mt={3}
+                  >
+                    Accepted requests
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Container maxWidth="lg">
+                    <Tabs variant="scrollable" scrollButtons="auto">
+                      {acceptedRequests.map((request, index) => (
+                        <Tab key={index} label={<RequestCard {...request} />} />
+                      ))}
+                    </Tabs>
+                  </Container>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          ) : null}
           <Grid item xs={12}>
             <Grid container spacing={2} direction="column">
               <Grid item xs={12}>

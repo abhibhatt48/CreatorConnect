@@ -1,14 +1,29 @@
+// pages/api/proxy.js
+
 import axios from "axios";
 
-export default async (req, res) => {
+export default async function handler(req, res) {
+  const { method, body, query } = req;
+
+  // Get the url parameter from the query
+  const { url } = query;
+
   try {
-    const response = await axios.post(
-      "http://localhost:8080/api/users/forgot-password",
-      req.body
-    );
-    res.status(200).json(response.data);
+    // Make the request to the external API
+    const response = await axios({
+      method: method.toLowerCase(),
+      url: `http://localhost:8080/api/${url}`,
+      headers: {
+        Authorization: req.headers.authorization,
+        "Content-Type": "application/json",
+      },
+      data: body,
+    });
+
+    // Forward status code and data from the external API to the client
+    res.status(response.status).json(response.data);
   } catch (error) {
-    console.log("proxy errr");
-    res.status(error.response.status).json(error.response.data);
+    // Forward status code and error message
+    res.status(error.response?.status || 500).json({ message: error.message });
   }
-};
+}

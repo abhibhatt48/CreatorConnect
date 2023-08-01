@@ -17,8 +17,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import InfluencerFeaturedPosts from "../../components/InfluencerFeaturedPosts/InfluencerFeaturedPosts";
-
 import { makeStyles } from "@mui/styles";
 import SocialMediaIcons from "../../components/SocialMediaIcons/SocialMediaIcons";
 const useStyles = makeStyles({
@@ -56,9 +56,10 @@ export default function InfluencerProfile({ params }) {
   const [open, setOpen] = useState(false);
   const [requestMessage, setRequestMessage] = useState("");
   const [requests, setRequests] = useState(null);
+  const router = useRouter();
   let userData = localStorage.getItem("userData");
   userData = JSON.parse(userData);
-
+  let userID = userData.userID;
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -84,46 +85,112 @@ export default function InfluencerProfile({ params }) {
   };
 
   useEffect(() => {
+    // Retrieve JWT token from local storage
+    const tempToken = localStorage.getItem("token");
+    // If token does not exist, redirect to login page
+    if (!tempToken) {
+      alert("Please login to continue");
+      router.push("/login");
+      return;
+    }
     const fetchInfluencerData = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:8080/api/influencers/" + influencerID
-        );
-        setInfluencerData(res.data);
+        const res = await fetch(`/api/proxy?url=influencers/${influencerID}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${tempToken}`,
+          },
+        });
+
+        if (res.status < 400) {
+          setInfluencerData(await res.json());
+        } else {
+          throw new Error("An error occurred");
+        }
       } catch (error) {
-        console.log("Error:");
         console.error(error);
       }
     };
 
     const fetchRequests = async () => {
       try {
-        console.log("user id " + userData?.userID);
-        const res = await axios.get(
-          `http://localhost:8080/api/connectionReq/organization/getByID/${userData?.userID}`
+        const token = localStorage.getItem("token");
+        const res = await fetch(
+          `/api/proxy?url=connectionReq/organization/getByID/${userData?.userID}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
-        setRequests(res.data);
-        console.log(res.data);
+
+        if (res.status < 400) {
+          setRequests(await res.json());
+        } else {
+          throw new Error("An error occurred");
+        }
       } catch (error) {
-        console.log("Error:");
         console.error(error);
       }
     };
 
     fetchRequests();
+    const addProfileView = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const viewObject = {
+          influencerId: parseInt(influencerID),
+          orgId: userID,
+          date: new Date(),
+        };
+
+        const res = await fetch(`/api/proxy?url=viewCounters/addView`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(viewObject),
+        });
+
+        if (res.status >= 400) {
+          throw new Error("An error occurred");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    addProfileView();
 
     fetchInfluencerData();
   }, []);
 
   const handleConnect = async (requestMessage) => {
     try {
-      await axios.post("http://localhost:8080/api/connectionReq/create", {
-        orgID: 2,
-        influencerID: influencerID, // ID coming from the state or props
+      const token = localStorage.getItem("token");
+      const connectObj = {
+        orgID: userID,
+        influencerID: influencerID,
         requestMessage: requestMessage,
         requestStatus: "Pending",
+      };
+
+      const res = await fetch(`/api/proxy?url=connectionReq/create`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(connectObj),
       });
-      alert("Connection Request Sent!");
+
+      if (res.status < 400) {
+        alert("Connection Request Sent!");
+      } else {
+        throw new Error("An error occurred");
+      }
     } catch (error) {
       console.error(
         "There was an error sending the connection request:",

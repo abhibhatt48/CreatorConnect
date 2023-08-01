@@ -68,20 +68,22 @@ export const useInfluencerDetailsForm = () => {
 
       userData = JSON.parse(userData);
 
+      const token = localStorage.getItem("token");
+
       const influencerProfileData = JSON.parse(influencerProfileDataString);
 
       const influencerOnboardingInfo = {
         name: `${influencerProfileData?.firstName} ${influencerProfileData.lastName}`,
         gender: influencerProfileData.gender,
         influencerName: `${influencerProfileData?.firstName} ${influencerProfileData.lastName}`,
-        influencerType: "", //not needed
+        influencerType: "asdf", //not needed
         influencerNiche: getSelectedNicheNames(selectedNiches),
         minRate: parseInt(minimumRate),
         location: influencerProfileData?.region,
         bio: influencerProfileData?.bio,
-        previousBrands: "",
-        profileImage: "",
-        // birthdate: influencerProfileData?.birthdate,
+        previousBrands: "asdf",
+        profileImage: "asdf",
+        birthdate: influencerProfileData?.birthdate,
         instagram: instagramUrl,
         tweeter: twitterUrl,
         youtube: youtubeUrl,
@@ -92,27 +94,30 @@ export const useInfluencerDetailsForm = () => {
       };
       try {
         const res = await fetch(
-          `http://localhost:8080/api/influencers/register/${userData?.userID}`,
+          `/api/proxy?url=influencers/register/${userData?.userID}`,
           {
-            method: "POST", // *GET, POST, PUT, DELETE, etc.
-            mode: "cors", // no-cors, *cors, same-origin
-            // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-            // credentials: "same-origin", // include, *same-origin, omit
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
-              // 'Content-Type': 'application/x-www-form-urlencoded',
+              Authorization: `Bearer ${token}`,
             },
-            // redirect: "follow", // manual, *follow, error
-            // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin,
-            body: JSON.stringify(influencerOnboardingInfo), // body data type must match "Content-Type" header
+            body: JSON.stringify(influencerOnboardingInfo),
           }
         );
-        if (!res.error) router.push("influencer-dashboard");
-        else toast.error(error);
-        return res;
+
+        if (res.status < 400) {
+          const result = await res.json();
+
+          if (!result.error) {
+            router.push("influencer-dashboard");
+          } else {
+            toast.error(result.error);
+          }
+        } else {
+          toast.error("An error occurred.");
+        }
       } catch (error) {
-        toast.error(error);
-        console.log("Error", error);
+        toast.error("Error: " + error);
       }
     } else {
       toast.error("Please fill out all fields, social URL's are optional.");

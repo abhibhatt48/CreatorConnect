@@ -89,30 +89,32 @@ export const useOrganizationDetailsForm = () => {
       };
 
       try {
+        const token = localStorage.getItem("token");
         const res = await fetch(
-          `http://localhost:8080/api/organizations/register/${userData?.userID}`,
+          `/api/proxy?url=organizations/register/${userData?.userID}`,
           {
-            method: "POST", // *GET, POST, PUT, DELETE, etc.
-            // mode: "cors", // no-cors, *cors, same-origin
-            mode: "cors",
-            // cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-            // credentials: "same-origin", // include, *same-origin, omit
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
-              // 'Content-Type': 'application/x-www-form-urlencoded',
+              Authorization: `Bearer ${token}`,
             },
-            // redirect: "follow", // manual, *follow, error
-            // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin,
-            body: JSON.stringify(organizationOnboardingInfo), // body data type must match "Content-Type" header
+            body: JSON.stringify(organizationOnboardingInfo),
           }
         );
 
-        if (!res.error) router.push("organization-dashboard");
-        else toast.error(error);
-        return res;
+        if (res.status < 400) {
+          const result = await res.json();
+
+          if (!result.error) {
+            router.push("organization-dashboard");
+          } else {
+            toast.error(result.error);
+          }
+        } else {
+          toast.error("An error occurred.");
+        }
       } catch (error) {
-        toast.error(error);
-        console.log("Error", error);
+        toast.error("Error: " + error);
       }
     } else {
       toast.error("Please fill out all fields, social URL's are optional.");

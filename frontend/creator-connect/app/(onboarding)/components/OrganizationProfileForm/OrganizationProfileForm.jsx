@@ -1,11 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./OrganizationProfileForm.module.css";
 import { Avatar, Grid } from "@mui/material";
 import { useOrganizationProfileForm } from "./useOrganizationProfileForm";
+import { useRouter } from "next/navigation";
 
 export const OrganizationProfileForm = () => {
+  const router = useRouter();
+  useEffect(() => {
+    // Retrieve JWT token from local storage
+    const tempToken = localStorage.getItem("token");
+    // If token does not exist, redirect to login page
+    if (!tempToken) {
+      alert("Please login to continue");
+      router.push("/login");
+      return;
+    }
+  }, []);
+
   const {
     organizationName,
     setOrganizationName,

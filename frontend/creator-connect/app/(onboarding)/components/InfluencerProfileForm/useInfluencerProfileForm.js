@@ -21,7 +21,6 @@ export const useInfluencerProfileForm = () => {
         gender,
         region,
         birthdate,
-        token,
       };
       localStorage.setItem(
         "influencerProfileData",
@@ -33,8 +32,6 @@ export const useInfluencerProfileForm = () => {
       toast.error("Please fill out all fields");
     }
   };
-
-  console.log("Inside inee funtion");
   return {
     firstName,
     setFirstName,

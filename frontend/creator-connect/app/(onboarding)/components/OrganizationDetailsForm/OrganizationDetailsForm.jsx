@@ -5,11 +5,23 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import { Grid } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./OrganizationDetailsForm.module.css";
 import { useOrganizationDetailsForm } from "./useOrganizationDetailsForm";
+import { useRouter } from "next/navigation";
 
 export const OrganizationDetailsForm = () => {
+  const router = useRouter();
+  useEffect(() => {
+    // Retrieve JWT token from local storage
+    const tempToken = localStorage.getItem("token");
+    // If token does not exist, redirect to login page
+    if (!tempToken) {
+      alert("Please login to continue");
+      router.push("/login");
+      return;
+    }
+  }, []);
   const {
     organizationNicheList,
     handleSelect,
@@ -206,6 +218,7 @@ export const OrganizationDetailsForm = () => {
           <option value="Education">Education</option>
           <option value="Energy">Energy</option>
           <option value="Transportation">Transportation</option>
+          <option value="Food">Food</option>
         </select>
       </div>
       <button className={styles.button} onClick={handleFinish}>

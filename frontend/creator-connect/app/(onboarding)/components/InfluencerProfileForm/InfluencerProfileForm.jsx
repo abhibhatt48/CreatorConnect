@@ -10,14 +10,11 @@ export const InfluencerProfileForm = () => {
   const router = useRouter();
   useEffect(() => {
     // Retrieve JWT token from local storage
-    setToken(localStorage.getItem("token"));
-
-    console.log("Inside useEffect");
-    console.log(token);
+    const tempToken = localStorage.getItem("token");
     // If token does not exist, redirect to login page
-    if (!localStorage.getItem("token")) {
+    if (!tempToken) {
       alert("Please login to continue");
-      // router.push("/login");
+      router.push("/login");
       return;
     }
   }, []);
@@ -40,8 +37,6 @@ export const InfluencerProfileForm = () => {
     setToken,
   } = useInfluencerProfileForm();
 
-  console.log("Outside useEffect");
-  console.log(token?.length);
   return (
     <Grid
       rowGap={2}

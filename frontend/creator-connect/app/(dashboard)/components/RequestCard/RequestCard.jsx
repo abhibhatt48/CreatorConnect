@@ -80,14 +80,21 @@ export default function RequestCard({
   useEffect(() => {
     const fetchInfluencerData = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:8080/api/influencers/" + influencerID
-        );
-        setInfluencerData(res.data);
-        console.log(res.data);
+        const token = localStorage.getItem("token");
+        const res = await fetch(`/api/proxy?url=influencers/${influencerID}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (res.status < 400) {
+          const result = await res.json();
+          setInfluencerData(result);
+        } else {
+          throw new Error("An error occurred.");
+        }
       } catch (error) {
-        console.log("Error:");
-        console.error(error);
+        console.log("Error:", error);
       }
     };
 

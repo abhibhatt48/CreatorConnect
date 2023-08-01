@@ -15,6 +15,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -99,6 +100,57 @@ class InfluencerServiceTest {
         influencer.setBestPosts(Arrays.asList("Post1", "Post2", "Post3"));
         
         return influencer;
+    }
+
+    private static java.sql.ResultSet createMockResultSet() throws java.sql.SQLException {
+        java.sql.ResultSet rs = Mockito.mock(java.sql.ResultSet.class);
+        when(rs.getLong("influencerID")).thenReturn(1L);
+        when(rs.getString("name")).thenReturn("John Doe");
+        when(rs.getString("profileImage")).thenReturn("https://example.com/profile.jpg");
+        when(rs.getString("gender")).thenReturn("MALE");
+        when(rs.getString("influencerName")).thenReturn("JD");
+        when(rs.getString("influencerType")).thenReturn("Fashion");
+        when(rs.getString("influencerNiche")).thenReturn("Health,Wellness");
+        when(rs.getLong("minRate")).thenReturn(1500L);
+        when(rs.getString("previousBrands")).thenReturn("Brand X,Brand Y");
+        when(rs.getString("location")).thenReturn("New York");
+        when(rs.getString("bio")).thenReturn("Fashion Enthusiast");
+        when(rs.getDate("birthdate")).thenReturn(Date.valueOf("1990-05-15"));
+        when(rs.getString("instagram")).thenReturn("https://www.instagram.com/johndoe/");
+        when(rs.getString("tikTok")).thenReturn("https://www.tiktok.com/@johndoe");
+        when(rs.getString("tweeter")).thenReturn("https://www.twitter.com/@johndoe");
+        when(rs.getString("youtube")).thenReturn("https://www.youtube.com/channel/UCVtFOytbRpEvzLjvqGG5gxQ");
+        when(rs.getString("facebook")).thenReturn("https://www.facebook.com/johndoe/");
+        when(rs.getString("twitch")).thenReturn("");
+        when(rs.getString("bestPosts")).thenReturn("https://example.com/post1.jpg,https://example.com/post2.jpg");
+        return rs;
+    }
+
+    @Test
+    void testInfluencerRowMapper() throws SQLException {
+        // Prepare a mock ResultSet with the required values
+        RowMapper<Influencer> rowMapper = influencerService.getRowMapper();
+        Influencer influencer = rowMapper.mapRow(createMockResultSet(), 1);
+
+        // Verify that the Influencer object is correctly mapped
+        assertEquals(1L, influencer.getInfluencerID());
+        assertEquals("John Doe", influencer.getName());
+        assertEquals("https://example.com/profile.jpg", influencer.getProfileImage());
+        assertEquals(Gender.MALE, influencer.getGender());
+        assertEquals("JD", influencer.getInfluencerName());
+        assertEquals("Fashion", influencer.getInfluencerType());
+        assertEquals(Arrays.asList("Health", "Wellness"), influencer.getInfluencerNiche());
+        assertEquals(1500L, influencer.getMinRate());
+        assertEquals("Brand X,Brand Y", influencer.getPreviousBrands());
+        assertEquals("New York", influencer.getLocation());
+        assertEquals("Fashion Enthusiast", influencer.getBio());
+        assertEquals("https://www.instagram.com/johndoe/", influencer.getInstagram());
+        assertEquals("https://www.tiktok.com/@johndoe", influencer.getTikTok());
+        assertEquals("https://www.twitter.com/@johndoe", influencer.getTweeter());
+        assertEquals("https://www.youtube.com/channel/UCVtFOytbRpEvzLjvqGG5gxQ", influencer.getYoutube());
+        assertEquals("https://www.facebook.com/johndoe/", influencer.getFacebook());
+        assertEquals("", influencer.getTwitch());
+        assertEquals(Arrays.asList("https://example.com/post1.jpg", "https://example.com/post2.jpg"), influencer.getBestPosts());
     }
     
     private User createUser(String userType) {

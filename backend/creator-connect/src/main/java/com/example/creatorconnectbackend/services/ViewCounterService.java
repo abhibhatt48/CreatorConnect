@@ -34,6 +34,10 @@ public class ViewCounterService implements ViewCounterServiceInterface {
         return viewCounter;
     };
 
+    public RowMapper<ViewCounter> getRowMapper() {
+        return rowMapper;
+    }
+
     /**
      * Adds a new ViewCounter.
      *
@@ -67,8 +71,7 @@ public class ViewCounterService implements ViewCounterServiceInterface {
     public Map<Long, Integer> getViewsByInfluencerID(Long id) {
         String query = "SELECT COUNT(*) AS profile_views FROM View_counter WHERE InfluencerID = ?";
         try {
-            return jdbcTemplate.query(query, new Object[]{id}, (rs, rowNum) -> {
-                int viewCount = rs.getInt("profile_views");
+            return jdbcTemplate.query(query, new Object[]{id}, (rs, rowNum) -> { int viewCount = rs.getInt("profile_views");
                 return new AbstractMap.SimpleEntry<>(id, viewCount);
             }).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         } catch (EmptyResultDataAccessException e) {
@@ -92,10 +95,7 @@ public class ViewCounterService implements ViewCounterServiceInterface {
                 "GROUP BY o.CompanyType";
 
         try {
-            return jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {
-                String companyType = rs.getString("companyType");
-                int viewCount = rs.getInt("view_count");
-                System.out.println(viewCount + " AA");
+            return jdbcTemplate.query(sql, new Object[]{id}, (rs, rowNum) -> {  String companyType = rs.getString("companyType");int viewCount = rs.getInt("view_count");
                 return new AbstractMap.SimpleEntry<>(companyType, viewCount);
             }).stream().collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         } catch (Exception e) {

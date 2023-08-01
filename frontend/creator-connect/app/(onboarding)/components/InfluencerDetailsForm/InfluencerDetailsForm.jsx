@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./InfluencerDetailsForm.module.css";
 import { Grid } from "@mui/material";
 import { useInfluencerDetailsForm } from "./useInfluencerDetailsForm";
@@ -8,8 +8,21 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import FacebookIcon from "@mui/icons-material/Facebook";
+import { useRouter } from "next/navigation";
 
 export const InfluencerDetailsForm = () => {
+  const router = useRouter();
+  useEffect(() => {
+    // Retrieve JWT token from local storage
+    const tempToken = localStorage.getItem("token");
+    // If token does not exist, redirect to login page
+    if (!tempToken) {
+      alert("Please login to continue");
+      router.push("/login");
+      return;
+    }
+  }, []);
+
   const {
     influencerNicheList,
     handleSelect,
