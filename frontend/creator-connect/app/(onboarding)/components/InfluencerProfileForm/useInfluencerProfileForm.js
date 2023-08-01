@@ -22,11 +22,12 @@ export const useInfluencerProfileForm = () => {
         region,
         birthdate,
       };
-      localStorage.setItem(
-        "influencerProfileData",
-        JSON.stringify(influencerProfileData)
-      );
-
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          "influencerProfileData",
+          JSON.stringify(influencerProfileData)
+        );
+      }
       router.push("onboarding-influencer-2");
     } else {
       toast.error("Please fill out all fields");

@@ -60,11 +60,15 @@ export const useOrganizationDetailsForm = () => {
 
   const handleFinish = async () => {
     if (getSelectedNicheNames(selectedNiches).length && industry) {
-      const organizationProfileDataString = localStorage.getItem(
-        "organizationProfileData"
-      );
+      let organizationProfileDataString;
+      let userData;
+      if (typeof window !== "undefined") {
+        organizationProfileDataString = localStorage.getItem(
+          "organizationProfileData"
+        );
 
-      let userData = localStorage.getItem("userData");
+        userData = localStorage.getItem("userData");
+      }
 
       userData = JSON.parse(userData);
 
