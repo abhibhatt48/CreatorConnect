@@ -25,10 +25,12 @@ export const useOrganizationProfileForm = () => {
         region,
         organizationSize,
       };
-      localStorage.setItem(
-        "organizationProfileData",
-        JSON.stringify(organizationProfileData)
-      );
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          "organizationProfileData",
+          JSON.stringify(organizationProfileData)
+        );
+      }
 
       router.push("onboarding-organization-2");
     } else {

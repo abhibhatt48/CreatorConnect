@@ -8,11 +8,13 @@ import RequestsListTable from "../components/RequestsListTable/RequestsListTable
 export default function InfluencerDashboard() {
   const [requests, setRequests] = useState(null);
   const [profileViews, setProfileViews] = useState();
-
-  let userData = localStorage.getItem("userData");
-
-  userData = JSON.parse(userData);
-  let userID = userData.userID;
+  let userData;
+  let userID;
+  if (typeof window !== "undefined") {
+    userData = localStorage.getItem("userData");
+    userData = JSON.parse(userData);
+    userID = userData.userID;
+  }
 
   useEffect(() => {
     const fetchRequests = async () => {

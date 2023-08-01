@@ -8,9 +8,14 @@ import InfluencerListTable from "../components/InfluencerListTable/InfluencerLis
 export default function OrganizationDashboard() {
   const [influencers, setInfluencers] = useState(null);
   const [requests, setRequests] = useState(null);
-  let userData = localStorage.getItem("userData");
-  userData = JSON.parse(userData);
-  let orgID = userData.userID;
+  let userData;
+  let orgID;
+  if (typeof window !== "undefined") {
+    userData = localStorage.getItem("userData");
+    userData = JSON.parse(userData);
+    orgID = userData.userID;
+  }
+
   const [acceptedRequests, setAcceptedRequests] = useState();
   const [pendingRequests, setPendingRequests] = useState();
 
